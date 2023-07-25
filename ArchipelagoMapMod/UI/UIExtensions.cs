@@ -1,6 +1,5 @@
 ﻿using MagicUI.Core;
 using MagicUI.Elements;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -53,12 +52,12 @@ internal static class UIExtensions
         if (value)
         {
             textObj.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
-            text += L.Localize("On");
+            text += "On";
         }
         else
         {
             textObj.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
-            text += L.Localize("Off");
+            text += "Off";
         }
 
         textObj.Text = text;

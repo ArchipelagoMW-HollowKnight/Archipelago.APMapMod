@@ -1,6 +1,5 @@
 ﻿using ArchipelagoMapMod.Modes;
 using UnityEngine;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -22,7 +21,7 @@ internal class RoomSelectionText : ControlPanelText
 
     private protected override string GetText()
     {
-        var text = $"{L.Localize("Toggle room selection")} (Ctrl-R): ";
+        var text = "Toggle room selection (Ctrl-R): ";
         return text + (ArchipelagoMapMod.GS.RoomSelectionOn ? "On" : "Off");
     }
 }

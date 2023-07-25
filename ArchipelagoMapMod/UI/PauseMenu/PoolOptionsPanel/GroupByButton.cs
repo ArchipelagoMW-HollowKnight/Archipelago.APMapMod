@@ -1,6 +1,5 @@
 ﻿using ArchipelagoMapMod.Settings;
 using MapChanger.UI;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -34,16 +33,16 @@ internal class GroupByButton : ExtraButton
 
     public override void Update()
     {
-        var text = $"{L.Localize("Group by")}:\n";
+        var text = "Group by:\n";
 
         switch (ArchipelagoMapMod.LS.GroupBy)
         {
             case GroupBySetting.Location:
-                text += L.Localize("Location");
+                text += "Location";
                 break;
 
             case GroupBySetting.Item:
-                text += L.Localize("Item");
+                text += "Item";
                 break;
         }
 

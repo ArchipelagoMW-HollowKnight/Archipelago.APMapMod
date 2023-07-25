@@ -1,6 +1,5 @@
 ﻿using ArchipelagoMapMod.Modes;
 using UnityEngine;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -22,7 +21,7 @@ internal class CompassText : ControlPanelText
 
     private protected override string GetText()
     {
-        var text = $"{L.Localize("Show route compass")} (Ctrl-C): ";
+        var text = "Show route compass (Ctrl-C): ";
         return text + (ArchipelagoMapMod.GS.ShowRouteCompass ? "On" : "Off");
     }
 }

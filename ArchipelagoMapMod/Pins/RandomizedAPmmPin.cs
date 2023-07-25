@@ -8,8 +8,6 @@ using MapChanger.Defs;
 using MapChanger.MonoBehaviours;
 using UnityEngine;
 using Finder = ItemChanger.Finder;
-using L = RandomizerMod.Localization;
-using RM = RandomizerMod.RandomizerMod;
 using RPS = ArchipelagoMapMod.Pins.RandoPlacementState;
 using SD = ConnectionMetadataInjector.SupplementalMetadata;
 
@@ -109,8 +107,7 @@ internal sealed class RandomizedapmmPin : apmmPin, IPeriodicUpdater
             }
         }
 
-        hints = SD.Of(placement).Get(InteropProperties.LocationHints).Select(RM.RS.TrackerData.lm.CreateDNFLogicDef)
-            .ToArray();
+        hints = SD.Of(placement).Get(InteropProperties.LocationHints).Select(RM.RS.TrackerData.lm.CreateDNFLogicDef).ToArray();
 
         // This has default behaviour when the CoordinateLocation exists and no other properties are provided
         if (!MapChanger.Finder.TryGetLocation(placement.Name, out var _)
@@ -318,24 +315,24 @@ internal sealed class RandomizedapmmPin : apmmPin, IPeriodicUpdater
 
         if (HighlightRooms is not null)
         {
-            text += $"\n\n{L.Localize("Rooms")}:";
+            text += $"\n\nRooms:";
 
             foreach (var scene in HighlightScenes) text += $" {scene},";
 
             text = text.Substring(0, text.Length - 1);
         }
 
-        text += $"\n\n{L.Localize("Status")}:";
+        text += $"\n\nStatus:";
 
         text += placementState switch
         {
-            RPS.UncheckedUnreachable => $" {L.Localize("Randomized, unchecked, unreachable")}",
-            RPS.UncheckedReachable => $" {L.Localize("Randomized, unchecked, reachable")}",
-            RPS.OutOfLogicReachable => $" {L.Localize("Randomized, unchecked, reachable through sequence break")}",
-            RPS.PreviewedUnreachable => $" {L.Localize("Randomized, previewed, unreachable")}",
-            RPS.PreviewedReachable => $" {L.Localize("Randomized, previewed, reachable")}",
-            RPS.Cleared => $" {L.Localize("Cleared")}",
-            RPS.ClearedPersistent => $" {L.Localize("Randomized, cleared, persistent")}",
+            RPS.UncheckedUnreachable => " Randomized, unchecked, unreachable",
+            RPS.UncheckedReachable => " Randomized, unchecked, reachable",
+            RPS.OutOfLogicReachable => " Randomized, unchecked, reachable through sequence break",
+            RPS.PreviewedUnreachable => " Randomized, previewed, unreachable",
+            RPS.PreviewedReachable => $" Randomized, previewed, reachable",
+            RPS.Cleared => $" Cleared",
+            RPS.ClearedPersistent => $" Randomized, cleared, persistent",
             _ => ""
         };
 

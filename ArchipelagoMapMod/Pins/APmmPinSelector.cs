@@ -8,7 +8,6 @@ using InControl;
 using MapChanger;
 using MapChanger.MonoBehaviours;
 using UnityEngine;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.Pins;
 
@@ -191,7 +190,7 @@ internal class apmmPinSelector : Selector
 
             if (BenchSelected())
                 text +=
-                    $"\n\n{L.Localize("Hold")} {Utils.GetBindingsText(attackBindings)} {L.Localize("to benchwarp")}.";
+                    $"\n\nHold {Utils.GetBindingsText(attackBindings)} to benchwarp.";
 
             List<BindingSource> quickCastBindings = new(InputHandler.Instance.inputActions.quickCast.Bindings);
 
@@ -201,17 +200,17 @@ internal class apmmPinSelector : Selector
                     text += pin.HintText;
                 else
                     text +=
-                        $"\n\n{L.Localize("Press")} {Utils.GetBindingsText(quickCastBindings)} {L.Localize("to reveal location hint")}.";
+                        $"\n\nPress {Utils.GetBindingsText(quickCastBindings)} to reveal location hint.";
             }
 
             List<BindingSource> dreamNailBindings = new(InputHandler.Instance.inputActions.dreamNail.Bindings);
 
             if (LockSelection)
                 text +=
-                    $"\n\n{L.Localize("Press")} {Utils.GetBindingsText(dreamNailBindings)} {L.Localize("to unlock pin selection")}.";
+                    $"\n\nPress {Utils.GetBindingsText(dreamNailBindings)} to unlock pin selection.";
             else
                 text +=
-                    $"\n\n{L.Localize("Press")} {Utils.GetBindingsText(dreamNailBindings)} {L.Localize("to lock pin selection")}.";
+                    $"\n\nPress {Utils.GetBindingsText(dreamNailBindings)} to lock pin selection.";
 
             return text;
         }

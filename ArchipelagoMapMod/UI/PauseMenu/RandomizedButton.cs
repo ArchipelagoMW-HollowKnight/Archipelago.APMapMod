@@ -1,7 +1,6 @@
 ﻿using ArchipelagoMapMod.Pins;
 using ArchipelagoMapMod.Settings;
 using MapChanger.UI;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -32,23 +31,23 @@ internal class RandomizedButton : MainButton
 
         Button.BorderColor = apmmColors.GetColor(apmmColorSetting.UI_Borders);
 
-        var text = $"{L.Localize("Randomized")}:\n";
+        var text = "Randomized:\n";
 
         if (ArchipelagoMapMod.LS.RandomizedOn)
         {
             Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
-            text += L.Localize("on");
+            text += "on";
         }
         else
         {
             Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
-            text += L.Localize("off");
+            text += "off";
         }
 
         if (IsRandomizedCustom())
         {
             Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Custom);
-            text += $" ({L.Localize("custom")})";
+            text += " (custom)";
         }
 
         Button.Content = text;

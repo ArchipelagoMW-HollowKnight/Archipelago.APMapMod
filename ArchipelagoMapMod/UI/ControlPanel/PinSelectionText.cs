@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -21,7 +20,7 @@ internal class PinSelectionText : ControlPanelText
 
     private protected override string GetText()
     {
-        var text = $"{L.Localize("Toggle pin selection")} (Ctrl-P): ";
+        var text = "Toggle pin selection (Ctrl-P): ";
         return text + (ArchipelagoMapMod.GS.PinSelectionOn ? "On" : "Off");
     }
 }

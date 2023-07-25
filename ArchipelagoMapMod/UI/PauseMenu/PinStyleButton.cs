@@ -1,6 +1,5 @@
 ﻿using ArchipelagoMapMod.Settings;
 using MapChanger.UI;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -31,24 +30,24 @@ internal class PinStyleButton : MainButton
 
         Button.BorderColor = apmmColors.GetColor(apmmColorSetting.UI_Borders);
 
-        var text = $"{L.Localize("Pin Style")}:\n";
+        var text = "Pin Style:\n";
 
         switch (ArchipelagoMapMod.GS.PinStyle)
         {
             case PinStyle.Normal:
-                text += L.Localize("normal");
+                text += "normal";
                 break;
 
             case PinStyle.Q_Marks_1:
-                text += $"{L.Localize("q marks")} 1";
+                text += "q marks 1";
                 break;
 
             case PinStyle.Q_Marks_2:
-                text += $"{L.Localize("q marks")} 2";
+                text += "q marks 2";
                 break;
 
             case PinStyle.Q_Marks_3:
-                text += $"{L.Localize("q marks")} 3";
+                text += "q marks 3";
                 break;
         }
 

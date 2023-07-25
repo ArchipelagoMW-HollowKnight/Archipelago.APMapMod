@@ -1,4 +1,5 @@
-﻿using ArchipelagoMapMod.Modes;
+﻿using Archipelago.HollowKnight.IC;
+using ArchipelagoMapMod.Modes;
 using ConnectionMetadataInjector;
 using ConnectionMetadataInjector.Util;
 using GlobalEnums;
@@ -76,7 +77,7 @@ internal class apmmPinManager : HookModule
         MapObjectUpdater.Add(MoPins);
 
         foreach (var placement in Ref.Settings.Placements.Values.Where(placement =>
-                     placement.HasTag<RandoPlacementTag>()))
+                     placement.HasTag<ArchipelagoPlacementTag>()))
         {
             if (SupplementalMetadata.Of(placement).Get(InteropProperties.DoNotMakePin)) continue;
             MakeRandoPin(placement);

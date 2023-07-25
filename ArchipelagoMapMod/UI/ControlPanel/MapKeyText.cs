@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -21,7 +20,7 @@ internal class MapKeyText : ControlPanelText
 
     private protected override string GetText()
     {
-        var text = $"{L.Localize("Toggle map key")} (Ctrl-K): ";
+        var text = "Toggle map key (Ctrl-K): ";
         return text + (ArchipelagoMapMod.GS.MapKeyOn ? "On" : "Off");
     }
 }

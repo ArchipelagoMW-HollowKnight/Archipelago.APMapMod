@@ -148,15 +148,14 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
             JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(Assembly,
                 "ArchipelagoMapMod.Resources.locations.json"));
 
-        Events.OnEnterGame += OnEnterGame;
-        Events.OnQuitToMenu += OnQuitToMenu;
+        Archipelago.HollowKnight.Archipelago.OnArchipelagoGameStarted += OnEnterGame;
+        Archipelago.HollowKnight.Archipelago.OnArchipelagoGameEnded += OnQuitToMenu;
 
         LogDebug("Initialization complete.");
     }
 
     private static void OnEnterGame()
     {
-        if (!RandomizerMod.RandomizerMod.IsRandoSave) return;
 
         MapChanger.Settings.AddModes(modes);
         Events.OnSetGameMap += OnSetGameMap;
@@ -194,8 +193,6 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
 
     private static void OnQuitToMenu()
     {
-        if (!RandomizerMod.RandomizerMod.IsRandoSave) return;
-
         Events.OnSetGameMap -= OnSetGameMap;
 
         foreach (var hookModule in hookModules) hookModule.OnQuitToMenu();

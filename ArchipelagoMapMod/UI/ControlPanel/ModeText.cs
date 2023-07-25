@@ -1,6 +1,5 @@
 ﻿using ArchipelagoMapMod.Modes;
 using UnityEngine;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -24,6 +23,6 @@ internal class ModeText : ControlPanelText
 
     private protected override string GetText()
     {
-        return $"{L.Localize("Mode")} (Ctrl-T): {MapChanger.Settings.CurrentMode().ModeName}";
+        return $"Mode (Ctrl-T): {MapChanger.Settings.CurrentMode().ModeName}";
     }
 }

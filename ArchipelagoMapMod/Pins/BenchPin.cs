@@ -4,7 +4,6 @@ using MapChanger;
 using MapChanger.Defs;
 using UnityEngine;
 using Finder = MapChanger.Finder;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.Pins;
 
@@ -108,14 +107,14 @@ internal sealed class BenchPin : apmmPin
     {
         var text = $"{BenchName.ToCleanName()}";
 
-        if (SceneName is not null) text += $"\n\n{L.Localize("Room")}: {SceneName}";
+        if (SceneName is not null) text += $"\n\nRoom: {SceneName}";
 
-        text += $"\n\n{L.Localize("Status")}:";
+        text += "\n\nStatus:";
 
         if (IsVisitedBench())
-            text += $" {L.Localize("Can warp")}";
+            text += " Can warp";
         else
-            text += $" {L.Localize("Cannot warp")}";
+            text += " Cannot warp";
 
         return text;
     }

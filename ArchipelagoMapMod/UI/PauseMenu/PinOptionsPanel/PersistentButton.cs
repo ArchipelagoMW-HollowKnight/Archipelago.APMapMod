@@ -1,5 +1,4 @@
 ﻿using MapChanger.UI;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -33,16 +32,16 @@ internal class PersistentButton : ExtraButton
 
     public override void Update()
     {
-        var text = $"{L.Localize("Persistent\nitems")}: ";
+        var text = "Persistent\nitems: ";
 
         if (ArchipelagoMapMod.GS.ShowPersistentPins)
         {
-            text += L.Localize("On");
+            text += "On";
             Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
         }
         else
         {
-            text += L.Localize("Off");
+            text += "Off";
             Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
         }
 

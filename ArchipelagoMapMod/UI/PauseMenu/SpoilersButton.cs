@@ -1,5 +1,4 @@
 ﻿using MapChanger.UI;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -33,12 +32,12 @@ internal class SpoilersButton : MainButton
         if (ArchipelagoMapMod.LS.SpoilerOn)
         {
             Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
-            Button.Content = $"{L.Localize("Spoilers")}:\n{L.Localize("on")}";
+            Button.Content = "Spoilers:\non";
         }
         else
         {
             Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
-            Button.Content = $"{L.Localize("Spoilers")}:\n{L.Localize("off")}";
+            Button.Content = "Spoilers:\noff";
         }
     }
 }

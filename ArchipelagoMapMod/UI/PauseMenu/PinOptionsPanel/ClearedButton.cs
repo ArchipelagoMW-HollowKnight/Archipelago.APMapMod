@@ -1,5 +1,4 @@
 ﻿using MapChanger.UI;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -33,16 +32,16 @@ internal class ClearedButton : ExtraButton
 
     public override void Update()
     {
-        var text = $"{L.Localize("Cleared\nlocations")}: ";
+        var text = "Cleared\nlocations: ";
 
         if (ArchipelagoMapMod.GS.ShowClearedPins)
         {
-            text += L.Localize("On");
+            text += "On";
             Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
         }
         else
         {
-            text += L.Localize("Off");
+            text += "Off";
             Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
         }
 

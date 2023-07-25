@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -26,7 +25,7 @@ internal class BenchwarpPinsText : ControlPanelText
     {
         if (Interop.HasBenchwarp())
         {
-            var text = $"{L.Localize("Benchwarp pins")} (Ctrl-W): ";
+            var text = "Benchwarp pins (Ctrl-W): ";
             return text + (ArchipelagoMapMod.GS.ShowBenchwarpPins ? "On" : "Off");
         }
 

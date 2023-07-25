@@ -1,7 +1,6 @@
 ﻿using ArchipelagoMapMod.Modes;
 using ArchipelagoMapMod.Settings;
 using UnityEngine;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -25,13 +24,13 @@ internal class WhenOffRouteText : ControlPanelText
 
     private protected override string GetText()
     {
-        var text = $"{L.Localize("When off-route")} (Ctrl-E): ";
+        var text = "When off-route (Ctrl-E): ";
 
         return ArchipelagoMapMod.GS.WhenOffRoute switch
         {
-            OffRouteBehaviour.Keep => text + L.Localize("Keep route"),
-            OffRouteBehaviour.Cancel => text + L.Localize("Cancel route"),
-            OffRouteBehaviour.Reevaluate => text + L.Localize("Reevaluate route"),
+            OffRouteBehaviour.Keep => text + "Keep route",
+            OffRouteBehaviour.Cancel => text + "Cancel route",
+            OffRouteBehaviour.Reevaluate => text + "Reevaluate route",
             _ => text
         };
     }

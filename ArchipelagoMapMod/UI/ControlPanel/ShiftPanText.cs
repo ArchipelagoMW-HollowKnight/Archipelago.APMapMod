@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using L = RandomizerMod.Localization;
-
 namespace ArchipelagoMapMod.UI;
 
 internal class ShiftPanText : ControlPanelText
@@ -19,6 +17,6 @@ internal class ShiftPanText : ControlPanelText
 
     private protected override string GetText()
     {
-        return $"{L.Localize("Hold Shift")}: {L.Localize("Pan faster")}";
+        return "Hold Shift: Pan faster";
     }
 }

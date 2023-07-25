@@ -1,7 +1,6 @@
 ﻿using ArchipelagoMapMod.Modes;
 using ArchipelagoMapMod.Settings;
 using UnityEngine;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -27,13 +26,13 @@ internal class ShowRouteInGameText : ControlPanelText
 
     private protected override string GetText()
     {
-        var text = $"{L.Localize("Show route in-game")} (Ctrl-G): ";
+        var text = "Show route in-game (Ctrl-G): ";
 
         return ArchipelagoMapMod.GS.RouteTextInGame switch
         {
-            RouteTextInGame.Hide => text + L.Localize("Off"),
-            RouteTextInGame.Show => text + L.Localize("Full"),
-            RouteTextInGame.NextTransitionOnly => text + L.Localize("Next transition only"),
+            RouteTextInGame.Hide => text + "Off",
+            RouteTextInGame.Show => text + "Full",
+            RouteTextInGame.NextTransitionOnly => text + "Next transition only",
             _ => text
         };
     }

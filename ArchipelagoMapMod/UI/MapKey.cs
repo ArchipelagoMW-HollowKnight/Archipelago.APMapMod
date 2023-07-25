@@ -5,7 +5,6 @@ using MagicUI.Graphics;
 using MapChanger;
 using MapChanger.UI;
 using UnityEngine;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -90,7 +89,7 @@ internal class MapKey : WorldMapStack
 
             var text = new TextObject(Root, colorSetting + " Text")
             {
-                Text = L.Localize(colorSetting.ToString().Replace("Pin_", "").ToCleanName()),
+                Text = colorSetting.ToString().Replace("Pin_", "".ToCleanName()),
                 Padding = new Padding(10f, 0f, 0f, 0f),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Center
@@ -146,7 +145,7 @@ internal class MapKey : WorldMapStack
 
             var text = new TextObject(Root, cleanRoomColor + " Text")
             {
-                Text = L.Localize(cleanRoomColor),
+                Text = cleanRoomColor,
                 Padding = new Padding(10f, 0f, 0f, 0f),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Center
@@ -173,7 +172,7 @@ internal class MapKey : WorldMapStack
 
         var textHighlight = new TextObject(Root, "Highlighted Text")
         {
-            Text = L.Localize("Contains\nunchecked\ntransitions"),
+            Text = "Contains\nunchecked\ntransitions",
             Padding = new Padding(10f, 0f, 0f, 0f),
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center

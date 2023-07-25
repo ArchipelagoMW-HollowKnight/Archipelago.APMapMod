@@ -1,6 +1,5 @@
 ﻿using MagicUI.Core;
 using MapChanger.UI;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -39,6 +38,6 @@ internal class PoolOptionsPanelButton : MainButton
         else
             Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
 
-        Button.Content = $"{L.Localize("Customize")}\n{L.Localize("Pools")}";
+        Button.Content = "Customize\nPools";
     }
 }

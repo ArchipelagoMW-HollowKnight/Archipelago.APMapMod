@@ -1,6 +1,5 @@
 ﻿using MagicUI.Core;
 using MapChanger.UI;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -37,12 +36,12 @@ internal class ModEnabledButton : MainButton
         if (MapChanger.Settings.MapModEnabled())
         {
             Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
-            Button.Content = $"{L.Localize("Map Mod")}\n{L.Localize("Enabled")}";
+            Button.Content = "Map Mod\nEnabled";
         }
         else
         {
             Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Disabled);
-            Button.Content = $"{L.Localize("Map Mod")}\n{L.Localize("Disabled")}";
+            Button.Content = "Map Mod\nDisabled";
         }
     }
 }

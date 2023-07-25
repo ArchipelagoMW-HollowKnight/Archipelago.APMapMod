@@ -1,6 +1,5 @@
 ﻿using ArchipelagoMapMod.Modes;
 using UnityEngine;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -27,7 +26,7 @@ internal class PathfinderBenchwarpText : ControlPanelText
     {
         if (Interop.HasBenchwarp())
         {
-            var text = $"{L.Localize("Pathfinder benchwarp")} (Ctrl-B): ";
+            var text = $"Pathfinder benchwarp (Ctrl-B): ";
             return text + (ArchipelagoMapMod.GS.PathfinderBenchwarp ? "On" : "Off");
         }
 

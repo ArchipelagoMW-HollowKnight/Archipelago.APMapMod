@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -19,6 +18,6 @@ internal class ModEnabledText : ControlPanelText
 
     private protected override string GetText()
     {
-        return $"Ctrl-M: {L.Localize("Disable mod")}";
+        return "Ctrl-M: Disable mod";
     }
 }

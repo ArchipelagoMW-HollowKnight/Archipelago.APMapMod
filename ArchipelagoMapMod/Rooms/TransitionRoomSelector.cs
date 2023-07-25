@@ -9,7 +9,6 @@ using ArchipelagoMapMod.UI;
 using InControl;
 using MapChanger;
 using MapChanger.MonoBehaviours;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.Rooms;
 
@@ -99,24 +98,24 @@ internal class TransitionRoomSelector : RoomSelector
         var selectedScene = Instance.SelectedObjectKey;
         var text = "";
 
-        text += $"{L.Localize("Selected room")}: {selectedScene}.";
+        text += $"Selected room: {selectedScene}.";
 
         List<BindingSource> bindings = new(InputHandler.Instance.inputActions.menuSubmit.Bindings);
 
-        if (selectedScene == Utils.CurrentScene()) text += $" {L.Localize("You are here")}.";
+        if (selectedScene == Utils.CurrentScene()) text += " You are here.";
 
-        text += $"\n\n{L.Localize("Press")} {Utils.GetBindingsText(bindings)}";
+        text += $"\n\nPress {Utils.GetBindingsText(bindings)}";
 
         if (RouteManager.CanCycleRoute(selectedScene))
-            text += $" {L.Localize("to change starting / final transitions of current route")}.";
+            text += $" to change starting / final transitions of current route.";
         else
-            text += $" {L.Localize("to find a new route")}.";
+            text += $" to find a new route.";
 
         if (!apmmPinSelector.Instance.BenchSelected() && RouteManager.TryGetBenchwarpKey(out var _))
         {
             bindings = new List<BindingSource>(InputHandler.Instance.inputActions.attack.Bindings);
 
-            text += $" {L.Localize("Hold")} {Utils.GetBindingsText(bindings)} {L.Localize("to benchwarp")}.";
+            text += $" Hold {Utils.GetBindingsText(bindings)} to benchwarp.";
         }
 
         return text;

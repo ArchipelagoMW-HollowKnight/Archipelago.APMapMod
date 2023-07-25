@@ -6,7 +6,7 @@ using MapChanger;
 using MapChanger.MonoBehaviours;
 using RandomizerCore.Logic;
 using UnityEngine;
-using L = RandomizerMod.Localization;
+//using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.Pins;
 
@@ -81,7 +81,7 @@ internal abstract class apmmPin : BorderedPin, ISelectable
             }
         );
 
-        if (RandomizerMod.RandomizerMod.RS.TrackerData.lm.LogicLookup.TryGetValue(name, out var logic)) Logic = logic;
+        //if (RandomizerMod.RandomizerMod.RS.TrackerData.lm.LogicLookup.TryGetValue(name, out var logic)) Logic = logic;
 
         BorderSprite = new EmbeddedSprite("Pins.Border").Value;
         BorderPlacement = BorderPlacement.InFront;
@@ -112,9 +112,9 @@ internal abstract class apmmPin : BorderedPin, ISelectable
 
         var text = "\n";
 
-        foreach (var hint in hints)
-            if (hint.CanGet(RandomizerMod.RandomizerMod.RS.TrackerData.pm))
-                text += $"\n{hint.Name}";
+        // foreach (var hint in hints)
+        //     if (hint.CanGet(RandomizerMod.RandomizerMod.RS.TrackerData.pm))
+        //         text += $"\n{hint.Name}";
 
         HintText = text is not "\n" ? text : null;
     }
@@ -131,13 +131,11 @@ internal abstract class apmmPin : BorderedPin, ISelectable
                || MapChanger.Settings.CurrentMode() is FullMapMode or AllPinsMode
                || (MapChanger.Settings.CurrentMode() is PinsOverAreaMode && Utils.HasMapSetting(MapZone))
                || (MapChanger.Settings.CurrentMode() is PinsOverRoomMode && Utils.HasMapSetting(MapZone)
-                                                                         && ((Tracker.HasVisitedScene(
+                                                                         && Tracker.HasVisitedScene(
                                                                                   Finder.GetMappedScene(SceneName)) &&
                                                                               (PlayerData.instance.GetBool(
                                                                                    nameof(PlayerData.hasQuill)) ||
                                                                                ArchipelagoMapMod.GS.AlwaysHaveQuill))
-                                                                             || Finder.IsMinimalMapScene(
-                                                                                 Finder.GetMappedScene(SceneName))))
                || (Conditions.TransitionRandoModeEnabled() && TransitionTracker.GetRoomActive(SceneName))
                || (Interop.HasBenchwarp() && ArchipelagoMapMod.GS.ShowBenchwarpPins && IsVisitedBench());
     }
@@ -151,7 +149,7 @@ internal abstract class apmmPin : BorderedPin, ISelectable
         ;
         var text = $"{name.ToCleanName()}";
 
-        if (SceneName is not null) text += $"\n\n{L.Localize("Room")}: {SceneName}";
+        //if (SceneName is not null) text += $"\n\n{L.Localize("Room")}: {SceneName}";
 
         return text;
     }

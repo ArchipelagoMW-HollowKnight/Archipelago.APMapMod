@@ -4,7 +4,6 @@ using ArchipelagoMapMod.Pathfinder.Instructions;
 using MagicUI.Elements;
 using MapChanger;
 using MapChanger.UI;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -33,9 +32,9 @@ internal class RouteSummaryText : MapUILayer
 
     private static string GetSummaryText()
     {
-        var text = $"{L.Localize("Current route")}: ";
+        var text = "Current route: ";
 
-        if (RouteManager.CurrentRoute is null) return text += L.Localize("None");
+        if (RouteManager.CurrentRoute is null) return text += "None";
 
         var first = RouteManager.CurrentRoute.FirstInstruction;
         var last = RouteManager.CurrentRoute.RemainingInstructions.Last();
@@ -51,6 +50,6 @@ internal class RouteSummaryText : MapUILayer
             if (first != last) text += $" ->...-> {last.Text.ToCleanName()}";
         }
 
-        return text += $"\n\n{L.Localize("Transitions")}: {RouteManager.CurrentRoute.TotalInstructionCount}";
+        return text += $"\n\nTransitions: {RouteManager.CurrentRoute.TotalInstructionCount}";
     }
 }

@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using L = RandomizerMod.Localization;
-
 namespace ArchipelagoMapMod.UI;
 
 internal class ShowReticleText : ControlPanelText
@@ -21,7 +19,7 @@ internal class ShowReticleText : ControlPanelText
 
     private protected override string GetText()
     {
-        var text = $"{L.Localize("Show reticles")} (Ctrl-S): ";
+        var text = "Show reticles (Ctrl-S): ";
         return text + (ArchipelagoMapMod.GS.ShowReticle ? "On" : "Off");
     }
 }

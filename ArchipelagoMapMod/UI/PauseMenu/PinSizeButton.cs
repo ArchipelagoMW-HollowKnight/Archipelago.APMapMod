@@ -1,6 +1,5 @@
 ﻿using ArchipelagoMapMod.Settings;
 using MapChanger.UI;
-using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -31,20 +30,20 @@ internal class PinSizeButton : MainButton
 
         Button.BorderColor = apmmColors.GetColor(apmmColorSetting.UI_Borders);
 
-        var text = $"{L.Localize("Pin Size")}:\n";
+        var text = "Pin Size:\n";
 
         switch (ArchipelagoMapMod.GS.PinSize)
         {
             case PinSize.Small:
-                text += L.Localize("small");
+                text += "small";
                 break;
 
             case PinSize.Medium:
-                text += L.Localize("medium");
+                text += "medium";
                 break;
 
             case PinSize.Large:
-                text += L.Localize("large");
+                text += "large";
                 break;
         }
 

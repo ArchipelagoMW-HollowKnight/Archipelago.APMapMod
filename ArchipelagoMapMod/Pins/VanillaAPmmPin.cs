@@ -7,7 +7,6 @@ using RandomizerCore;
 using RandomizerMod.RandomizerData;
 using UnityEngine;
 using Finder = ItemChanger.Finder;
-using L = RandomizerMod.Localization;
 using RM = RandomizerMod.RandomizerMod;
 
 namespace ArchipelagoMapMod.Pins;
@@ -96,21 +95,21 @@ internal sealed class VanillaapmmPin : apmmPin
     {
         var text = base.GetSelectionText();
 
-        text += $"\n\n{L.Localize("Status")}:";
+        text += "\n\nStatus:";
 
         if (Tracker.HasClearedLocation(name))
         {
-            text += $" {L.Localize("Not randomized, cleared")}";
+            text += " Not randomized, cleared";
         }
         else
         {
             if (IsPersistent())
-                text += $" {L.Localize("Not randomized, persistent")}";
+                text += " Not randomized, persistent";
             else
-                text += $" {L.Localize("Not randomized, unchecked")}";
+                text += " Not randomized, unchecked";
         }
 
-        text += $"\n\n{L.Localize("Logic")}: {Logic?.InfixSource ?? "not found"}";
+        text += $"\n\nLogic: {Logic?.InfixSource ?? "not found"}";
 
         return text;
     }
