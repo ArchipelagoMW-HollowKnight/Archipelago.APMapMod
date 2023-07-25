@@ -1,15 +1,15 @@
-# RandoMapMod
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/syyePhenomenol/RandoMapMod)
-![Downloads GitHub all releases](https://img.shields.io/github/downloads/syyePhenomenol/RandoMapMod/total)
+# ArchipelagoMapMod
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/ArchipelagoMW-HollowKnight/Archipelago.APMapMod)
+![Downloads GitHub all releases](https://img.shields.io/github/downloads/ArchipelagoMW-HollowKnight/Archipelago.APMapMod/total)
 
-RandoMapMod is a Hollow Knight mod for Randomizer 4 that adds many new features to the map.
+ArchipelagoMapMod is a fork of [syyePhenomenol's](https://github.com/syyePhenomenol/) [RandoMapMod](https://github.com/syyePhenomenol/RandoMapMod) modified to work for Archipelago that adds many new features to the map.
 
 The mod helps with tracking both items and transitions, and is compatible with several existing connection mods.
 
 This version is the successor to MapModS, updated to work with the MapChanger library.
 
 # Dependencies:
-- [Randomizer 4](https://github.com/homothetyhk/RandomizerMod) and all of its dependencies.
+- [ArchipelagoMW](https://github.com/ArchipelagoMW-HollowKnight/Archipelago.HollowKnight) and all of its dependencies.
 - [RCPathfinder](https://github.com/syyePhenomenol/RCPathfinder)
 - [MapChanger](https://github.com/syyePhenomenol/MapChanger)
 - [MagicUI](https://github.com/BadMagic100/HollowKnight.MagicUI)
@@ -19,6 +19,8 @@ Please make sure all of the above mods are installed and up to date.
 
 Optional and compatible:
 - [AdditionalMaps](https://github.com/SFGrenade/AdditionalMaps). Adds pins to white palace and godhome maps
+
+Future additions if/when ArchipelagoMW adds support for the following:
 - [RandomizableLevers](https://github.com/flibber-hk/HollowKnight.RandomizableLevers). Shows lever checks on map
 - [RandoPlus](https://github.com/flibber-hk/HollowKnight.RandoPlus). Shows Mr Mushroom and nail upgrade checks on map
 - [BenchRando](https://github.com/homothetyhk/BenchRando/tree/master/BenchRando). Shows bench checks on map
@@ -113,14 +115,14 @@ Optional and compatible:
 Use Scarab: https://github.com/fifty-six/Scarab
 
 Or, you can install manually:
-1. Download the latest release of `RandoMapMod.zip`.
-2. Unzip and copy the folder 'RandoMapMod' to `...\hollow_knight_Data\Managed\Mods`.
+1. Download the latest release of `ArchipelagoMapMod.zip`.
+2. Unzip and copy the folder 'ArchipelagoMapMod' to `...\hollow_knight_Data\Managed\Mods`.
 
 If you need any help, feel free to ask in any of the active Hollow Knight Discord servers.
 
 # For Developers
 - Pins are automatically generated for each connection-provided placement with "best-guess" behaviour for position/displayed sprite.
-- To override this default behaviour with your connection mod, see [here](./RandoMapMod/Pins/InteropProperties.cs).
+- To override this default behaviour with your connection mod, see [here](./ArchipelagoMapMod/Pins/InteropProperties.cs).
 
 # Acknowledgements
 - Special thanks to Homothety, Flib and BadMagic for significant coding help

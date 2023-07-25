@@ -1,4 +1,4 @@
-# RandoMapMod Legend
+# ArchipelagoMapMod Legend
 <table>
 <tr><th>Style: Normal</th><th>Style: Q Marks 1</th><th>Style: Q Marks 2</th><th>Style: Q Marks 3</th><th>Pin Borders</th><th>Transition Mode Rooms</th></tr>
 <tr valign=top><td>
