@@ -82,6 +82,8 @@
         <EmbeddedResource Include="Resources\quickMapGrids.json" />
         <EmbeddedResource Include="Resources\roomTexts.json" />
         <EmbeddedResource Include="Resources\roomTextsAM.json" />
+        <EmbeddedResource Include="Resources\Data\*.json" />
+        <EmbeddedResource Include="Resources\Logic\*.json" />
     </ItemGroup>
 
     <ItemGroup>

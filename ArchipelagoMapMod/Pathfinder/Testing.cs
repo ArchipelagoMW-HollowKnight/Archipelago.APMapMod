@@ -2,7 +2,6 @@
 using ArchipelagoMapMod.Transition;
 using RandomizerCore.Logic;
 using RCPathfinder;
-using RM = RandomizerMod.RandomizerMod;
 
 namespace ArchipelagoMapMod.Pathfinder;
 
@@ -10,7 +9,7 @@ internal static class Testing
 {
     private static readonly Random rng = new(0);
 
-    internal static void LogProgressionData(apmmSearchData sd)
+    internal static void LogProgressionData(APmmSearchData sd)
     {
         ArchipelagoMapMod.Instance?.LogDebug("  Logging PMs");
 
@@ -18,12 +17,12 @@ internal static class Testing
         {
             ArchipelagoMapMod.Instance.LogDebug($"    {term.Name}");
             ArchipelagoMapMod.Instance.LogDebug(
-                $"      Reference: {RM.RS.TrackerData.lm.Terms.IsTerm(term.Name) && RM.RS.TrackerData.pm.Has(term)}");
+                $"      Reference: {ArchipelagoMapMod.LS.TrackerData.lm.Terms.IsTerm(term.Name) && ArchipelagoMapMod.LS.TrackerData.pm.Has(term)}");
             ArchipelagoMapMod.Instance.LogDebug($"      Local: {sd.LocalPM.Has(term)}");
         }
     }
 
-    internal static void DebugActions(apmmSearchData sd)
+    internal static void DebugActions(APmmSearchData sd)
     {
         sd.UpdateProgression();
 
@@ -43,18 +42,18 @@ internal static class Testing
         }
     }
 
-    internal static void SingleStartDestinationTest(apmmSearchData sd)
+    internal static void SingleStartDestinationTest(APmmSearchData sd)
     {
         var inLogicTransitions = sd.Positions.Where(p => TransitionData.GetTransitionDef(p.Name) is not null
-                                                         && (RM.RS.TrackerData.pm.lm.GetTerm(p.Name) is null ||
-                                                             RM.RS.TrackerData.pm.Has(p))).ToArray();
+                                                         && (ArchipelagoMapMod.LS.TrackerData.pm.lm.GetTerm(p.Name) is null ||
+                                                             ArchipelagoMapMod.LS.TrackerData.pm.Has(p))).ToArray();
 
         sd.UpdateProgression();
 
         SearchParams sp = new
         (
             null,
-            apmmPathfinder.SD.CurrentState,
+            APmmPathfinder.SD.CurrentState,
             null,
             1000f,
             TerminationConditionType.Any
@@ -110,7 +109,7 @@ internal static class Testing
         ArchipelagoMapMod.Instance?.LogDebug($"Average serarch time: {globalElapsedMS / testCount} ms");
     }
 
-    internal static void SceneToSceneTest(apmmSearchData sd)
+    internal static void SceneToSceneTest(APmmSearchData sd)
     {
         TransitionTracker.Update();
 
@@ -119,7 +118,7 @@ internal static class Testing
         SearchParams sp = new
         (
             null,
-            apmmPathfinder.SD.CurrentState,
+            APmmPathfinder.SD.CurrentState,
             null,
             1000f,
             TerminationConditionType.Any
@@ -199,7 +198,7 @@ internal static class Testing
     /// <summary>
     ///     Removes transitions that are immediately accesible from another transition in the same scene.
     /// </summary>
-    private static Term[] GetPrunedTransitions(apmmSearchData sd, string scene)
+    private static Term[] GetPrunedTransitions(APmmSearchData sd, string scene)
     {
         if (!sd.TransitionTermsByScene.TryGetValue(scene, out var transitions)) return new Term[] { };
 

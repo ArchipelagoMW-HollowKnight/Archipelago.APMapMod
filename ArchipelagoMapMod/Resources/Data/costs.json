@@ -1,0 +1,187 @@
+{
+  // This file documents nonrandomized costs.
+  // Vanilla costs for randomizable costs are found in the vanilla sections of the pools.json.
+  // Note: the amount on a geo cost does not affect its logic. 
+  // A negative geo cost on one of the 5 base shop locations is randomized at the end of randomization.
+  "Sly": {
+    "term": "GEO",
+    "amount": -1
+  },
+  "Sly_(Key)": {
+    "term": "GEO",
+    "amount": -1
+  },
+  "Iselda": {
+    "term": "GEO",
+    "amount": -1
+  },
+  "Salubra": {
+    "term": "GEO",
+    "amount": -1
+  },
+  "Leg_Eater": {
+    "term": "GEO",
+    "amount": -1
+  },
+  "Lurien": {
+    "term": "DREAMNAIL",
+    "amount": 1
+  },
+  "Monomon": {
+    "term": "DREAMNAIL",
+    "amount": 1
+  },
+  "Herrah": {
+    "term": "DREAMNAIL",
+    "amount": 1
+  },
+  "Abyss_Shriek": {
+    "term": "SCREAM",
+    "amount": 1
+  },
+  "Dash_Slash": {
+    "term": "GEO",
+    "amount": 800
+  },
+  "Void_Heart": {
+    "term": "DREAMNAIL",
+    "amount": 1
+  },
+  // unbreakables at 5% of vanilla price
+  "Unbreakable_Heart": {
+    "term": "GEO",
+    "amount": 600
+  },
+  "Unbreakable_Greed": {
+    "term": "GEO",
+    "amount": 450
+  },
+  "Unbreakable_Strength": {
+    "term": "GEO",
+    "amount": 750
+  },
+  "Godtuner": {
+    "term": "SIMPLE",
+    "amount": 1
+  },
+  "Vessel_Fragment-Basin": {
+    "term": "GEO",
+    "amount": 3000
+  },
+  "Crossroads_Map": {
+    "term": "GEO",
+    "amount": 30
+  },
+  "Greenpath_Map": {
+    "term": "GEO",
+    "amount": 60
+  },
+  "Fog_Canyon_Map": {
+    "term": "GEO",
+    "amount": 150
+  },
+  "Fungal_Wastes_Map": {
+    "term": "GEO",
+    "amount": 75
+  },
+  "Deepnest_Map-Upper": {
+    "term": "GEO",
+    "amount": 38
+  },
+  "Deepnest_Map-Right": {
+    "term": "GEO",
+    "amount": 38
+  },
+  "Ancient_Basin_Map": {
+    "term": "GEO",
+    "amount": 112
+  },
+  "Kingdom's_Edge_Map": {
+    "term": "GEO",
+    "amount": 112
+  },
+  "City_of_Tears_Map": {
+    "term": "GEO",
+    "amount": 90
+  },
+  "Royal_Waterways_Map": {
+    "term": "GEO",
+    "amount": 75
+  },
+  "Howling_Cliffs_Map": {
+    "term": "GEO",
+    "amount": 75
+  },
+  "Crystal_Peak_Map": {
+    "term": "GEO",
+    "amount": 112
+  },
+  "Queen's_Gardens_Map": {
+    "term": "GEO",
+    "amount": 150
+  },
+  "Resting_Grounds_Map": {
+    "term": "GEO",
+    "amount": 56
+  },
+  "Crossroads_Stag": {
+    "term": "GEO",
+    "amount": 50
+  },
+  "Greenpath_Stag": {
+    "term": "GEO",
+    "amount": 140
+  },
+  "Queen's_Station_Stag": {
+    "term": "GEO",
+    "amount": 120
+  },
+  "Queen's_Gardens_Stag": {
+    "term": "GEO",
+    "amount": 200
+  },
+  "City_Storerooms_Stag": {
+    "term": "GEO",
+    "amount": 200
+  },
+  "King's_Station_Stag": {
+    "term": "GEO",
+    "amount": 300
+  },
+  "Distant_Village_Stag": {
+    "term": "GEO",
+    "amount": 250
+  },
+  "Hidden_Station_Stag": {
+    "term": "GEO",
+    "amount": 300
+  },
+  "Stag_Nest_Stag": {
+    "term": "GEO",
+    "amount": 300
+  },
+  "Elevator_Pass": {
+    "term": "GEO",
+    "amount": 150
+  },
+  "Lore_Tablet-Spore_Shroom": {
+    "term": "Spore_Shroom",
+    "amount": 1
+  },
+  "Lore_Tablet-Fungal_Wastes_Hidden": {
+    "term": "Spore_Shroom",
+    "amount": 1
+  },
+  "Lore_Tablet-Fungal_Wastes_Below_Shrumal_Ogres": {
+    "term": "Spore_Shroom",
+    "amount": 1
+  },
+  "Lore_Tablet-Fungal_Core": {
+    "term": "Spore_Shroom",
+    "amount": 1
+  },
+  "Lore_Tablet-Kingdom's_Edge": {
+    "term": "Spore_Shroom",
+    "amount": 1
+  }
+}

@@ -95,7 +95,7 @@ internal class RoomText : MapObject, ISelectable
     internal void UpdateColor()
     {
         if (selected)
-            Color = apmmColors.GetColor(apmmColorSetting.Room_Selected);
+            Color = APmmColors.GetColor(APmmColorSetting.Room_Selected);
         else
             Color = TransitionTracker.GetRoomColor(Rtd.Name);
     }

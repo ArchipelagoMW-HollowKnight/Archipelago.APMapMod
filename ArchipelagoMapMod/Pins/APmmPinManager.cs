@@ -11,15 +11,14 @@ using MapChanger.MonoBehaviours;
 using Newtonsoft.Json;
 using RandomizerCore;
 using RandomizerCore.Logic;
-using RandomizerMod.IC;
+using ArchipelagoMapMod.IC;
 using UnityEngine;
 using Events = MapChanger.Events;
-using RD = RandomizerMod.RandomizerData;
-using RM = RandomizerMod.RandomizerMod;
+using RD = ArchipelagoMapMod.RandomizerData;
 
 namespace ArchipelagoMapMod.Pins;
 
-internal class apmmPinManager : HookModule
+internal class APmmPinManager : HookModule
 {
     private const float WORLD_MAP_GRID_BASE_OFFSET_X = -11.5f;
     private const float WORLD_MAP_GRID_BASE_OFFSET_Y = -11f;
@@ -33,8 +32,8 @@ internal class apmmPinManager : HookModule
     internal static Dictionary<string, RawLogicDef[]> LocationHints;
 
     internal static MapObject MoPins { get; private set; }
-    internal static Dictionary<string, apmmPin> Pins { get; private set; } = new();
-    internal static List<apmmPin> GridPins { get; private set; } = new();
+    internal static Dictionary<string, APmmPin> Pins { get; private set; } = new();
+    internal static List<APmmPin> GridPins { get; private set; } = new();
 
     internal static List<string> AllPoolGroups { get; private set; }
     internal static HashSet<string> RandoLocationPoolGroups { get; private set; }
@@ -67,8 +66,8 @@ internal class apmmPinManager : HookModule
 
     internal static void Make(GameObject goMap)
     {
-        Pins = new Dictionary<string, apmmPin>();
-        GridPins = new List<apmmPin>();
+        Pins = new Dictionary<string, APmmPin>();
+        GridPins = new List<APmmPin>();
 
         MoPins = Utils.MakeMonoBehaviour<MapObject>(goMap, "ArchipelagoMapMod Pins");
         MoPins.Initialize();
@@ -83,7 +82,7 @@ internal class apmmPinManager : HookModule
             MakeRandoPin(placement);
         }
 
-        foreach (var placement in RM.RS.Context.Vanilla.Where(placement =>
+        foreach (var placement in ArchipelagoMapMod.LS.Context.Vanilla.Where(placement =>
                      RD.Data.IsLocation(placement.Location.Name) && !Pins.ContainsKey(placement.Location.Name)))
             MakeVanillaPin(placement);
         if (Interop.HasBenchwarp())
@@ -98,7 +97,7 @@ internal class apmmPinManager : HookModule
         InitializePoolGroups();
         UpdateRandoPins();
 
-        var pinSelector = Utils.MakeMonoBehaviour<apmmPinSelector>(null, "ArchipelagoMapMod Pin Selector");
+        var pinSelector = Utils.MakeMonoBehaviour<APmmPinSelector>(null, "ArchipelagoMapMod Pin Selector");
         pinSelector.Initialize(Pins.Values);
     }
 
@@ -112,7 +111,7 @@ internal class apmmPinManager : HookModule
             return;
         }
 
-        var randoPin = Utils.MakeMonoBehaviour<RandomizedapmmPin>(MoPins.gameObject, placement.Name);
+        var randoPin = Utils.MakeMonoBehaviour<RandomizedAPmmPin>(MoPins.gameObject, placement.Name);
         randoPin.Initialize(placement);
         MoPins.AddChild(randoPin);
         Pins[placement.Name] = randoPin;
@@ -136,7 +135,7 @@ internal class apmmPinManager : HookModule
             return;
         }
 
-        var vanillaPin = Utils.MakeMonoBehaviour<VanillaapmmPin>(MoPins.gameObject, placement.Location.Name);
+        var vanillaPin = Utils.MakeMonoBehaviour<VanillaAPmmPin>(MoPins.gameObject, placement.Location.Name);
         vanillaPin.Initialize(placement);
         MoPins.AddChild(vanillaPin);
         Pins[placement.Location.Name] = vanillaPin;
@@ -159,7 +158,7 @@ internal class apmmPinManager : HookModule
     internal static void UpdateRandoPins()
     {
         foreach (var pin in Pins.Values)
-            if (pin is RandomizedapmmPin randoPin)
+            if (pin is RandomizedAPmmPin randoPin)
                 randoPin.UpdatePlacementState();
     }
 
@@ -185,8 +184,8 @@ internal class apmmPinManager : HookModule
 
         var currentScene = Utils.CurrentScene();
 
-        var highlightScenePins = GridPins.Where(pin => pin is RandomizedapmmPin)
-            .Select(pin => (RandomizedapmmPin) pin)
+        var highlightScenePins = GridPins.Where(pin => pin is RandomizedAPmmPin)
+            .Select(pin => (RandomizedAPmmPin) pin)
             .Where(pin => pin.HighlightScenes is not null);
 
         var gridIndex = 0;
@@ -235,13 +234,13 @@ internal class apmmPinManager : HookModule
 
         foreach (var pin in Pins.Values)
         {
-            if (pin is RandomizedapmmPin)
+            if (pin is RandomizedAPmmPin)
             {
                 RandoLocationPoolGroups.Add(pin.LocationPoolGroup);
                 RandoItemPoolGroups.UnionWith(pin.ItemPoolGroups);
             }
 
-            if (pin is VanillaapmmPin)
+            if (pin is VanillaAPmmPin)
             {
                 VanillaLocationPoolGroups.Add(pin.LocationPoolGroup);
                 VanillaItemPoolGroups.UnionWith(pin.ItemPoolGroups);
@@ -278,7 +277,7 @@ internal class apmmPinManager : HookModule
 
         [JsonProperty] internal int RollOverCount { get; init; }
 
-        internal void SetPinPosition(RandomizedapmmPin randoPin, int gridIndex)
+        internal void SetPinPosition(RandomizedAPmmPin randoPin, int gridIndex)
         {
             float x;
             float y;
@@ -297,7 +296,7 @@ internal class apmmPinManager : HookModule
             randoPin.MapPosition = new QuickMapPosition(new Vector2(x, y));
         }
 
-        internal void SetPinHidden(RandomizedapmmPin randoPin)
+        internal void SetPinHidden(RandomizedAPmmPin randoPin)
         {
             randoPin.MapPosition = new QuickMapPosition(new Vector2(-11f, 11f));
         }

@@ -176,7 +176,7 @@ internal static class InteropProperties
 
     internal static RawLogicDef[] GetDefaultLocationHints(string name)
     {
-        if (apmmPinManager.LocationHints.TryGetValue(name, out var hints)) return hints;
+        if (APmmPinManager.LocationHints.TryGetValue(name, out var hints)) return hints;
 
         return new RawLogicDef[] { };
     }

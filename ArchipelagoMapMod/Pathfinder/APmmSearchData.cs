@@ -2,17 +2,16 @@
 using ArchipelagoMapMod.Transition;
 using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
-using RandomizerMod.RandomizerData;
-using RandomizerMod.RC;
+using ArchipelagoMapMod.RandomizerData;
+using ArchipelagoMapMod.RC;
 using RCPathfinder;
 using RCPathfinder.Actions;
 using JsonUtil = MapChanger.JsonUtil;
-using RM = RandomizerMod.RandomizerMod;
 using SN = ItemChanger.SceneNames;
 
 namespace ArchipelagoMapMod.Pathfinder;
 
-internal class apmmSearchData : SearchData
+internal class APmmSearchData : SearchData
 {
     private static readonly string[] infectionTransitions =
     {
@@ -42,7 +41,7 @@ internal class apmmSearchData : SearchData
         ("Opened_Glade_Door", nameof(PlayerData.gladeDoorOpened))
     };
 
-    public apmmSearchData(ProgressionManager reference) : base(reference)
+    public APmmSearchData(ProgressionManager reference) : base(reference)
     {
         if (Actions.Where(a => a.Name is "Room_Town_Stag_Station[left1]").FirstOrDefault() is AbstractAction action)
             DirthmouthStagTransition = action;
@@ -208,10 +207,10 @@ internal class apmmSearchData : SearchData
 
         // Emulate a transition being possibly available via having the required term
         foreach (var kvp in conditionalTerms
-                     .Where(kvp => RM.RS.Context.LM.GetTerm(kvp.Key) is not null
-                                   && RM.RS.Context.LM.GetTerm(kvp.Value) is Term valueTerm
+                     .Where(kvp => ArchipelagoMapMod.LS.Context.LM.GetTerm(kvp.Key) is not null
+                                   && ArchipelagoMapMod.LS.Context.LM.GetTerm(kvp.Value) is Term valueTerm
                                    && valueTerm.Type is not TermType.State))
-            if (RM.RS.TrackerData.pm.Get(kvp.Key) > 0)
+            if (ArchipelagoMapMod.LS.TrackerData.pm.Get(kvp.Key) > 0)
                 LocalPM.Set(kvp.Value, 1);
 
         foreach (var (term, pdBool) in pdBoolTerms)
@@ -307,20 +306,20 @@ internal class apmmSearchData : SearchData
     internal StartPosition[] GetPrunedStartTerms(string scene)
     {
         if (scene is SN.Room_Tram)
-            return new StartPosition[] {new("Lower_Tram", apmmPathfinder.SD.PositionLookup["Lower_Tram"], 0f)};
+            return new StartPosition[] {new("Lower_Tram", APmmPathfinder.SD.PositionLookup["Lower_Tram"], 0f)};
         if (scene is SN.Room_Tram_RG)
-            return new StartPosition[] {new("Upper_Tram", apmmPathfinder.SD.PositionLookup["Upper_Tram"], 0f)};
+            return new StartPosition[] {new("Upper_Tram", APmmPathfinder.SD.PositionLookup["Upper_Tram"], 0f)};
 
         if (!TransitionTermsByScene.TryGetValue(scene, out var transitions)) return new StartPosition[] { };
 
         List<Term> inLogicTransitions = new(transitions.Where(t =>
-            (RM.RS.TrackerData.pm.lm.GetTerm(t.Name) is not null && RM.RS.TrackerData.pm.Get(t.Name) > 0)
+            (ArchipelagoMapMod.LS.TrackerData.pm.lm.GetTerm(t.Name) is not null && ArchipelagoMapMod.LS.TrackerData.pm.Get(t.Name) > 0)
             || TransitionTracker.InLogicExtraTransitions.Contains(t.Name)));
 
         SearchParams sp = new
         (
             transitions.Select(t => new StartPosition(t.Name, t, 0f)).ToArray(),
-            apmmPathfinder.SD.CurrentState,
+            APmmPathfinder.SD.CurrentState,
             transitions.ToArray(),
             1f,
             TerminationConditionType.None
@@ -328,7 +327,7 @@ internal class apmmSearchData : SearchData
 
         SearchState ss = new(sp);
 
-        Algorithms.DijkstraSearch(apmmPathfinder.SD, sp, ss);
+        Algorithms.DijkstraSearch(APmmPathfinder.SD, sp, ss);
 
         List<Node> nodes =
             new(ss.ResultNodes.Where(n => n.Depth > 0 && n.StartPosition != n.Actions.Last().Destination));

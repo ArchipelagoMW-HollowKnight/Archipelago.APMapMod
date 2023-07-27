@@ -31,12 +31,12 @@ internal class PoolOptionsPanelButton : MainButton
     {
         base.Update();
 
-        Button.BorderColor = apmmColors.GetColor(apmmColorSetting.UI_Borders);
+        Button.BorderColor = APmmColors.GetColor(APmmColorSetting.UI_Borders);
 
         if (PoolOptionsPanel.Instance.ExtraButtonsGrid.Visibility == Visibility.Visible)
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Custom);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Custom);
         else
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
 
         Button.Content = "Customize\nPools";
     }

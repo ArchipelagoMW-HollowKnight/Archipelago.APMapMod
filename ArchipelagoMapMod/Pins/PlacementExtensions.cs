@@ -1,8 +1,7 @@
 ﻿using ItemChanger;
 using ItemChanger.Tags;
-using RandomizerMod.IC;
-using RandomizerMod.RC;
-using RM = RandomizerMod.RandomizerMod;
+using ArchipelagoMapMod.IC;
+using ArchipelagoMapMod.RC;
 
 namespace ArchipelagoMapMod.Pins;
 
@@ -24,11 +23,11 @@ internal static class PlacementExtensions
     // copies or substantial portions of the Software.
     internal static ItemPlacement RandoPlacement(this AbstractItem item)
     {
-        if (item.GetTag(out RandoItemTag tag)) return RM.RS.Context.itemPlacements[tag.id];
+        if (item.GetTag(out APmmItemTag tag)) return ArchipelagoMapMod.LS.Context.itemPlacements[tag.id];
         return default;
     }
 
-    internal static RandoModLocation RandoModLocation(this AbstractPlacement placement)
+    internal static APLocation RandoModLocation(this AbstractPlacement placement)
     {
         return placement.Items.First().RandoPlacement().Location;
     }

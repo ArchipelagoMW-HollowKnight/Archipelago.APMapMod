@@ -35,7 +35,7 @@ internal class RouteManager : HookModule
 
     internal static bool TryGetNextRouteTo(string scene)
     {
-        apmmPathfinder.SD.UpdateProgression();
+        APmmPathfinder.SD.UpdateProgression();
 
         // Reset
         if (!CanCycleRoute(scene))
@@ -44,9 +44,9 @@ internal class RouteManager : HookModule
             FinalScene = scene;
 
             _sp = new SearchParams(
-                apmmPathfinder.SD.GetPrunedStartTerms(StartScene),
-                apmmPathfinder.SD.CurrentState,
-                apmmPathfinder.SD.GetTransitionTerms(FinalScene),
+                APmmPathfinder.SD.GetPrunedStartTerms(StartScene),
+                APmmPathfinder.SD.CurrentState,
+                APmmPathfinder.SD.GetTransitionTerms(FinalScene),
                 1000f,
                 TerminationConditionType.Any
             );
@@ -69,7 +69,7 @@ internal class RouteManager : HookModule
 
         Reevaluated = false;
 
-        while (Algorithms.DijkstraSearch(apmmPathfinder.SD, _sp, _ss))
+        while (Algorithms.DijkstraSearch(APmmPathfinder.SD, _sp, _ss))
         {
             Route route = new(_ss.NewResultNodes[0]);
 
@@ -94,24 +94,24 @@ internal class RouteManager : HookModule
 
     internal static bool TryReevaluateRoute(ItemChanger.Transition transition)
     {
-        apmmPathfinder.SD.UpdateProgression();
+        APmmPathfinder.SD.UpdateProgression();
 
         StartScene = transition.SceneName;
         var destination = CurrentRoute.Destination;
 
         _sp = new SearchParams(
             null,
-            apmmPathfinder.SD.CurrentState,
+            APmmPathfinder.SD.CurrentState,
             new[] {destination},
             1000f,
             TerminationConditionType.Any
         );
 
-        if (TransitionData.GetTransitionDef(transition.ToString()) is apmmTransitionDef td
-            && apmmPathfinder.SD.PositionLookup.TryGetValue(td.Name, out var start))
+        if (TransitionData.GetTransitionDef(transition.ToString()) is APmmTransitionDef td
+            && APmmPathfinder.SD.PositionLookup.TryGetValue(td.Name, out var start))
             _sp.StartPositions = new StartPosition[] {new(start.Name, start, 0f)};
         else
-            _sp.StartPositions = apmmPathfinder.SD.GetPrunedStartTerms(StartScene);
+            _sp.StartPositions = APmmPathfinder.SD.GetPrunedStartTerms(StartScene);
 
         if (Interop.HasBenchwarp() && ArchipelagoMapMod.GS.PathfinderBenchwarp)
             _sp.StartPositions = _sp.StartPositions.Concat(GetBenchStartWarps(true)).ToArray();
@@ -127,7 +127,7 @@ internal class RouteManager : HookModule
 
         _ss = new SearchState(_sp);
 
-        if (Algorithms.DijkstraSearch(apmmPathfinder.SD, _sp, _ss))
+        if (Algorithms.DijkstraSearch(APmmPathfinder.SD, _sp, _ss))
         {
             Route route = new(_ss.NewResultNodes[0]);
 
@@ -207,7 +207,7 @@ internal class RouteManager : HookModule
         SelectionPanels.UpdateRoomPanel();
     }
 
-    internal static bool TryGetBenchwarpKey(out apmmBenchKey key)
+    internal static bool TryGetBenchwarpKey(out APmmBenchKey key)
     {
         if (CurrentRoute is not null &&
             CurrentRoute.RemainingInstructions.First().IsOrIsSubclassInstanceOf<BenchwarpInstruction>())
@@ -234,18 +234,18 @@ internal class RouteManager : HookModule
     /// </summary>
     private static List<StartPosition> GetBenchStartWarps(bool removeLastWarp = false)
     {
-        apmmBenchKey key = new(Utils.CurrentScene(), PlayerData.instance.GetString("respawnMarkerName"));
+        APmmBenchKey key = new(Utils.CurrentScene(), PlayerData.instance.GetString("respawnMarkerName"));
         BenchwarpInterop.BenchNames.TryGetValue(key, out var lastWarp);
 
         var benchStarts = BenchwarpInterop.GetVisitedBenchNames()
-            .Where(apmmPathfinder.SD.PositionLookup.ContainsKey)
-            .Select(b => new StartPosition("benchStart", apmmPathfinder.SD.PositionLookup[b], 1f)).ToList();
+            .Where(APmmPathfinder.SD.PositionLookup.ContainsKey)
+            .Select(b => new StartPosition("benchStart", APmmPathfinder.SD.PositionLookup[b], 1f)).ToList();
 
         if (removeLastWarp) benchStarts.RemoveAll(b => b.Term.Name == lastWarp);
 
-        if (apmmPathfinder.SD.StartTerm is not null &&
+        if (APmmPathfinder.SD.StartTerm is not null &&
             (!removeLastWarp || lastWarp != BenchwarpInterop.BENCH_WARP_START))
-            benchStarts.Add(new StartPosition("benchStart", apmmPathfinder.SD.StartTerm, 1f));
+            benchStarts.Add(new StartPosition("benchStart", APmmPathfinder.SD.StartTerm, 1f));
 
         return benchStarts;
     }
@@ -255,7 +255,7 @@ internal class RouteManager : HookModule
     {
         if (DreamgateTracker.DreamgateTiedTransition is null
             || (transition != default && transition.GateName is "dreamGate")
-            || !apmmPathfinder.SD.PositionLookup.TryGetValue(DreamgateTracker.DreamgateTiedTransition, out var term))
+            || !APmmPathfinder.SD.PositionLookup.TryGetValue(DreamgateTracker.DreamgateTiedTransition, out var term))
         {
             dreamGateStart = default;
             return false;

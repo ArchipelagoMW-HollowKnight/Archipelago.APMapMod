@@ -27,16 +27,16 @@ internal class SpoilersButton : MainButton
     {
         base.Update();
 
-        Button.BorderColor = apmmColors.GetColor(apmmColorSetting.UI_Borders);
+        Button.BorderColor = APmmColors.GetColor(APmmColorSetting.UI_Borders);
 
         if (ArchipelagoMapMod.LS.SpoilerOn)
         {
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_On);
             Button.Content = "Spoilers:\non";
         }
         else
         {
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
             Button.Content = "Spoilers:\noff";
         }
     }

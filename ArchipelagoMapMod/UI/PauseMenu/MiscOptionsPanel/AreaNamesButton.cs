@@ -37,12 +37,12 @@ internal class AreaNamesButton : ExtraButton
         if (ArchipelagoMapMod.GS.ShowAreaNames)
         {
             text += "On";
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_On);
         }
         else
         {
             text += "Off";
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
         }
 
         Button.Content = text;

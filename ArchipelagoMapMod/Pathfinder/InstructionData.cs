@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using ArchipelagoMapMod.Pathfinder.Instructions;
 using ArchipelagoMapMod.Transition;
-using RandomizerMod.RandomizerData;
+using ArchipelagoMapMod.RandomizerData;
 using RCPathfinder;
 using RCPathfinder.Actions;
 using JsonUtil = MapChanger.JsonUtil;
@@ -19,7 +19,7 @@ internal class InstructionData
         "GG_Workshop"
     };
 
-    internal InstructionData(apmmSearchData sd)
+    internal InstructionData(APmmSearchData sd)
     {
         Instance = this;
 

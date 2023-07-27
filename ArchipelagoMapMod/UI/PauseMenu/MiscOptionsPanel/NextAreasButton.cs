@@ -39,17 +39,17 @@ internal class NextAreasButton : ExtraButton
         {
             case NextAreaSetting.Off:
                 text += "Off";
-                Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+                Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
                 break;
 
             case NextAreaSetting.Arrows:
                 text += "Arrows";
-                Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
+                Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_On);
                 break;
 
             case NextAreaSetting.Full:
                 text += "Full";
-                Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
+                Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_On);
                 break;
         }
 

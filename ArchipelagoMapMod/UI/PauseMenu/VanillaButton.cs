@@ -29,24 +29,24 @@ internal class VanillaButton : MainButton
     {
         base.Update();
 
-        Button.BorderColor = apmmColors.GetColor(apmmColorSetting.UI_Borders);
+        Button.BorderColor = APmmColors.GetColor(APmmColorSetting.UI_Borders);
 
         var text = "Vanilla:\n";
 
         if (ArchipelagoMapMod.LS.VanillaOn)
         {
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_On);
             text += "on";
         }
         else
         {
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
             text += "off";
         }
 
         if (IsVanillaCustom())
         {
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Custom);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Custom);
             text += " (custom)";
         }
 
@@ -57,20 +57,20 @@ internal class VanillaButton : MainButton
     {
         if (ArchipelagoMapMod.LS.GroupBy == GroupBySetting.Item)
         {
-            if (!apmmPinManager.VanillaItemPoolGroups.Any()) return false;
+            if (!APmmPinManager.VanillaItemPoolGroups.Any()) return false;
 
-            return (!ArchipelagoMapMod.LS.VanillaOn && apmmPinManager.VanillaItemPoolGroups.Any(group =>
+            return (!ArchipelagoMapMod.LS.VanillaOn && APmmPinManager.VanillaItemPoolGroups.Any(group =>
                        ArchipelagoMapMod.LS.GetPoolGroupSetting(group) == PoolState.On))
-                   || (ArchipelagoMapMod.LS.VanillaOn && apmmPinManager.VanillaItemPoolGroups.Any(group =>
+                   || (ArchipelagoMapMod.LS.VanillaOn && APmmPinManager.VanillaItemPoolGroups.Any(group =>
                        ArchipelagoMapMod.LS.GetPoolGroupSetting(group) == PoolState.Off));
         }
 
-        if (!apmmPinManager.RandoLocationPoolGroups.Any()) return false;
+        if (!APmmPinManager.RandoLocationPoolGroups.Any()) return false;
 
         return (!ArchipelagoMapMod.LS.VanillaOn &&
-                apmmPinManager.VanillaLocationPoolGroups.Any(group =>
+                APmmPinManager.VanillaLocationPoolGroups.Any(group =>
                     ArchipelagoMapMod.LS.GetPoolGroupSetting(group) == PoolState.On))
-               || (ArchipelagoMapMod.LS.VanillaOn && apmmPinManager.VanillaLocationPoolGroups.Any(group =>
+               || (ArchipelagoMapMod.LS.VanillaOn && APmmPinManager.VanillaLocationPoolGroups.Any(group =>
                    ArchipelagoMapMod.LS.GetPoolGroupSetting(group) == PoolState.Off));
     }
 }

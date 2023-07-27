@@ -13,7 +13,7 @@ using SD = ConnectionMetadataInjector.SupplementalMetadata;
 
 namespace ArchipelagoMapMod.Pins;
 
-internal sealed class RandomizedapmmPin : apmmPin, IPeriodicUpdater
+internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
 {
     private int itemIndex;
 
@@ -107,7 +107,7 @@ internal sealed class RandomizedapmmPin : apmmPin, IPeriodicUpdater
             }
         }
 
-        hints = SD.Of(placement).Get(InteropProperties.LocationHints).Select(RM.RS.TrackerData.lm.CreateDNFLogicDef).ToArray();
+        hints = SD.Of(placement).Get(InteropProperties.LocationHints).Select(ArchipelagoMapMod.LS.TrackerData.lm.CreateDNFLogicDef).ToArray();
 
         // This has default behaviour when the CoordinateLocation exists and no other properties are provided
         if (!MapChanger.Finder.TryGetLocation(placement.Name, out var _)
@@ -136,7 +136,7 @@ internal sealed class RandomizedapmmPin : apmmPin, IPeriodicUpdater
         else
         {
             PinGridIndex = SD.Of(placement).Get(InteropProperties.PinGridIndex);
-            apmmPinManager.GridPins.Add(this);
+            APmmPinManager.GridPins.Add(this);
         }
     }
 
@@ -252,11 +252,11 @@ internal sealed class RandomizedapmmPin : apmmPin, IPeriodicUpdater
     {
         var color = placementState switch
         {
-            RPS.OutOfLogicReachable => apmmColors.GetColor(apmmColorSetting.Pin_Out_of_logic),
-            RPS.PreviewedUnreachable or RPS.PreviewedReachable => apmmColors.GetColor(apmmColorSetting.Pin_Previewed),
-            RPS.Cleared => apmmColors.GetColor(apmmColorSetting.Pin_Cleared),
-            RPS.ClearedPersistent => apmmColors.GetColor(apmmColorSetting.Pin_Persistent),
-            _ => apmmColors.GetColor(apmmColorSetting.Pin_Normal)
+            RPS.OutOfLogicReachable => APmmColors.GetColor(APmmColorSetting.Pin_Out_of_logic),
+            RPS.PreviewedUnreachable or RPS.PreviewedReachable => APmmColors.GetColor(APmmColorSetting.Pin_Previewed),
+            RPS.Cleared => APmmColors.GetColor(APmmColorSetting.Pin_Cleared),
+            RPS.ClearedPersistent => APmmColors.GetColor(APmmColorSetting.Pin_Persistent),
+            _ => APmmColors.GetColor(APmmColorSetting.Pin_Normal)
         };
 
         if (placementState is RPS.UncheckedUnreachable or RPS.PreviewedUnreachable)
@@ -268,7 +268,7 @@ internal sealed class RandomizedapmmPin : apmmPin, IPeriodicUpdater
 
     internal void UpdatePlacementState()
     {
-        if (RM.RS.TrackerData.clearedLocations.Contains(name))
+        if (ArchipelagoMapMod.LS.TrackerData.clearedLocations.Contains(name))
         {
             if (placement.IsPersistent() && LocationPoolGroup is not "Benches")
                 placementState = RPS.ClearedPersistent;
@@ -276,18 +276,18 @@ internal sealed class RandomizedapmmPin : apmmPin, IPeriodicUpdater
                 placementState = RPS.Cleared;
         }
         // Does not guarantee the item sprites should show (for a cost-only or a "none" preview)
-        else if (RM.RS.TrackerData.previewedLocations.Contains(name))
+        else if (ArchipelagoMapMod.LS.TrackerData.previewedLocations.Contains(name))
         {
-            if (Logic is not null && Logic.CanGet(RM.RS.TrackerData.pm))
+            if (Logic is not null && Logic.CanGet(ArchipelagoMapMod.LS.TrackerData.pm))
                 placementState = RPS.PreviewedReachable;
             else
                 placementState = RPS.PreviewedUnreachable;
         }
-        else if (RM.RS.TrackerDataWithoutSequenceBreaks.uncheckedReachableLocations.Contains(name))
+        else if (ArchipelagoMapMod.LS.TrackerDataWithoutSequenceBreaks.uncheckedReachableLocations.Contains(name))
         {
             placementState = RPS.UncheckedReachable;
         }
-        else if (RM.RS.TrackerData.uncheckedReachableLocations.Contains(name))
+        else if (ArchipelagoMapMod.LS.TrackerData.uncheckedReachableLocations.Contains(name))
         {
             placementState = RPS.OutOfLogicReachable;
         }
@@ -344,12 +344,12 @@ internal sealed class RandomizedapmmPin : apmmPin, IPeriodicUpdater
                 text += ", cannot warp";
         }
 
-        text += $"\n\n{L.Localize("Logic")}: {Logic?.InfixSource ?? "not found"}";
+        text += $"\n\nLogic: {Logic?.InfixSource ?? "not found"}";
 
         if (placementState is RPS.PreviewedUnreachable or RPS.PreviewedReachable &&
             placement.TryGetPreviewText(out var previewText))
         {
-            text += $"\n\n{L.Localize("Previewed item(s)")}:";
+            text += $"\n\nPreviewed item(s):";
 
             foreach (var preview in previewText) text += $" {ToCleanPreviewText(preview)},";
 
@@ -360,7 +360,7 @@ internal sealed class RandomizedapmmPin : apmmPin, IPeriodicUpdater
 
         if (obtainedItems.Any())
         {
-            text += $"\n\n{L.Localize("Obtained item(s)")}:";
+            text += $"\n\nObtained item(s):";
 
             foreach (var item in obtainedItems) text += $" {item.GetPreviewName()},";
 
@@ -373,7 +373,7 @@ internal sealed class RandomizedapmmPin : apmmPin, IPeriodicUpdater
                                && !(placementState is RPS.PreviewedUnreachable or RPS.PreviewedReachable &&
                                     placement.CanPreview()))
         {
-            text += $"\n\n{L.Localize("Spoiler item(s)")}:";
+            text += $"\n\nSpoiler item(s):";
 
             foreach (var item in spoilerItems) text += $" {item.GetPreviewName()},";
 

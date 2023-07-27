@@ -28,7 +28,7 @@ internal class PinSizeButton : MainButton
     {
         base.Update();
 
-        Button.BorderColor = apmmColors.GetColor(apmmColorSetting.UI_Borders);
+        Button.BorderColor = APmmColors.GetColor(APmmColorSetting.UI_Borders);
 
         var text = "Pin Size:\n";
 
@@ -47,7 +47,7 @@ internal class PinSizeButton : MainButton
                 break;
         }
 
-        Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+        Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
         Button.Content = text;
     }
 }

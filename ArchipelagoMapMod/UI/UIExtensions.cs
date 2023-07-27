@@ -36,7 +36,7 @@ internal static class UIExtensions
     {
         return new TextObject(onLayout, name)
         {
-            ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral),
+            ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral),
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,
             TextAlignment = HorizontalAlignment.Left,
@@ -51,12 +51,12 @@ internal static class UIExtensions
 
         if (value)
         {
-            textObj.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
+            textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_On);
             text += "On";
         }
         else
         {
-            textObj.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+            textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
             text += "Off";
         }
 

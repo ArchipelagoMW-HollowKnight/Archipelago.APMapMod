@@ -15,10 +15,10 @@ internal class ModeText : ControlPanelText
     private protected override Vector4 GetColor()
     {
         if (MapChanger.Settings.CurrentMode() is FullMapMode)
-            return apmmColors.GetColor(apmmColorSetting.UI_On);
+            return APmmColors.GetColor(APmmColorSetting.UI_On);
         if (Conditions.TransitionRandoModeEnabled())
-            return apmmColors.GetColor(apmmColorSetting.UI_Special);
-        return apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+            return APmmColors.GetColor(APmmColorSetting.UI_Special);
+        return APmmColors.GetColor(APmmColorSetting.UI_Neutral);
     }
 
     private protected override string GetText()

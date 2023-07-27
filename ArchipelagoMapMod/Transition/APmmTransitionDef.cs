@@ -1,19 +1,19 @@
 ﻿using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using RandomizerMod.RandomizerData;
+using ArchipelagoMapMod.RandomizerData;
 
 namespace ArchipelagoMapMod.Transition;
 
-public record apmmTransitionDef
+public record APmmTransitionDef
 {
     [JsonConstructor]
-    public apmmTransitionDef(string sceneName, string doorName)
+    public APmmTransitionDef(string sceneName, string doorName)
     {
         SceneName = sceneName;
         DoorName = doorName;
     }
 
-    public apmmTransitionDef(TransitionDef td)
+    public APmmTransitionDef(TransitionDef td)
     {
         SceneName = td.SceneName;
         DoorName = td.DoorName;
@@ -23,13 +23,13 @@ public record apmmTransitionDef
     public string SceneName { get; init; }
     public string DoorName { get; init; }
 
-    public static bool TryMake(string str, out apmmTransitionDef td)
+    public static bool TryMake(string str, out APmmTransitionDef td)
     {
         var match = Regex.Match(str, @"^(\w+)\[(\w+)\]$");
 
         if (match.Groups.Count == 3)
         {
-            td = new apmmTransitionDef(match.Groups[1].Value, match.Groups[2].Value);
+            td = new APmmTransitionDef(match.Groups[1].Value, match.Groups[2].Value);
             return true;
         }
 

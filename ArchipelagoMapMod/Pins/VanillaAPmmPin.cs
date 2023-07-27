@@ -4,14 +4,13 @@ using ItemChanger;
 using MapChanger;
 using MapChanger.Defs;
 using RandomizerCore;
-using RandomizerMod.RandomizerData;
+using ArchipelagoMapMod.RandomizerData;
 using UnityEngine;
 using Finder = ItemChanger.Finder;
-using RM = RandomizerMod.RandomizerMod;
 
 namespace ArchipelagoMapMod.Pins;
 
-internal sealed class VanillaapmmPin : apmmPin
+internal sealed class VanillaAPmmPin : APmmPin
 {
     private static readonly Vector4 vanillaColor = new(UNREACHABLE_COLOR_MULTIPLIER, UNREACHABLE_COLOR_MULTIPLIER,
         UNREACHABLE_COLOR_MULTIPLIER, 1f);
@@ -37,11 +36,11 @@ internal sealed class VanillaapmmPin : apmmPin
         }
         else
         {
-            apmmPinManager.GridPins.Add(this);
+            APmmPinManager.GridPins.Add(this);
         }
 
         hints = InteropProperties.GetDefaultLocationHints(placement.Location.Name)
-            .Select(RM.RS.TrackerData.lm.CreateDNFLogicDef).ToArray();
+            .Select(ArchipelagoMapMod.LS.TrackerData.lm.CreateDNFLogicDef).ToArray();
     }
 
     private protected override bool ActiveBySettings()
@@ -81,11 +80,11 @@ internal sealed class VanillaapmmPin : apmmPin
         Vector4 color;
 
         if (Tracker.HasClearedLocation(name))
-            color = apmmColors.GetColor(apmmColorSetting.Pin_Cleared);
+            color = APmmColors.GetColor(APmmColorSetting.Pin_Cleared);
         else if (IsPersistent())
-            color = apmmColors.GetColor(apmmColorSetting.Pin_Persistent);
+            color = APmmColors.GetColor(APmmColorSetting.Pin_Persistent);
         else
-            color = apmmColors.GetColor(apmmColorSetting.Pin_Normal);
+            color = APmmColors.GetColor(APmmColorSetting.Pin_Normal);
 
         BorderColor = new Vector4(color.x * UNREACHABLE_COLOR_MULTIPLIER, color.y * UNREACHABLE_COLOR_MULTIPLIER,
             color.z * UNREACHABLE_COLOR_MULTIPLIER, color.w);

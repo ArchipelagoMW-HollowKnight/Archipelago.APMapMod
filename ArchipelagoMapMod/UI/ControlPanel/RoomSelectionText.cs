@@ -15,8 +15,8 @@ internal class RoomSelectionText : ControlPanelText
     private protected override Vector4 GetColor()
     {
         return ArchipelagoMapMod.GS.RoomSelectionOn
-            ? apmmColors.GetColor(apmmColorSetting.UI_On)
-            : apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+            ? APmmColors.GetColor(APmmColorSetting.UI_On)
+            : APmmColors.GetColor(APmmColorSetting.UI_Neutral);
     }
 
     private protected override string GetText()

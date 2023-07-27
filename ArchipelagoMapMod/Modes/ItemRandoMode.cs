@@ -20,7 +20,7 @@ internal class ItemRandoMode : apmmMapMode
 
     public override Vector4? RoomColorOverride(RoomSprite roomSprite)
     {
-        if (roomSprite.Selected) return apmmColors.GetColor(apmmColorSetting.Room_Highlighted);
+        if (roomSprite.Selected) return APmmColors.GetColor(APmmColorSetting.Room_Highlighted);
 
         return GetCustomColor(roomSprite.Rsd.ColorSetting);
     }
@@ -56,7 +56,7 @@ internal class ItemRandoMode : apmmMapMode
 
     private Vector4? GetCustomColor(ColorSetting colorSetting)
     {
-        var customColor = apmmColors.GetColor(colorSetting);
+        var customColor = APmmColors.GetColor(colorSetting);
 
         if (!customColor.Equals(Vector4.negativeInfinity)) return customColor.ToOpaque();
 
@@ -65,7 +65,7 @@ internal class ItemRandoMode : apmmMapMode
 
     public override Vector4? QuickMapTitleColorOverride(QuickMapTitle qmt)
     {
-        var customColor = apmmColors.GetColorFromMapZone(Finder.GetCurrentMapZone());
+        var customColor = APmmColors.GetColorFromMapZone(Finder.GetCurrentMapZone());
 
         if (!customColor.Equals(Vector4.negativeInfinity)) return customColor.ToOpaque();
 

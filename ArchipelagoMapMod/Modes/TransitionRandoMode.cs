@@ -25,13 +25,13 @@ internal abstract class TransitionRandoMode : apmmMapMode
     public override Vector4? RoomColorOverride(RoomSprite roomSprite)
     {
         return roomSprite.Selected
-            ? apmmColors.GetColor(apmmColorSetting.Room_Selected)
+            ? APmmColors.GetColor(APmmColorSetting.Room_Selected)
             : TransitionTracker.GetRoomColor(roomSprite.Rsd.SceneName);
     }
 
     public override Vector4? QuickMapTitleColorOverride(QuickMapTitle qmt)
     {
-        return apmmColors.GetColor(ColorSetting.UI_Neutral);
+        return APmmColors.GetColor(ColorSetting.UI_Neutral);
     }
 
     public override bool? NextAreaNameActiveOverride(NextAreaName nextAreaName)

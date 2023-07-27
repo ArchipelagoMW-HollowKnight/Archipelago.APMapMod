@@ -58,7 +58,7 @@ internal class RouteCompass : HookModule
             "Route Compass", // name
             Knight, // parent entity
             arrow, // sprite
-            apmmColors.GetColor(apmmColorSetting.UI_Compass), // color
+            APmmColors.GetColor(APmmColorSetting.UI_Compass), // color
             1.5f, // radius
             2.0f, // scale
             IsCompassEnabled, // bool condition

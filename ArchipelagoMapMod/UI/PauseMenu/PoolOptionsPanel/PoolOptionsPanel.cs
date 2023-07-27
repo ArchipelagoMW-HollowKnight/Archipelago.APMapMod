@@ -14,7 +14,7 @@ internal class PoolOptionsPanel : ExtraButtonPanel
 
     protected override void MakeButtons()
     {
-        foreach (var poolGroup in apmmPinManager.AllPoolGroups)
+        foreach (var poolGroup in APmmPinManager.AllPoolGroups)
         {
             PoolButton poolButton = new(poolGroup);
             poolButton.Make();

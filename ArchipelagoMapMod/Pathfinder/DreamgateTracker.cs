@@ -50,7 +50,7 @@ internal class DreamgateTracker : HookModule
     {
         // If the player left a scene where a dreamgate was just set OR just used, add logic to the transition performed
         if ((dreamgateSet || dreamgateUsed)
-            && apmmPathfinder.SD.TransitionTermsByScene.TryGetValue(DreamgateScene, out var transitions))
+            && APmmPathfinder.SD.TransitionTermsByScene.TryGetValue(DreamgateScene, out var transitions))
         {
             //ArchipelagoMapMod.Instance.LogDebug($"Dreamgate was set or used in previous scene. Trying to add logical connection:");
 

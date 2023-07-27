@@ -27,7 +27,7 @@ internal class MapKey : WorldMapStack
             VerticalAlignment = VerticalAlignment.Top
         };
 
-        ((Image) Root.GetElement("Panel Background")).Tint = apmmColors.GetColor(apmmColorSetting.UI_Borders);
+        ((Image) Root.GetElement("Panel Background")).Tint = APmmColors.GetColor(APmmColorSetting.UI_Borders);
 
         Stack.Children.Add(panel);
 
@@ -65,7 +65,7 @@ internal class MapKey : WorldMapStack
 
         var counter = 0;
 
-        foreach (var colorSetting in apmmColors.PinColors)
+        foreach (var colorSetting in APmmColors.PinColors)
         {
             var pinPanel = new Panel(Root, SpriteManager.Instance.GetSprite("Pins.Blank"), colorSetting + "Panel")
             {
@@ -83,7 +83,7 @@ internal class MapKey : WorldMapStack
                 VerticalAlignment = VerticalAlignment.Center
             }.WithProp(GridLayout.Column, 0).WithProp(GridLayout.Row, counter);
 
-            ((Image) Root.GetElement(colorSetting + " Pin")).Tint = apmmColors.GetColor(colorSetting);
+            ((Image) Root.GetElement(colorSetting + " Pin")).Tint = APmmColors.GetColor(colorSetting);
 
             pinPanel.Child = pin;
 
@@ -129,7 +129,7 @@ internal class MapKey : WorldMapStack
 
         counter = 0;
 
-        foreach (var color in apmmColors.RoomColors)
+        foreach (var color in APmmColors.RoomColors)
         {
             var cleanRoomColor = color.ToString().Replace("Room_", "").ToCleanName();
 
@@ -137,7 +137,7 @@ internal class MapKey : WorldMapStack
             {
                 Width = 40f,
                 Height = 40f,
-                Tint = apmmColors.GetColor(color),
+                Tint = APmmColors.GetColor(color),
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Center,
                 Padding = new Padding(0f, 5f, 17f, 5f)
@@ -157,7 +157,7 @@ internal class MapKey : WorldMapStack
             counter++;
         }
 
-        var highlighted = apmmColors.GetColor(apmmColorSetting.Room_Normal);
+        var highlighted = APmmColors.GetColor(APmmColorSetting.Room_Normal);
         highlighted.w = 1f;
 
         var roomHighlight = new Image(Root, roomCopy, "Highlighted Room")

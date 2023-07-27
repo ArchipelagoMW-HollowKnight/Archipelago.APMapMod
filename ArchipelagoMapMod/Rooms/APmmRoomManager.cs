@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace ArchipelagoMapMod.Rooms;
 
-internal class apmmRoomManager
+internal class APmmRoomManager
 {
     private static Dictionary<string, RoomTextDef> roomTextDefs;
 
@@ -51,6 +51,6 @@ internal class apmmRoomManager
 
         var transitionRoomSelector =
             Utils.MakeMonoBehaviour<TransitionRoomSelector>(null, "ArchipelagoMapMod Transition Room Selector");
-        transitionRoomSelector.Initialize(BuiltInObjects.MappedRooms.Values.Concat(MoRoomTexts.Children));
+        //transitionRoomSelector.Initialize(BuiltInObjects.MappedRooms.Values.Concat(MoRoomTexts.Children));
     }
 }

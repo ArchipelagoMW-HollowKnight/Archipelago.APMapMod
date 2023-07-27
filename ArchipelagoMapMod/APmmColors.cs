@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ArchipelagoMapMod;
 
-internal enum apmmColorSetting
+internal enum APmmColorSetting
 {
     None,
 
@@ -57,43 +57,43 @@ internal enum apmmColorSetting
     Room_Debug
 }
 
-internal class apmmColors : HookModule
+internal class APmmColors : HookModule
 {
-    internal static readonly apmmColorSetting[] PinColors =
+    internal static readonly APmmColorSetting[] PinColors =
     {
-        apmmColorSetting.Pin_Normal,
-        apmmColorSetting.Pin_Previewed,
-        apmmColorSetting.Pin_Out_of_logic,
-        apmmColorSetting.Pin_Persistent,
-        apmmColorSetting.Pin_Cleared
+        APmmColorSetting.Pin_Normal,
+        APmmColorSetting.Pin_Previewed,
+        APmmColorSetting.Pin_Out_of_logic,
+        APmmColorSetting.Pin_Persistent,
+        APmmColorSetting.Pin_Cleared
     };
 
-    internal static readonly apmmColorSetting[] RoomColors =
+    internal static readonly APmmColorSetting[] RoomColors =
     {
-        apmmColorSetting.Room_Normal,
-        apmmColorSetting.Room_Current,
-        apmmColorSetting.Room_Adjacent,
-        apmmColorSetting.Room_Out_of_logic,
-        apmmColorSetting.Room_Selected
+        APmmColorSetting.Room_Normal,
+        APmmColorSetting.Room_Current,
+        APmmColorSetting.Room_Adjacent,
+        APmmColorSetting.Room_Out_of_logic,
+        APmmColorSetting.Room_Selected
     };
 
-    private static Dictionary<apmmColorSetting, Vector4> customColors = new();
+    private static Dictionary<APmmColorSetting, Vector4> customColors = new();
 
-    private static readonly Dictionary<apmmColorSetting, Vector4> defaultColors = new()
+    private static readonly Dictionary<APmmColorSetting, Vector4> defaultColors = new()
     {
-        {apmmColorSetting.Pin_Normal, Color.white},
-        {apmmColorSetting.Pin_Previewed, Color.green},
-        {apmmColorSetting.Pin_Out_of_logic, Color.red},
-        {apmmColorSetting.Pin_Persistent, Color.cyan},
-        {apmmColorSetting.Pin_Cleared, Color.magenta},
-        {apmmColorSetting.Room_Normal, new Vector4(1f, 1f, 1f, 0.3f)}, // white
-        {apmmColorSetting.Room_Current, new Vector4(0, 1f, 0, 0.4f)}, // green
-        {apmmColorSetting.Room_Adjacent, new Vector4(0, 1f, 1f, 0.4f)}, // cyan
-        {apmmColorSetting.Room_Out_of_logic, new Vector4(1f, 0, 0, 0.3f)}, // red
-        {apmmColorSetting.Room_Selected, new Vector4(1f, 1f, 0, 0.7f)}, // yellow
-        {apmmColorSetting.Room_Highlighted, new Vector4(1f, 1f, 0.2f, 1f)}, // yellow
-        {apmmColorSetting.Room_Debug, new Vector4(0, 0, 1f, 0.5f)}, // blue
-        {apmmColorSetting.UI_Compass, new Vector4(1f, 1f, 1f, 0.83f)}
+        {APmmColorSetting.Pin_Normal, Color.white},
+        {APmmColorSetting.Pin_Previewed, Color.green},
+        {APmmColorSetting.Pin_Out_of_logic, Color.red},
+        {APmmColorSetting.Pin_Persistent, Color.cyan},
+        {APmmColorSetting.Pin_Cleared, Color.magenta},
+        {APmmColorSetting.Room_Normal, new Vector4(1f, 1f, 1f, 0.3f)}, // white
+        {APmmColorSetting.Room_Current, new Vector4(0, 1f, 0, 0.4f)}, // green
+        {APmmColorSetting.Room_Adjacent, new Vector4(0, 1f, 1f, 0.4f)}, // cyan
+        {APmmColorSetting.Room_Out_of_logic, new Vector4(1f, 0, 0, 0.3f)}, // red
+        {APmmColorSetting.Room_Selected, new Vector4(1f, 1f, 0, 0.7f)}, // yellow
+        {APmmColorSetting.Room_Highlighted, new Vector4(1f, 1f, 0.2f, 1f)}, // yellow
+        {APmmColorSetting.Room_Debug, new Vector4(0, 0, 1f, 0.5f)}, // blue
+        {APmmColorSetting.UI_Compass, new Vector4(1f, 1f, 1f, 0.83f)}
     };
 
     internal static bool HasCustomColors { get; private set; }
@@ -117,7 +117,7 @@ internal class apmmColors : HookModule
         {
             foreach (var colorSettingRaw in customColorsRaw.Keys)
             {
-                if (!Enum.TryParse(colorSettingRaw, out apmmColorSetting colorSetting)) continue;
+                if (!Enum.TryParse(colorSettingRaw, out APmmColorSetting colorSetting)) continue;
 
                 if (customColors.ContainsKey(colorSetting)) continue;
 
@@ -141,23 +141,23 @@ internal class apmmColors : HookModule
 
     public override void OnQuitToMenu()
     {
-        customColors = new Dictionary<apmmColorSetting, Vector4>();
+        customColors = new Dictionary<APmmColorSetting, Vector4>();
     }
 
-    internal static Vector4 GetColor(apmmColorSetting apmmColor)
+    internal static Vector4 GetColor(APmmColorSetting aPmmColor)
     {
-        if (customColors is not null && customColors.ContainsKey(apmmColor)) return customColors[apmmColor];
+        if (customColors is not null && customColors.ContainsKey(aPmmColor)) return customColors[aPmmColor];
 
-        if (defaultColors.ContainsKey(apmmColor)) return defaultColors[apmmColor];
+        if (defaultColors.ContainsKey(aPmmColor)) return defaultColors[aPmmColor];
 
-        if (Enum.TryParse(apmmColor.ToString(), out ColorSetting mcColor)) return Colors.GetColor(mcColor);
+        if (Enum.TryParse(aPmmColor.ToString(), out ColorSetting mcColor)) return Colors.GetColor(mcColor);
 
         return Vector4.negativeInfinity;
     }
 
     internal static Vector4 GetColor(ColorSetting mcColor)
     {
-        if (Enum.TryParse(mcColor.ToString(), out apmmColorSetting apmmColor)) return GetColor(apmmColor);
+        if (Enum.TryParse(mcColor.ToString(), out APmmColorSetting apmmColor)) return GetColor(apmmColor);
 
         return Vector4.negativeInfinity;
     }
@@ -166,22 +166,22 @@ internal class apmmColors : HookModule
     {
         return mapZone switch
         {
-            MapZone.ABYSS => GetColor(apmmColorSetting.Map_Ancient_Basin),
-            MapZone.CITY => GetColor(apmmColorSetting.Map_City_of_Tears),
-            MapZone.CLIFFS => GetColor(apmmColorSetting.Map_Howling_Cliffs),
-            MapZone.CROSSROADS => GetColor(apmmColorSetting.Map_Forgotten_Crossroads),
-            MapZone.MINES => GetColor(apmmColorSetting.Map_Crystal_Peak),
-            MapZone.DEEPNEST => GetColor(apmmColorSetting.Map_Deepnest),
-            MapZone.TOWN => GetColor(apmmColorSetting.Map_Dirtmouth),
-            MapZone.FOG_CANYON => GetColor(apmmColorSetting.Map_Fog_Canyon),
-            MapZone.WASTES => GetColor(apmmColorSetting.Map_Fungal_Wastes),
-            MapZone.GREEN_PATH => GetColor(apmmColorSetting.Map_Greenpath),
-            MapZone.OUTSKIRTS => GetColor(apmmColorSetting.Map_Kingdoms_Edge),
-            MapZone.ROYAL_GARDENS => GetColor(apmmColorSetting.Map_Queens_Gardens),
-            MapZone.RESTING_GROUNDS => GetColor(apmmColorSetting.Map_Resting_Grounds),
-            MapZone.WATERWAYS => GetColor(apmmColorSetting.Map_Royal_Waterways),
-            MapZone.WHITE_PALACE => GetColor(apmmColorSetting.Map_White_Palace),
-            MapZone.GODS_GLORY => GetColor(apmmColorSetting.Map_Godhome),
+            MapZone.ABYSS => GetColor(APmmColorSetting.Map_Ancient_Basin),
+            MapZone.CITY => GetColor(APmmColorSetting.Map_City_of_Tears),
+            MapZone.CLIFFS => GetColor(APmmColorSetting.Map_Howling_Cliffs),
+            MapZone.CROSSROADS => GetColor(APmmColorSetting.Map_Forgotten_Crossroads),
+            MapZone.MINES => GetColor(APmmColorSetting.Map_Crystal_Peak),
+            MapZone.DEEPNEST => GetColor(APmmColorSetting.Map_Deepnest),
+            MapZone.TOWN => GetColor(APmmColorSetting.Map_Dirtmouth),
+            MapZone.FOG_CANYON => GetColor(APmmColorSetting.Map_Fog_Canyon),
+            MapZone.WASTES => GetColor(APmmColorSetting.Map_Fungal_Wastes),
+            MapZone.GREEN_PATH => GetColor(APmmColorSetting.Map_Greenpath),
+            MapZone.OUTSKIRTS => GetColor(APmmColorSetting.Map_Kingdoms_Edge),
+            MapZone.ROYAL_GARDENS => GetColor(APmmColorSetting.Map_Queens_Gardens),
+            MapZone.RESTING_GROUNDS => GetColor(APmmColorSetting.Map_Resting_Grounds),
+            MapZone.WATERWAYS => GetColor(APmmColorSetting.Map_Royal_Waterways),
+            MapZone.WHITE_PALACE => GetColor(APmmColorSetting.Map_White_Palace),
+            MapZone.GODS_GLORY => GetColor(APmmColorSetting.Map_Godhome),
             _ => Color.white
         };
     }

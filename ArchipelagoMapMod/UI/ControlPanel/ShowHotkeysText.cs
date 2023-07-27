@@ -13,7 +13,7 @@ internal class ShowHotkeysText : ControlPanelText
 
     private protected override Vector4 GetColor()
     {
-        return apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+        return APmmColors.GetColor(APmmColorSetting.UI_Neutral);
     }
 
     private protected override string GetText()

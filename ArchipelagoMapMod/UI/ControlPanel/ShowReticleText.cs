@@ -13,8 +13,8 @@ internal class ShowReticleText : ControlPanelText
     private protected override Vector4 GetColor()
     {
         return ArchipelagoMapMod.GS.ShowReticle
-            ? apmmColors.GetColor(apmmColorSetting.UI_On)
-            : apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+            ? APmmColors.GetColor(APmmColorSetting.UI_On)
+            : APmmColors.GetColor(APmmColorSetting.UI_Neutral);
     }
 
     private protected override string GetText()

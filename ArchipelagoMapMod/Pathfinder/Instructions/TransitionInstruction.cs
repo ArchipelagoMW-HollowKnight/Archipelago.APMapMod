@@ -6,7 +6,7 @@ internal class TransitionInstruction : Instruction
 {
     internal TransitionInstruction(string name, string destination) : base(name, destination)
     {
-        if (CompassObjects is null && TransitionData.GetTransitionDef(name) is apmmTransitionDef td)
+        if (CompassObjects is null && TransitionData.GetTransitionDef(name) is APmmTransitionDef td)
             CompassObjects = new Dictionary<string, string> {{td.SceneName, td.DoorName}};
     }
 

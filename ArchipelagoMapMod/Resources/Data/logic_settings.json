@@ -1,0 +1,23 @@
+{
+  "PRECISEMOVEMENT": "SkipSettings.PreciseMovement",
+  "PROFICIENTCOMBAT": "SkipSettings.ProficientCombat",
+  "BACKGROUNDPOGOS": "SkipSettings.BackgroundObjectPogos",
+  "ENEMYPOGOS": "SkipSettings.EnemyPogos",
+  "OBSCURESKIPS": "SkipSettings.ObscureSkips",
+  "SHADESKIPS": "SkipSettings.ShadeSkips",
+  "INFECTIONSKIPS": "SkipSettings.InfectionSkips",
+  "FIREBALLSKIPS": "SkipSettings.FireballSkips",
+  "SPIKETUNNELS": "SkipSettings.SpikeTunnels",
+  "ACIDSKIPS": "SkipSettings.AcidSkips",
+  "DAMAGEBOOSTS": "SkipSettings.DamageBoosts",
+  "DANGEROUSSKIPS": "SkipSettings.DangerousSkips",
+  "DARKROOMS": "SkipSettings.DarkRooms",
+  "SLOPEBALLSKIPS": "SkipSettings.Slopeballs",
+  "SHRIEKPOGOSKIPS": "SkipSettings.ShriekPogos",
+  "COMPLEXSKIPS": "SkipSettings.ComplexSkips",
+  "DIFFICULTSKIPS": "SkipSettings.DifficultSkips",
+  "RANDOMNAIL": "NoveltySettings.RandomizeNail",
+  "CURSED": "CursedSettings.RemoveSpellUpgrades",
+  "RANDOMFOCUS": "NoveltySettings.RandomizeFocus",
+  "RANDOMELEVATORS": "NoveltySettings.RandomizeElevatorPass"
+}

@@ -1,15 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using MapChanger;
-using L = RandomizerMod.Localization;
-using RD = RandomizerMod.RandomizerData.Data;
-using RM = RandomizerMod.RandomizerMod;
-
+using RD = ArchipelagoMapMod.RandomizerData.Data;
 namespace ArchipelagoMapMod.Transition;
 
 internal class TransitionData : HookModule
 {
-    private static Dictionary<string, apmmTransitionDef> _vanillaTransitions;
-    private static Dictionary<string, apmmTransitionDef> _randomizedTransitions;
+    private static Dictionary<string, APmmTransitionDef> _vanillaTransitions;
+    private static Dictionary<string, APmmTransitionDef> _randomizedTransitions;
     private static Dictionary<string, string> _placements;
 
     internal static (string location, string item)[] ExtraVanillaTransitions { get; } =
@@ -20,31 +17,31 @@ internal class TransitionData : HookModule
         ("GG_Workshop[left1]", "GG_Atrium[Door_Workshop]")
     };
 
-    internal static ReadOnlyCollection<apmmTransitionDef> Transitions { get; private set; }
+    internal static ReadOnlyCollection<APmmTransitionDef> Transitions { get; private set; }
 
     public static ReadOnlyDictionary<string, string> Placements { get; private set; }
 
     public override void OnEnterGame()
     {
-        _vanillaTransitions = new Dictionary<string, apmmTransitionDef>();
-        _randomizedTransitions = new Dictionary<string, apmmTransitionDef>();
+        _vanillaTransitions = new Dictionary<string, APmmTransitionDef>();
+        _randomizedTransitions = new Dictionary<string, APmmTransitionDef>();
         _placements = new Dictionary<string, string>();
 
         // Add transition placements
-        foreach ((var location, var item) in RM.RS.Context.Vanilla.Select(p => (p.Location.Name, p.Item.Name))
+        foreach ((var location, var item) in ArchipelagoMapMod.LS.Context.Vanilla.Select(p => (p.Location.Name, p.Item.Name))
                      .Concat(ExtraVanillaTransitions))
         {
             if (RD.IsTransition(location) && RD.IsTransition(item))
             {
-                _vanillaTransitions[location] = new apmmTransitionDef(RD.GetTransitionDef(location));
-                _vanillaTransitions[item] = new apmmTransitionDef(RD.GetTransitionDef(item));
+                _vanillaTransitions[location] = new APmmTransitionDef(RD.GetTransitionDef(location));
+                _vanillaTransitions[item] = new APmmTransitionDef(RD.GetTransitionDef(item));
                 _placements[location] = item;
                 continue;
             }
 
             // Connection-provided vanilla transitions, including extra ones
-            if (apmmTransitionDef.TryMake(location, out var locationTD)
-                && apmmTransitionDef.TryMake(item, out var itemTD)
+            if (APmmTransitionDef.TryMake(location, out var locationTD)
+                && APmmTransitionDef.TryMake(item, out var itemTD)
                 && locationTD is not null && itemTD is not null)
             {
                 _vanillaTransitions[location] = locationTD;
@@ -53,19 +50,19 @@ internal class TransitionData : HookModule
             }
         }
 
-        if (RM.RS.Context.transitionPlacements is not null)
-            foreach ((var source, var target) in RM.RS.Context.transitionPlacements.Select(p =>
+        if (ArchipelagoMapMod.LS.Context.transitionPlacements is not null)
+            foreach ((var source, var target) in ArchipelagoMapMod.LS.Context.transitionPlacements.Select(p =>
                          (p.Source.TransitionDef, p.Target.TransitionDef)))
             {
-                _randomizedTransitions[source.Name] = new apmmTransitionDef(source);
-                _randomizedTransitions[target.Name] = new apmmTransitionDef(target);
+                _randomizedTransitions[source.Name] = new APmmTransitionDef(source);
+                _randomizedTransitions[target.Name] = new APmmTransitionDef(target);
                 _placements[source.Name] = target.Name;
             }
 
         Placements = new ReadOnlyDictionary<string, string>(_placements);
 
         Transitions =
-            new ReadOnlyCollection<apmmTransitionDef>(_vanillaTransitions.Values.Concat(_randomizedTransitions.Values)
+            new ReadOnlyCollection<APmmTransitionDef>(_vanillaTransitions.Values.Concat(_randomizedTransitions.Values)
                 .ToArray());
     }
 
@@ -93,14 +90,14 @@ internal class TransitionData : HookModule
 
     internal static bool IsVanillaOrCheckedTransition(string transition)
     {
-        return RM.RS.TrackerData.HasVisited(transition)
+        return ArchipelagoMapMod.LS.TrackerData.HasVisited(transition)
                || (_vanillaTransitions.ContainsKey(transition)
-                   && (RM.RS.TrackerData.lm.GetTerm(transition) is null || RM.RS.TrackerData.pm.Get(transition) > 0));
+                   && (ArchipelagoMapMod.LS.TrackerData.lm.GetTerm(transition) is null || ArchipelagoMapMod.LS.TrackerData.pm.Get(transition) > 0));
     }
 
     public static bool TryGetScene(string str, out string scene)
     {
-        if (GetTransitionDef(str) is apmmTransitionDef td)
+        if (GetTransitionDef(str) is APmmTransitionDef td)
         {
             scene = td.SceneName;
             return true;
@@ -110,7 +107,7 @@ internal class TransitionData : HookModule
         return false;
     }
 
-    public static apmmTransitionDef GetTransitionDef(string str)
+    public static APmmTransitionDef GetTransitionDef(string str)
     {
         if (_vanillaTransitions.TryGetValue(str, out var def)) return def;
         if (_randomizedTransitions.TryGetValue(str, out def)) return def;
@@ -122,44 +119,45 @@ internal class TransitionData : HookModule
     {
         var text = "";
 
-        var uncheckedTransitions = RM.RS.TrackerData.uncheckedReachableTransitions
+        var uncheckedTransitions = ArchipelagoMapMod.LS.TrackerData.uncheckedReachableTransitions
             .Where(t => TryGetScene(t, out var s) && s == scene);
 
         if (uncheckedTransitions.Any())
         {
-            text += $"{L.Localize("Unchecked")}:";
+            text += "Unchecked:";
 
             foreach (var transition in uncheckedTransitions)
             {
-                if (GetTransitionDef(transition) is not apmmTransitionDef td) continue;
+                if (GetTransitionDef(transition) is not APmmTransitionDef td) continue;
 
                 text += "\n";
 
-                if (!RM.RS.TrackerDataWithoutSequenceBreaks.uncheckedReachableTransitions.Contains(transition))
+                if (!ArchipelagoMapMod.LS.TrackerDataWithoutSequenceBreaks.uncheckedReachableTransitions.Contains(transition))
                     text += "*";
 
                 text += td.DoorName;
             }
         }
 
-        var visitedTransitions = RM.RS.TrackerData.visitedTransitions
+        var visitedTransitions = ArchipelagoMapMod.LS.TrackerData.visitedTransitions
             .Where(t => TryGetScene(t.Key, out var s) && s == scene)
             .ToDictionary(t => GetTransitionDef(t.Key), t => GetTransitionDef(t.Value));
 
         text += BuildTransitionStringList(visitedTransitions, "Visited", false, text != "");
 
-        var visitedTransitionsTo = RM.RS.TrackerData.visitedTransitions
+        var visitedTransitionsTo = ArchipelagoMapMod.LS.TrackerData.visitedTransitions
             .Where(t => TryGetScene(t.Value, out var s) && s == scene)
             .ToDictionary(t => GetTransitionDef(t.Key), t => GetTransitionDef(t.Value));
 
-        // Display only one-way transitions in coupled rando
-        if (RM.RS.GenerationSettings.TransitionSettings.Coupled)
-            visitedTransitionsTo = visitedTransitionsTo.Where(t => !visitedTransitions.ContainsKey(t.Value))
-                .ToDictionary(t => t.Key, t => t.Value);
+        // TODO: Revisit once transitional randomization is enabled in AP and this info becomes available.
+        // // Display only one-way transitions in coupled rando
+        // if (ArchipelagoMapMod.LS.GenerationSettings.TransitionSettings.Coupled)
+        //     visitedTransitionsTo = visitedTransitionsTo.Where(t => !visitedTransitions.ContainsKey(t.Value))
+        //         .ToDictionary(t => t.Key, t => t.Value);
 
         text += BuildTransitionStringList(visitedTransitionsTo, "Visited to", true, text != "");
 
-        var vanillaTransitions = RM.RS.Context.Vanilla
+        var vanillaTransitions = ArchipelagoMapMod.LS.Context.Vanilla
             .Where(t => RD.IsTransition(t.Location.Name)
                         && TryGetScene(t.Location.Name, out var s) && s == scene)
             .ToDictionary(t => GetTransitionDef(t.Location.Name), t => GetTransitionDef(t.Item.Name));
@@ -167,7 +165,7 @@ internal class TransitionData : HookModule
 
         text += BuildTransitionStringList(vanillaTransitions, "Vanilla", false, text != "");
 
-        var vanillaTransitionsTo = RM.RS.Context.Vanilla
+        var vanillaTransitionsTo = ArchipelagoMapMod.LS.Context.Vanilla
             .Where(t => RD.IsTransition(t.Location.Name)
                         && TryGetScene(t.Item.Name, out var s) && s == scene
                         && !vanillaTransitions.Keys.Any(td => td.Name == t.Item.Name))
@@ -178,7 +176,7 @@ internal class TransitionData : HookModule
         return text;
     }
 
-    private static string BuildTransitionStringList(Dictionary<apmmTransitionDef, apmmTransitionDef> transitions,
+    private static string BuildTransitionStringList(Dictionary<APmmTransitionDef, APmmTransitionDef> transitions,
         string subtitle, bool to, bool addNewLines)
     {
         var text = "";
@@ -187,13 +185,13 @@ internal class TransitionData : HookModule
 
         if (addNewLines) text += "\n\n";
 
-        text += $"{L.Localize(subtitle)}:";
+        text += $"{subtitle}:";
 
         foreach (var kvp in transitions)
         {
             text += "\n";
 
-            if (RM.RS.TrackerDataWithoutSequenceBreaks.outOfLogicVisitedTransitions.Contains(kvp.Key.Name)) text += "*";
+            if (ArchipelagoMapMod.LS.TrackerDataWithoutSequenceBreaks.outOfLogicVisitedTransitions.Contains(kvp.Key.Name)) text += "*";
 
             if (to)
                 text += $"{kvp.Key.Name} -> {kvp.Value.DoorName}";

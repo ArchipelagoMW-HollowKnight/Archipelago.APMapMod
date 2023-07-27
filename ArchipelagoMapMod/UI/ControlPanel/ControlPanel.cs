@@ -46,7 +46,7 @@ internal class ControlPanel : WorldMapStack
 
         Stack.Children.Add(panel);
 
-        ((Image) Root.GetElement("Panel Background")).Tint = apmmColors.GetColor(apmmColorSetting.UI_Borders);
+        ((Image) Root.GetElement("Panel Background")).Tint = APmmColors.GetColor(APmmColorSetting.UI_Borders);
 
         panelStack = new StackLayout(Root, "Panel Stack")
         {

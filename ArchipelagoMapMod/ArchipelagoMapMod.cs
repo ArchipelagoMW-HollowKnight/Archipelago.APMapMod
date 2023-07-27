@@ -3,6 +3,7 @@ using ArchipelagoMapMod.Modes;
 using ArchipelagoMapMod.Pathfinder;
 using ArchipelagoMapMod.Pathfinder.Instructions;
 using ArchipelagoMapMod.Pins;
+using ArchipelagoMapMod.RC;
 using ArchipelagoMapMod.Rooms;
 using ArchipelagoMapMod.Settings;
 using ArchipelagoMapMod.Transition;
@@ -22,7 +23,7 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
     private static readonly string[] dependencies =
     {
         "MapChangerMod",
-        "Randomizer 4",
+        "Archipelago",
         "CMICore"
     };
 
@@ -74,10 +75,11 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
 
     private static readonly List<HookModule> hookModules = new()
     {
-        new apmmColors(),
+        new APmmColors(),
+        new APLogicSetup(),
         new TransitionData(),
-        new apmmPathfinder(),
-        new apmmPinManager(),
+        new APmmPathfinder(),
+        new APmmPinManager(),
         new TransitionTracker(),
         new DreamgateTracker(),
         new RouteManager(),
@@ -119,7 +121,7 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
 
     public override string GetVersion()
     {
-        return "3.4.0";
+        return "2.0.0";
     }
 
     public override int LoadPriority()
@@ -139,11 +141,11 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
             }
 
         Interop.FindInteropMods();
-        apmmSearchData.LoadConditionalTerms();
+        APmmSearchData.LoadConditionalTerms();
         Instruction.LoadCompssObjOverrides();
         InstructionData.LoadWaypointInstructions();
-        apmmRoomManager.Load();
-        apmmPinManager.Load();
+        APmmRoomManager.Load();
+        APmmPinManager.Load();
         Finder.InjectLocations(
             JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(Assembly,
                 "ArchipelagoMapMod.Resources.locations.json"));
@@ -170,8 +172,8 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
         try
         {
             // Make rooms and pins
-            apmmRoomManager.Make(goMap);
-            apmmPinManager.Make(goMap);
+            APmmRoomManager.Make(goMap);
+            APmmPinManager.Make(goMap);
 
             LS.Initialize();
 

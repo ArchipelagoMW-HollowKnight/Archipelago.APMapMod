@@ -28,7 +28,7 @@ internal class ModeButton : MainButton
     {
         base.Update();
 
-        Button.BorderColor = apmmColors.GetColor(apmmColorSetting.UI_Borders);
+        Button.BorderColor = APmmColors.GetColor(APmmColorSetting.UI_Borders);
 
         var text = "Mode:";
 
@@ -36,43 +36,43 @@ internal class ModeButton : MainButton
 
         if (mode is FullMapMode)
         {
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_On);
             text += '\n' + "Full Map";
         }
 
         if (mode is AllPinsMode)
         {
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
             text += '\n' + "All Pins";
         }
 
         if (mode is PinsOverAreaMode)
         {
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
             text += " Pins\nOver Area";
         }
 
         if (mode is PinsOverRoomMode)
         {
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
             text += " Pins\nOver Room";
         }
 
         if (mode is TransitionNormalMode)
         {
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Special);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Special);
             text += '\n' + "Transition 1";
         }
 
         if (mode is TransitionVisitedOnlyMode)
         {
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Special);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Special);
             text += '\n' + "Transition 2";
         }
 
         if (mode is TransitionAllRoomsMode)
         {
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Special);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Special);
             text += '\n' + "Transition 3";
         }
 

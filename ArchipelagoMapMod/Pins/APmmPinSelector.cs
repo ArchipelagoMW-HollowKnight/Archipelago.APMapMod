@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace ArchipelagoMapMod.Pins;
 
-internal class apmmPinSelector : Selector
+internal class APmmPinSelector : Selector
 {
     private const int HIGHLIGHT_HALF_PERIOD = 25;
     private const int HIGHLIGHT_PERIOD = HIGHLIGHT_HALF_PERIOD * 2;
@@ -21,7 +21,7 @@ internal class apmmPinSelector : Selector
     private readonly Stopwatch attackHoldTimer = new();
 
     private Coroutine animateHighlightedRooms;
-    internal static apmmPinSelector Instance { get; private set; }
+    internal static APmmPinSelector Instance { get; private set; }
 
     internal static HashSet<ISelectable> HighlightedRooms { get; private set; } = new();
 
@@ -58,7 +58,7 @@ internal class apmmPinSelector : Selector
         }
     }
 
-    internal void Initialize(IEnumerable<apmmPin> pins)
+    internal void Initialize(IEnumerable<APmmPin> pins)
     {
         Instance = this;
 
@@ -94,15 +94,15 @@ internal class apmmPinSelector : Selector
 
     protected override void Select(ISelectable selectable)
     {
-        if (selectable is apmmPin pin)
+        if (selectable is APmmPin pin)
         {
             //ArchipelagoMapMod.Instance.LogDebug($"Selected {pin.name}");
             pin.Selected = true;
 
-            if (pin is RandomizedapmmPin randoPin) SetHighlightedRooms(randoPin);
+            if (pin is RandomizedAPmmPin randoPin) SetHighlightedRooms(randoPin);
         }
 
-        static void SetHighlightedRooms(RandomizedapmmPin randoPin)
+        static void SetHighlightedRooms(RandomizedAPmmPin randoPin)
         {
             if (randoPin.HighlightRooms is null) return;
 
@@ -112,7 +112,7 @@ internal class apmmPinSelector : Selector
 
     protected override void Deselect(ISelectable selectable)
     {
-        if (selectable is apmmPin pin)
+        if (selectable is APmmPin pin)
             //ArchipelagoMapMod.Instance.LogDebug($"Deselected {pin.name}");
             pin.Selected = false;
 
@@ -134,7 +134,7 @@ internal class apmmPinSelector : Selector
 
             highlightAnimationTick = (highlightAnimationTick + 1) % HIGHLIGHT_PERIOD;
 
-            var color = apmmColors.GetColor(apmmColorSetting.Room_Highlighted);
+            var color = APmmColors.GetColor(APmmColorSetting.Room_Highlighted);
             color.w = 0.3f + TriangleWave(highlightAnimationTick) * 0.7f;
 
             foreach (var room in HighlightedRooms)
@@ -182,7 +182,7 @@ internal class apmmPinSelector : Selector
 
     internal string GetText()
     {
-        if (apmmPinManager.Pins.TryGetValue(SelectedObjectKey, out var pin))
+        if (APmmPinManager.Pins.TryGetValue(SelectedObjectKey, out var pin))
         {
             var text = pin.GetSelectionText();
 

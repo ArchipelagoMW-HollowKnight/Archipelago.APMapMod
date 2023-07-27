@@ -6,7 +6,6 @@ using MapChanger;
 using RandomizerCore.Logic;
 using RCPathfinder;
 using UnityEngine;
-using RM = RandomizerMod.RandomizerMod;
 
 namespace ArchipelagoMapMod.Transition;
 
@@ -66,7 +65,7 @@ internal class TransitionTracker : HookModule
         InLogicScenes = new HashSet<string>();
         UncheckedReachableScenes = new HashSet<string>();
 
-        var pm = RM.RS.TrackerData.pm;
+        var pm = ArchipelagoMapMod.LS.TrackerData.pm;
 
         // Get in-logic extra transitions from waypoints
         foreach ((var waypoint, var transition) in waypointTransitionPairs)
@@ -87,8 +86,8 @@ internal class TransitionTracker : HookModule
         VisitedAdjacentScenes = GetVisitedAdjacentScenes();
 
         // Get scenes where there are unchecked reachable transitions
-        foreach (var transition in RM.RS.TrackerData.uncheckedReachableTransitions)
-            if (TransitionData.GetTransitionDef(transition) is apmmTransitionDef td)
+        foreach (var transition in ArchipelagoMapMod.LS.TrackerData.uncheckedReachableTransitions)
+            if (TransitionData.GetTransitionDef(transition) is APmmTransitionDef td)
                 UncheckedReachableScenes.Add(td.SceneName);
     }
 
@@ -104,13 +103,13 @@ internal class TransitionTracker : HookModule
 
     internal static Vector4 GetRoomColor(string scene)
     {
-        var color = apmmColors.GetColor(apmmColorSetting.Room_Out_of_logic);
+        var color = APmmColors.GetColor(APmmColorSetting.Room_Out_of_logic);
 
-        if (InLogicScenes.Contains(scene)) color = apmmColors.GetColor(apmmColorSetting.Room_Normal);
+        if (InLogicScenes.Contains(scene)) color = APmmColors.GetColor(APmmColorSetting.Room_Normal);
 
-        if (VisitedAdjacentScenes.Contains(scene)) color = apmmColors.GetColor(apmmColorSetting.Room_Adjacent);
+        if (VisitedAdjacentScenes.Contains(scene)) color = APmmColors.GetColor(APmmColorSetting.Room_Adjacent);
 
-        if (scene == Utils.CurrentScene()) color = apmmColors.GetColor(apmmColorSetting.Room_Current);
+        if (scene == Utils.CurrentScene()) color = APmmColors.GetColor(APmmColorSetting.Room_Current);
 
         if (UncheckedReachableScenes.Contains(scene)) color.w = 1f;
 
@@ -124,21 +123,21 @@ internal class TransitionTracker : HookModule
         if (scene is "Room_Tram") return new HashSet<string> {"Abyss_03", "Abyss_03_b", "Abyss_03_c"};
         if (scene is "Room_Tram_RG") return new HashSet<string> {"Crossroads_46", "Crossroads_46b"};
 
-        var starts = apmmPathfinder.SD.GetPrunedStartTerms(scene);
+        var starts = APmmPathfinder.SD.GetPrunedStartTerms(scene);
 
         if (!starts.Any()) return new HashSet<string>();
 
         SearchParams sp = new
         (
             starts,
-            apmmPathfinder.SD.CurrentState,
+            APmmPathfinder.SD.CurrentState,
             new Term[] { },
             0.5f,
             TerminationConditionType.None
         );
 
         SearchState ss = new(sp);
-        Algorithms.DijkstraSearch(apmmPathfinder.SD, sp, ss);
+        Algorithms.DijkstraSearch(APmmPathfinder.SD, sp, ss);
 
         HashSet<string> scenes = new();
 

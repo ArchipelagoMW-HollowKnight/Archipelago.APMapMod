@@ -2,13 +2,13 @@
 
 internal class BenchwarpInstruction : WaypointInstruction
 {
-    internal BenchwarpInstruction(string name, apmmBenchKey benchKey, string waypoint)
+    internal BenchwarpInstruction(string name, APmmBenchKey benchKey, string waypoint)
         : base(name, $"{benchKey.SceneName}[]", waypoint)
     {
         BenchKey = benchKey;
     }
 
-    internal apmmBenchKey BenchKey { get; }
+    internal APmmBenchKey BenchKey { get; }
 
     internal override bool IsFinished(ItemChanger.Transition lastTransition)
     {

@@ -8,21 +8,21 @@ using JsonUtil = MapChanger.JsonUtil;
 
 namespace ArchipelagoMapMod;
 
-internal record struct apmmBenchKey(string SceneName, string RespawnMarkerName);
+internal record struct APmmBenchKey(string SceneName, string RespawnMarkerName);
 
 internal class BenchwarpInterop
 {
     internal const string BENCH_EXTRA_SUFFIX = "_Extra";
     internal const string BENCH_WARP_START = "Start_Warp";
 
-    internal static Dictionary<apmmBenchKey, string> BenchNames { get; private set; } = new();
-    internal static Dictionary<string, apmmBenchKey> BenchKeys { get; private set; } = new();
-    internal static apmmBenchKey StartKey { get; private set; }
+    internal static Dictionary<APmmBenchKey, string> BenchNames { get; private set; } = new();
+    internal static Dictionary<string, APmmBenchKey> BenchKeys { get; private set; } = new();
+    internal static APmmBenchKey StartKey { get; private set; }
 
     internal static void Load()
     {
-        BenchNames = new Dictionary<apmmBenchKey, string>();
-        BenchKeys = new Dictionary<string, apmmBenchKey>();
+        BenchNames = new Dictionary<APmmBenchKey, string>();
+        BenchKeys = new Dictionary<string, APmmBenchKey>();
 
         if (Interop.HasBenchRando() && BenchRandoInterop.BenchRandoEnabled())
         {
@@ -39,11 +39,15 @@ internal class BenchwarpInterop
 
                 if (bench is null) continue;
 
-                BenchNames.Add(new apmmBenchKey(bench.sceneName, bench.respawnMarker), kvp.Value);
+                BenchNames.Add(new APmmBenchKey(bench.sceneName, bench.respawnMarker), kvp.Value);
             }
         }
 
-        StartKey = new apmmBenchKey(Ref.Settings.Start.SceneName, "ITEMCHANGER_RESPAWN_MARKER");
+        if(Ref.Settings.Start != null)
+            StartKey = new APmmBenchKey(Ref.Settings.Start.SceneName, "ITEMCHANGER_RESPAWN_MARKER");
+        else
+            StartKey = new APmmBenchKey("Tutorial_01", "ITEMCHANGER_RESPAWN_MARKER");
+    
 
         BenchNames.Add(StartKey, BENCH_WARP_START);
 
@@ -77,7 +81,7 @@ internal class BenchwarpInterop
                      out benchKey)) yield return DoBenchwarpInternal(benchKey);
     }
 
-    private static IEnumerator DoBenchwarpInternal(apmmBenchKey benchKey)
+    private static IEnumerator DoBenchwarpInternal(APmmBenchKey benchKey)
     {
         InputHandler.Instance.inputActions.openInventory.CommitWithState(true,
             ReflectionHelper.GetField<OneAxisInputControl, ulong>(InputHandler.Instance.inputActions.openInventory,
@@ -102,11 +106,11 @@ internal class BenchwarpInterop
     }
 
     /// <summary>
-    ///     Gets the BenchKeys from Benchwarp's visited benches and converts them to apmmBenchKeys.
+    ///     Gets the BenchKeys from Benchwarp's visited benches and converts them to APmmBenchKeys.
     /// </summary>
-    private static HashSet<apmmBenchKey> GetVisitedBenchKeys()
+    private static HashSet<APmmBenchKey> GetVisitedBenchKeys()
     {
-        return new HashSet<apmmBenchKey>(Benchwarp.Benchwarp.LS.visitedBenchScenes.Select(bwKey =>
-            new apmmBenchKey(bwKey.SceneName, bwKey.RespawnMarkerName)));
+        return new HashSet<APmmBenchKey>(Benchwarp.Benchwarp.LS.visitedBenchScenes.Select(bwKey =>
+            new APmmBenchKey(bwKey.SceneName, bwKey.RespawnMarkerName)));
     }
 }

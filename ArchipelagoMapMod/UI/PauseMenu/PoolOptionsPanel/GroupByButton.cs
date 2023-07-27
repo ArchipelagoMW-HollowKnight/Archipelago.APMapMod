@@ -47,6 +47,6 @@ internal class GroupByButton : ExtraButton
         }
 
         Button.Content = text;
-        Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Special);
+        Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Special);
     }
 }

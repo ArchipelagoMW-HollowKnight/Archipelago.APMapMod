@@ -17,8 +17,8 @@ internal class WhenOffRouteText : ControlPanelText
     {
         return ArchipelagoMapMod.GS.WhenOffRoute switch
         {
-            OffRouteBehaviour.Reevaluate => apmmColors.GetColor(apmmColorSetting.UI_On),
-            _ => apmmColors.GetColor(apmmColorSetting.UI_Neutral)
+            OffRouteBehaviour.Reevaluate => APmmColors.GetColor(APmmColorSetting.UI_On),
+            _ => APmmColors.GetColor(APmmColorSetting.UI_Neutral)
         };
     }
 

@@ -36,11 +36,11 @@ internal class SelectionPanels : WorldMapStack
             VerticalAlignment = VerticalAlignment.Center
         };
 
-        ((Image) Root.GetElement("Lookup Panel Background")).Tint = apmmColors.GetColor(apmmColorSetting.UI_Borders);
+        ((Image) Root.GetElement("Lookup Panel Background")).Tint = APmmColors.GetColor(APmmColorSetting.UI_Borders);
 
         pinPanelText = new TextObject(Root, "Pin Panel Text")
         {
-            ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral),
+            ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral),
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
             Font = MagicUI.Core.UI.Perpetua,
@@ -62,11 +62,11 @@ internal class SelectionPanels : WorldMapStack
             VerticalAlignment = VerticalAlignment.Center
         };
 
-        ((Image) Root.GetElement("Room Panel Background")).Tint = apmmColors.GetColor(apmmColorSetting.UI_Borders);
+        ((Image) Root.GetElement("Room Panel Background")).Tint = APmmColors.GetColor(APmmColorSetting.UI_Borders);
 
         roomPanelText = new TextObject(Root, "Room Panel Text")
         {
-            ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral),
+            ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral),
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
             Font = MagicUI.Core.UI.TrajanNormal,
@@ -88,9 +88,9 @@ internal class SelectionPanels : WorldMapStack
     internal static void UpdatePinPanel()
     {
         if (ArchipelagoMapMod.GS.PinSelectionOn &&
-            apmmPinSelector.Instance.SelectedObjectKey is not Selector.NONE_SELECTED)
+            APmmPinSelector.Instance.SelectedObjectKey is not Selector.NONE_SELECTED)
         {
-            pinPanelText.Text = apmmPinSelector.Instance.GetText();
+            pinPanelText.Text = APmmPinSelector.Instance.GetText();
             lookupPanel.Visibility = Visibility.Visible;
         }
         else

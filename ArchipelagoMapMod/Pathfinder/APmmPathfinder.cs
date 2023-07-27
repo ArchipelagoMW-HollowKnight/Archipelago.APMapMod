@@ -2,15 +2,15 @@
 
 namespace ArchipelagoMapMod.Pathfinder;
 
-public class apmmPathfinder : HookModule
+public class APmmPathfinder : HookModule
 {
-    internal static apmmSearchData SD { get; private set; }
+    internal static APmmSearchData SD { get; private set; }
 
     internal static InstructionData ID { get; private set; }
 
     public override void OnEnterGame()
     {
-        SD = new apmmSearchData(RandomizerMod.RandomizerMod.RS.TrackerData.pm);
+        SD = new APmmSearchData(ArchipelagoMapMod.LS.TrackerData.pm);
 
         ID = new InstructionData(SD);
 

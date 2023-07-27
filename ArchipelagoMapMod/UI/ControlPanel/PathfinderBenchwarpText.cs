@@ -16,10 +16,10 @@ internal class PathfinderBenchwarpText : ControlPanelText
     {
         if (Interop.HasBenchwarp())
             return ArchipelagoMapMod.GS.PathfinderBenchwarp
-                ? apmmColors.GetColor(apmmColorSetting.UI_On)
-                : apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+                ? APmmColors.GetColor(APmmColorSetting.UI_On)
+                : APmmColors.GetColor(APmmColorSetting.UI_Neutral);
 
-        return apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+        return APmmColors.GetColor(APmmColorSetting.UI_Neutral);
     }
 
     private protected override string GetText()

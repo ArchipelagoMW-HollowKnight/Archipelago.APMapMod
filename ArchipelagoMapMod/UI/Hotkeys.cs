@@ -34,7 +34,7 @@ internal class Hotkeys : MapUILayer
             Root.ListenForHotkey(KeyCode.W, () =>
             {
                 ArchipelagoMapMod.GS.ToggleBenchwarpPins();
-                apmmPinManager.Update();
+                APmmPinManager.Update();
                 UpdateSelectors();
             }, ModifierKeys.Ctrl, () => MapChanger.Settings.MapModEnabled());
 
@@ -117,7 +117,7 @@ internal class Hotkeys : MapUILayer
 
     private void UpdateSelectors()
     {
-        apmmPinSelector.Instance.MainUpdate();
+        APmmPinSelector.Instance.MainUpdate();
         TransitionRoomSelector.Instance.MainUpdate();
         MapUILayerUpdater.Update();
     }
@@ -125,7 +125,7 @@ internal class Hotkeys : MapUILayer
     private void UpdatePins()
     {
         PauseMenu.Update();
-        apmmPinManager.Update();
+        APmmPinManager.Update();
         MapUILayerUpdater.Update();
     }
 }

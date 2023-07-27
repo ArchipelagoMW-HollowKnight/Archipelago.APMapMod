@@ -39,12 +39,12 @@ internal sealed class apmmBottomRowText : BottomRowText
 
         if (ArchipelagoMapMod.LS.SpoilerOn)
         {
-            textObj.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
+            textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_On);
             text += "on";
         }
         else
         {
-            textObj.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+            textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
             text += "off";
         }
 
@@ -59,17 +59,17 @@ internal sealed class apmmBottomRowText : BottomRowText
 
         if (ArchipelagoMapMod.LS.RandomizedOn)
         {
-            textObj.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
+            textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_On);
             text += "on";
         }
         else
         {
-            textObj.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+            textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
             text += "off";
         }
 
         if (RandomizedButton.IsRandomizedCustom())
-            textObj.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Custom);
+            textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Custom);
 
         textObj.Text = text;
     }
@@ -82,16 +82,16 @@ internal sealed class apmmBottomRowText : BottomRowText
 
         if (ArchipelagoMapMod.LS.VanillaOn)
         {
-            textObj.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
+            textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_On);
             text += "on";
         }
         else
         {
-            textObj.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+            textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
             text += "off";
         }
 
-        if (VanillaButton.IsVanillaCustom()) textObj.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Custom);
+        if (VanillaButton.IsVanillaCustom()) textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Custom);
 
         textObj.Text = text;
     }
@@ -121,7 +121,7 @@ internal sealed class apmmBottomRowText : BottomRowText
                 break;
         }
 
-        textObj.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+        textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
         textObj.Text = text;
     }
 
@@ -146,7 +146,7 @@ internal sealed class apmmBottomRowText : BottomRowText
                 break;
         }
 
-        textObj.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+        textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
         textObj.Text = text;
     }
 }

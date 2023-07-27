@@ -1,0 +1,1323 @@
+﻿[
+  {
+    "name": "Start_State",
+    "logic": "$DEFAULTSTATE | Can_Bench + $WARPTOSTART"
+  },
+  {
+    "name": "Can_Replenish_Geo",
+    "logic": "Tutorial_01 | Can_Replenish_Geo-Crossroads | Fungus1_01[right1] | Fungus2_03[left1] | Fungus2_06[top1] | Fungus2_12[left1] | Fungus2_14[top1] | Deepnest_41[left1] + (DARKROOMS | LANTERN) | Ruins1_01[left1] | Ruins1_17[right1] | Ruins2_04[right2] | Ruins2_06[right2] | Abyss_04[left1] | Abyss_12[right1] | Fungus3_40[top1] | Mines_02[left1] | Cliffs_02[left1] | Deepnest_East_01[bot1] | Deepnest_East_03[left1] | Deepnest_East_07[left2] | Deepnest_East_08[top1] | Waterways_02[top1] | Waterways_01[right1] | Waterways_04b[left1]",
+    "Stateless": true
+  },
+  {
+    "name": "Can_Replenish_Geo-Crossroads",
+    "logic": "Crossroads_01[top1] | Crossroads_03 | Crossroads_04[door1] | Crossroads_05[left1] | Crossroads_07 | Crossroads_08 | Crossroads_11_alt[left1] + INFECTED | Crossroads_12[right1] + INFECTED | Crossroads_13[left1] | Crossroads_15[left1] | Crossroads_16[left1] | Crossroads_19 | Crossroads_21 | Crossroads_22[bot1] | Crossroads_25[right1] | Crossroads_27 | Crossroads_35[right1] | Crossroads_37[right1] | Crossroads_39[left1] | Crossroads_40[left1] | Crossroads_42[left1] | Crossroads_48[left1] | Crossroads_ShamanTemple[left1]",
+    "Stateless": true
+  },
+  {
+    "name": "Rescued_Sly",
+    "logic": "Room_ruinhouse[left1]",
+    "Stateless": true
+  },
+  {
+    "name": "Rescued_Bretta",
+    "logic": "Fungus2_23 + (FULLCLAW + FULLDASH | FULLCLAW + FULLSUPERDASH | LEFTCLAW + WINGS | RIGHTCLAW + ENEMYPOGOS + WINGS | COMPLEXSKIPS + FULLCLAW + $SHADESKIP[2HITS] + SPELLAIRSTALL + $CASTSPELL[1,1,before:ROOMSOUL] + $TAKEDAMAGE[2])",
+    "Stateless": true
+  },
+  {
+    "name": "Rescued_Deepnest_Zote",
+    "logic": "Deepnest_33[top1]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Colosseum_Zote",
+    "logic": "Room_Colosseum_01[left1] + Rescued_Deepnest_Zote + Defeated_Colosseum_1",
+    "Stateless": true
+  },
+  {
+    "name": "Lever-Shade_Soul",
+    "logic": "Ruins1_31b[right1] | Ruins1_31b[right2] + Defeated_Elegant_Warrior",
+    "Stateless": true
+  },
+  {
+    "name": "Lever-Shade_Soul",
+    "logic": "Ruins1_31b[right1] | Ruins1_31b[right2] + Defeated_Elegant_Warrior",
+    "Stateless": true
+  },
+  {
+    "name": "Lever-City_Fountain",
+    "logic": "Ruins1_27[right1] | Ruins1_27[left1] + (RIGHTCLAW + (WINGS | $SLOPEBALL[before:AREASOUL,after:ROOMSOUL]) | LEFTCLAW + RIGHTSUPERDASH + $SHRIEKPOGO[before:AREASOUL,after:AREASOUL] | LEFTCLAW + RIGHTDASH + $SHRIEKPOGO[1,1,before:AREASOUL,after:AREASOUL] | RIGHTDASH + PRECISEMOVEMENT + $SHRIEKPOGO[3,before:AREASOUL,after:AREASOUL] | $SHRIEKPOGO[4,before:AREASOUL,after:AREASOUL,NOLEFTSTALL])",
+    "Stateless": true
+  },
+  {
+    "name": "Lever-Path_of_Pain",
+    "logic": "White_Palace_17[bot1] + (FULLDASH + FULLCLAW + WINGS | FULLDASH + (LEFTCLAW + $SHRIEKPOGO[1,2,NOSTALL] | RIGHTCLAW + $SHRIEKPOGO[2,NOSTALL]))",
+    "Stateless": true
+  },
+  {
+    "name": "Completed_Path_of_Pain",
+    "logic": "White_Palace_20[bot1] + (FULLCLAW + RIGHTDASH + WINGS | RIGHTDASH + PRECISEMOVEMENT + DANGEROUSSKIPS + $SHRIEKPOGO[1,1,before:AREASOUL]) + Defeated_Path_of_Pain_Arena",
+    "Stateless": true
+  },
+  {
+    "name": "Lever-Dung_Defender",
+    "logic": "Waterways_05[bot1] + (ANYCLAW | WINGS) + Defeated_Dung_Defender | Waterways_05[bot2] | Waterways_05[right1]",
+    "Stateless": true
+  },
+  {
+    "name": "Warp-Lifeblood_Core_to_Abyss",
+    "logic": "Abyss_08[right1] + (PRECISEMOVEMENT | LEFTDASH)"
+  },
+  {
+    "name": "Warp-Palace_Grounds_to_White_Palace",
+    "logic": "Abyss_05 + AWOKEN"
+  },
+  {
+    "name": "Warp-White_Palace_Entrance_to_Palace_Grounds",
+    "logic": "White_Palace_11[door2] + COMBAT[White_Palace_Arenas]"
+  },
+  {
+    "name": "Warp-White_Palace_Atrium_to_Palace_Grounds",
+    "logic": "White_Palace_03_hub[left1] | White_Palace_03_hub[top1] + Palace_Atrium_Gates_Opened | White_Palace_03_hub[right1] + Palace_Atrium_Gates_Opened | White_Palace_03_hub + (PRECISEMOVEMENT | LEFTCLAW | LEFTDASH | LEFTSUPERDASH | WINGS)"
+  },
+  {
+    "name": "Warp-Path_of_Pain_Complete",
+    "logic": "White_Palace_20[bot1] + Completed_Path_of_Pain"
+  },
+  {
+    "name": "Upper_Tram",
+    "logic": "TRAM + (Crossroads_46[left1] | Crossroads_46b[right1]) | Bench-Upper_Tram"
+  },
+  {
+    "name": "Lower_Tram",
+    "logic": "TRAM + (Abyss_03 | Abyss_03_b | Abyss_03_c) | Bench-Lower_Tram"
+  },
+  {
+    "name": "Left_Elevator",
+    "logic": "(Crossroads_49[left1] | Crossroads_49[right1] | Crossroads_49b[right1]) + (Crossroads_49b[right1] + NONRANDOMELEVATORS | Elevator_Pass)"
+  },
+  {
+    "name": "Right_Elevator",
+    "logic": "(Ruins2_10[right1] | Ruins2_10[left1] | Ruins2_10b[right1] | Ruins2_10b[right2] | Ruins2_10b[left1]) + (NONRANDOMELEVATORS | Elevator_Pass)"
+  },
+  {
+    "name": "Crossroads_Hot_Spring",
+    "logic": "Crossroads_30[left1] + $HOTSPRINGRESET"
+  },
+  {
+    "name": "Deepnest_Hot_Spring",
+    "logic": "Deepnest_30[left1] + $HOTSPRINGRESET"
+  },
+  {
+    "name": "Colosseum_Hot_Spring",
+    "logic": "(Room_Colosseum_02[top1] | Room_Colosseum_02[top2]) + $HOTSPRINGRESET"
+  },
+  {
+    "name": "Pleasure_House_Hot_Spring",
+    "logic": "(Ruins_Bathhouse[door1] | Ruins_Bathhouse[right1]) + $HOTSPRINGRESET"
+  },
+  {
+    "name": "Defeated_Gruz_Mother",
+    "logic": "(Crossroads_04[left1] | Crossroads_04[top1] | Crossroads_04[door_Mender_House] | Crossroads_04[door1] | Crossroads_04[door_charmshop] | Crossroads_04[right1]) + COMBAT[Gruz_Mother]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_False_Knight",
+    "logic": "(Crossroads_10[right1] | Crossroads_10[left1] + (ANYCLAW | WINGS)) + COMBAT[False_Knight]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Brooding_Mawlek",
+    "logic": "(Crossroads_09[left1] | Crossroads_09[right1]) + COMBAT[Brooding_Mawlek]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Hornet_1",
+    "logic": "Fungus1_04[right1] + COMBAT[Hornet_1]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Mantis_Lords",
+    "logic": "(Fungus2_15[top3] | Fungus2_15[right1] | Fungus2_15[left1]) + COMBAT[Mantis_Lords]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Sanctum_Warrior",
+    "logic": "((Ruins1_23 + (LEFTCLAW | WINGS | (RIGHTCLAW + LEFTSUPERDASH + ENEMYPOGOS))) | Ruins1_23[top1]) + COMBAT[Sanctum_Warrior]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Soul_Master",
+    "logic": "Ruins1_24[right1] + COMBAT[Soul_Master]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Elegant_Warrior",
+    "logic": "(Ruins1_31b[right1] | Ruins1_31b[right2]) + COMBAT[Elegant_Warrior]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Crystal_Guardian",
+    "logic": "(Mines_18[left1] | Mines_18[right1] | Mines_18[top1]) + (SIDESLASH | UPSLASH | GREATSLASH | CYCLONE | ANYDASHSLASH) + COMBAT[Crystal_Guardian]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Enraged_Guardian",
+    "logic": "Mines_32[bot1] + Defeated_Crystal_Guardian + COMBAT[Enraged_Guardian]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Flukemarm",
+    "logic": "Waterways_12[right1] + (SWIM | LEFTSUPERDASH | ACIDSKIPS + LEFTDASH + $SHRIEKPOGO[4,before:AREASOUL]) + COMBAT[Flukemarm]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Dung_Defender",
+    "logic": "Waterways_05[bot1] + (ANYCLAW | WINGS) + COMBAT[Dung_Defender]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Broken_Vessel",
+    "logic": "Abyss_19[bot1] + (ANYCLAW | WINGS) + COMBAT[Broken_Vessel]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Hornet_2",
+    "logic": "Deepnest_East_Hornet[left1] + COMBAT[Hornet_2]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Watcher_Knights",
+    "logic": "(Ruins2_03[bot1] | Ruins2_03[top1]) + COMBAT[Watcher_Knights]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Uumuu",
+    "logic": "Uumuu_Arena + COMBAT[Uumuu]",
+    "Stateless": true
+  },
+  {
+    "name": "Uumuu_Arena",
+    "logic": "Fungus3_archive_02[top1] + (ANYSUPERDASH | ACID | ACIDSKIPS + (LEFTDASH + LEFTCLAW + WINGS | LEFTDASH + $SHRIEKPOGO[before:ROOMSOUL] | RIGHTDASH + $SHRIEKPOGO[2,before:ROOMSOUL] | ANYCLAW + $SHRIEKPOGO[2,before:ROOMSOUL] | $SHRIEKPOGO[3,before:ROOMSOUL]))"
+  },
+  {
+    "name": "Defeated_Nosk",
+    "logic": "Deepnest_32[left1] + COMBAT[Nosk]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Traitor_Lord",
+    "logic": "(Fungus3_23[left1] + RIGHTSHADOWDASH | Fungus3_23[right1] + LEFTSHADOWDASH + (ANYCLAW | WINGS)) + COMBAT[Traitor_Lord]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Grimm",
+    "logic": "Grimm_Main_Tent[left1] + GRIMMCHILD + 6FLAMES + COMBAT[Grimm]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Collector",
+    "logic": "Ruins2_11[right1] + (LEFTCLAW | RIGHTCLAW + (RIGHTDASH | PRECISEMOVEMENT) | WINGS) + COMBAT[Collector]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Hive_Knight",
+    "logic": "Hive_05[left1] + COMBAT[Hive_Knight]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Pale_Lurker",
+    "logic": "GG_Lurker[left1] + (SWIM | RIGHTDASH | WINGS | (LEFTCLAW + FULLSUPERDASH)) + RIGHTCLAW + COMBAT[Pale_Lurker]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Elder_Hu",
+    "logic": "Fungus2_32[left1] + DREAMNAIL + COMBAT[Elder_Hu]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Xero",
+    "logic": "RestingGrounds_02 + DREAMNAIL + COMBAT[Xero]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Gorb",
+    "logic": "Cliffs_02 + DREAMNAIL + COMBAT[Gorb]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Marmu",
+    "logic": "(Fungus3_40[top1] | Fungus3_40[right1] + (LEFTCLAW | RIGHTCLAW + LEFTSUPERDASH | WINGS | LEFTDASH)) + DREAMNAIL + COMBAT[Marmu]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_No_Eyes",
+    "logic": "(Fungus1_35[left1] | Fungus1_35[right1]) + LANTERN + DREAMNAIL + COMBAT[No_Eyes]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Galien",
+    "logic": "Deepnest_40[right1] + DREAMNAIL + COMBAT[Galien]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Markoth",
+    "logic": "Deepnest_East_10[left1] + DREAMNAIL + COMBAT[Markoth]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Failed_Champion",
+    "logic": "(Crossroads_10[left1] | Crossroads_10[right1]) + Defeated_False_Knight + (ANYCLAW | WINGS + INFECTED | $SHRIEKPOGO[2,before:AREASOUL]) + (WINGS | LEFTDASH | LEFTSUPERDASH) + DREAMNAIL + COMBAT[Failed_Champion]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Soul_Tyrant",
+    "logic": "(Ruins1_24[right1] | Ruins1_24[left1]) + Defeated_Soul_Master + (LEFTCLAW + PRECISEMOVEMENT | WINGS | LEFTDASH) + DREAMNAIL + COMBAT[Soul_Tyrant]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Lost_Kin",
+    "logic": "(Abyss_19[left1] | Abyss_19[bot1]) + Defeated_Broken_Vessel + DREAMNAIL + (LEFTCLAW | WINGS) + COMBAT[Lost_Kin]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_White_Defender",
+    "logic": "Waterways_15[top1] + DREAMNAIL + DREAMER3 + Defeated_Dung_Defender + COMBAT[White_Defender]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Grey_Prince_Zote",
+    "logic": "Room_Bretta[right1] + DREAMNAIL + WINGS + Rescued_Bretta + Defeated_Colosseum_Zote + COMBAT[Grey_Prince_Zote]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Colosseum_1",
+    "logic": "Room_Colosseum_01[left1] + Can_Replenish_Geo + COMBAT[Colosseum_1]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Colosseum_2",
+    "logic": "Room_Colosseum_01[left1] + Can_Replenish_Geo + (ANYCLAW | (SPICYCOMBATSKIPS + WINGS)) + COMBAT[Colosseum_2]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Ancestral_Mound_Baldur",
+    "logic": "Crossroads_ShamanTemple[left1] + LEFTBALDURS + (UPWALLBREAK | (LEFTSUPERDASH + RIGHTCLAW | RIGHTSUPERDASH + LEFTCLAW) + OBSCURESKIPS)",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Crossroads_Baldur",
+    "logic": "Crossroads_11_alt[right1] + LEFTBALDURS",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Right_Cliffs_Baldur",
+    "logic": "RIGHTBALDURS + (Fungus1_28[left1] | (Fungus1_28[left2] + (FULLCLAW | WINGS | RIGHTDASH | RIGHTSUPERDASH | $SHADESKIP)))",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Shrumal_Ogre_Arena",
+    "logic": "(Fungus2_05[bot1] | Fungus2_05[right1]) + (SIDESLASH | UPSLASH | CYCLONE | GREATSLASH | FULLDASHSLASH | ANYDASHSLASH + DASHMASTER + OBSCURESKIPS | SPICYCOMBATSKIPS)",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_King's_Station_Arena",
+    "logic": "Ruins2_09[bot1] + COMBAT[King's_Station_Arena]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_West_Queen's_Gardens_Arena",
+    "logic": "(Fungus3_10[bot1] | Fungus3_10[top1] + (FULLDASH | WINGS)) + COMBAT[West_Queen's_Gardens_Arena]",
+    "Stateless": true
+  },
+  {
+    "name": "Defeated_Path_of_Pain_Arena",
+    "logic": "White_Palace_20[bot1] + (FULLCLAW + RIGHTDASH + WINGS | RIGHTDASH + PRECISEMOVEMENT + DANGEROUSSKIPS + $SHRIEKPOGO[1,1,before:AREASOUL]) + COMBAT[Path_of_Pain_Arena]",
+    "Stateless": true
+  },
+  {
+    "name": "Can_Bench",
+    "logic": "Bench-Dirtmouth | Bench-Mato | Bench-Crossroads_Hot_Springs | Bench-Crossroads_Stag | Bench-Salubra | Bench-Black_Egg_Temple | Bench-Waterfall | Bench-Stone_Sanctuary | Bench-Greenpath_Toll | Bench-Greenpath_Stag | Bench-Lake_of_Unn | Bench-Sheo | Bench-Archives | Bench-Queen's_Station | Bench-Leg_Eater | Bench-Bretta | Bench-Mantis_Village | Bench-Quirrel | Bench-City_Toll | Bench-City_Storerooms | Bench-Watcher's_Spire | Bench-King's_Station | Bench-Pleasure_House | Bench-Waterways | Bench-Godhome_Atrium | Bench-Godhome_Roof | Bench-Hall_of_Gods | Bench-Deepnest_Hot_Springs | Bench-Failed_Tramway | Bench-Basin_Toll | Bench-Hidden_Station | Bench-Oro | Bench-Camp | Bench-Colosseum | Bench-Hive | Bench-Peak_Dark_Room | Bench-Crystal_Guardian | Bench-Grounds_Stag | Bench-Grey_Mourner | Bench-Gardens_Cornifer | Bench-Gardens_Toll | Bench-Gardens_Stag | Can_Warp_To_DG_Bench | Bench-Ancestral_Mound | Bench-Beast's_Den | Bench-Palace_Entrance | Bench-Palace_Atrium | Bench-Palace_Balcony | Bench-Upper_Tram | Bench-Lower_Tram"
+  },
+  {
+    "name": "Can_Warp_To_DG_Bench",
+    "logic": "INCLUDEBENCHWARPSELECT + (Bench-Dirtmouth | Bench-Mato | Bench-Crossroads_Hot_Springs | Bench-Crossroads_Stag | Bench-Salubra | Bench-Black_Egg_Temple | Bench-Waterfall | Bench-Stone_Sanctuary | Bench-Greenpath_Toll | Bench-Greenpath_Stag | Bench-Lake_of_Unn | Bench-Sheo | Bench-Archives | Bench-Queen's_Station | Bench-Leg_Eater | Bench-Bretta | Bench-Mantis_Village | Bench-Quirrel | Bench-City_Toll | Bench-City_Storerooms | Bench-Watcher's_Spire | Bench-King's_Station | Bench-Pleasure_House | Bench-Waterways | Bench-Godhome_Atrium | Bench-Godhome_Roof | Bench-Hall_of_Gods | Bench-Deepnest_Hot_Springs | Bench-Failed_Tramway | Bench-Basin_Toll | Bench-Hidden_Station | Bench-Oro | Bench-Camp | Bench-Colosseum | Bench-Hive | Bench-Peak_Dark_Room | Bench-Crystal_Guardian | Bench-Grounds_Stag | Bench-Grey_Mourner | Bench-Gardens_Cornifer | Bench-Gardens_Toll | Bench-Gardens_Stag)",
+    "Stateless": true
+  },
+  {
+    "name": "Can_Warp_To_Bench",
+    "logic": "INCLUDEBENCHWARPSELECT + (Can_Warp_To_DG_Bench | Bench-Ancestral_Mound | Bench-Beast's_Den | Bench-Palace_Entrance | Bench-Palace_Atrium | Bench-Palace_Balcony | Bench-Upper_Tram | Bench-Lower_Tram)",
+    "Stateless": true
+  },
+  {
+    "name": "Can_Stag",
+    "logic": "(Room_Town_Stag_Station[left1] | Crossroads_47[right1] | Fungus1_16_alt[right1] | Fungus2_02[right1] | (Fungus3_40[top1] | Fungus3_40[right1]) | Ruins1_29[left1] | Ruins2_08[left1] | RestingGrounds_09[left1] | Deepnest_09[left1] | Abyss_22[left1]) + $STAGSTATEMODIFIER"
+  },
+  {
+    "name": "Can_Visit_Lemm",
+    "logic": "Ruins1_05b[top1] + Ruins1_27[left1]",
+    "Stateless": true
+  },
+  {
+    "name": "Can_Repair_Fragile_Charms",
+    "logic": "Fungus2_26[left1] + Can_Replenish_Geo",
+    "Stateless": true
+  },
+  {
+    "name": "Grey_Mourner",
+    "logic": "Room_Mansion[left1] + $FLOWERGET"
+  },
+  {
+    "name": "Can_Deliver_Flower",
+    "logic": "Fungus3_49[right1] + (LEFTDASH | LEFTSUPERDASH + (RIGHTCLAW | WINGS) | WINGS + DIFFICULTSKIPS) + NOFLOWER=FALSE",
+    "Stateless": true
+  },
+  {
+    "name": "First_Grimmchild_Upgrade",
+    "logic": "Grimm_Main_Tent[left1] + GRIMMCHILD + 3FLAMES",
+    "Stateless": true
+  },
+  {
+    "name": "Second_Grimmchild_Upgrade",
+    "logic": "Grimm_Main_Tent[left1] + GRIMMCHILD + 6FLAMES + Defeated_Grimm",
+    "Stateless": true
+  },
+  {
+    "name": "Nightmare_Lantern_Lit",
+    "logic": "Cliffs_06[left1] + DREAMNAIL | Grimmchild",
+    "Stateless": true
+  },
+  {
+    "name": "Opened_Waterways_Manhole",
+    "logic": "Ruins1_05b + WATERWAYSUNLOCK",
+    "Stateless": true
+  },
+  {
+    "name": "Opened_Dung_Defender_Wall",
+    "logic": "Waterways_05[bot1] + (ANYCLAW | WINGS) + Defeated_Dung_Defender | Waterways_05[bot2] | Waterways_05[right1]",
+    "Stateless": true
+  },
+  {
+    "name": "Opened_Resting_Grounds_Floor",
+    "logic": "(RestingGrounds_06[left1] | RestingGrounds_06[right1]) + (LEFTDASH | LEFTCLAW | WINGS | ENEMYPOGOS) | RestingGrounds_06[top1]",
+    "Stateless": true
+  },
+  {
+    "name": "Opened_Resting_Grounds_Catacombs_Wall",
+    "logic": "RestingGrounds_10",
+    "Stateless": true
+  },
+  {
+    "name": "Opened_Pleasure_House_Wall",
+    "logic": "Ruins_Bathhouse[door1] | Ruins_Bathhouse[right1]",
+    "Stateless": true
+  },
+  {
+    "name": "Opened_Gardens_Stag_Exit",
+    "logic": "Fungus3_40[top1] + (RIGHTDASH | WINGS | RIGHTCLAW | LEFTCLAW + RIGHTSUPERDASH | ENEMYPOGOS | $SHADESKIP | SPELLAIRSTALL + $CASTSPELL[before:ROOMSOUL,after:ROOMSOUL]) | Fungus3_40[right1] | Queen's_Gardens_Stag + Can_Stag",
+    "Stateless": true
+  },
+  {
+    "name": "Opened_Mawlek_Wall",
+    "logic": "Crossroads_09[right1] | Crossroads_09[left1] + Defeated_Brooding_Mawlek",
+    "Stateless": true
+  },
+  {
+    "name": "Opened_Shaman_Pillar",
+    "logic": "Crossroads_06[left1] | Crossroads_06[door1] | Crossroads_06[right1] | INFECTION",
+    "Stateless": true
+  },
+  {
+    "name": "Opened_Archives_Exit_Wall",
+    "logic": "Fungus3_47",
+    "Stateless": true
+  },
+  {
+    "name": "Opened_Tramway_Exit_Gate",
+    "logic": "Deepnest_26b[right2] + (WINGS | LEFTCLAW + (RIGHTDASH | ENEMYPOGOS))",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Camp_Bench_Wall",
+    "logic": "Deepnest_East_11[top1] + (SIDESLASH | CYCLONE | GREATSLASH | (FIREBALL | QUAKE) + $CASTSPELL) | Deepnest_East_11[right1] + (LEFTCLAW | WINGS + BACKGROUNDPOGOS) + UPWALLBREAK | (Deepnest_East_11[left1] | Deepnest_East_11[bot1]) + (WINGS | FULLCLAW + $SHADESKIP | ENEMYPOGOS + DANGEROUSSKIPS) + (LEFTCLAW | WINGS + BACKGROUNDPOGOS) + UPWALLBREAK",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Sanctum_Glass_Floor",
+    "logic": "Ruins1_30 + QUAKE + $CASTSPELL",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Goam_Entry_Quake_Floor",
+    "logic": "Crossroads_52[left1] + QUAKE + $CASTSPELL[before:ITEMSOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Pilgrim's_Way_Quake_Floor",
+    "logic": "Fungus2_21[right1] + (FULLCLAW + (LEFTDASH | LEFTSUPERDASH) | ANYCLAW + WINGS) + QUAKE + $CASTSPELL[before:ITEMSOUL] | Fungus2_21[right1] + $SHRIEKPOGO[7,before:ITEMSOUL] + QUAKE + $CASTSPELL",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Sanctum_Geo_Rock_Quake_Floor",
+    "logic": "Ruins1_32[right1] + QUAKE + (ANYCLAW + $CASTSPELL[before:AREASOUL] | $SHRIEKPOGO[before:AREASOUL] + $CASTSPELL)",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Quake_Floor_After_Soul_Master_1",
+    "logic": "Ruins1_32[right1] + QUAKE + (ANYCLAW + $CASTSPELL[before:AREASOUL] | $SHRIEKPOGO[before:AREASOUL] + $CASTSPELL)",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Quake_Floor_After_Soul_Master_2",
+    "logic": "Ruins1_32[right1] + Broke_Quake_Floor_After_Soul_Master_1 + QUAKE + $CASTSPELL[before:ROOMSOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Quake_Floor_After_Soul_Master_3",
+    "logic": "Ruins1_32[right1] + Broke_Quake_Floor_After_Soul_Master_1 + Broke_Quake_Floor_After_Soul_Master_2 + QUAKE + $CASTSPELL[before:ROOMSOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Quake_Floor_After_Soul_Master_4",
+    "logic": "Ruins1_32[right1] + Broke_Quake_Floor_After_Soul_Master_1 + Broke_Quake_Floor_After_Soul_Master_2 + Broke_Quake_Floor_After_Soul_Master_3 + QUAKE + $CASTSPELL[before:ROOMSOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Sanctum_Escape_Quake_Floor_1",
+    "logic": "Ruins1_30[left2] + (LEFTCLAW | RIGHTCLAW + BACKGROUNDPOGOS | WINGS) + QUAKE + $CASTSPELL[before:ROOMSOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Sanctum_Escape_Quake_Floor_2",
+    "logic": "Ruins1_30[left2] + Broke_Sanctum_Escape_Quake_Floor_1 + (LEFTCLAW | RIGHTCLAW + BACKGROUNDPOGOS | WINGS) + QUAKE + $CASTSPELL[before:ROOMSOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Crystal_Peak_Entrance_Quake_Floor",
+    "logic": "Mines_01[left1] + QUAKE + $CASTSPELL",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Crystal_Peak_Dive_Egg_Quake_Floor",
+    "logic": "Mines_20 + QUAKE + $CASTSPELL[before:ROOMSOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Hallownest's_Crown_Quake_Floor",
+    "logic": "(Mines_25[left1] + (FULLCLAW | WINGS + ANYCLAW | ENEMYPOGOS + BACKGROUNDPOGOS + $SHRIEKPOGO[5]) | Mines_25[top1]) + QUAKE + $CASTSPELL[before:ROOMSOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Crystallized_Mound_Quake_Floor",
+    "logic": "Mines_35[left1] + QUAKE + $CASTSPELL",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Resting_Grounds_Quake_Floor",
+    "logic": "RestingGrounds_05 + QUAKE + $CASTSPELL",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Cliffs_Dark_Room_Quake_Floor",
+    "logic": "Cliffs_04[right1] + (DARKROOMS | LANTERN) + QUAKE + $CASTSPELL[before:ROOMSOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Basin_Grub_Quake_Floor",
+    "logic": "Abyss_17[top1] + QUAKE + $CASTSPELL[before:ROOMSOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Lower_Edge_Quake_Floor",
+    "logic": "Deepnest_East_02 + QUAKE + $CASTSPELL[before:ROOMSOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Oro_Quake_Floor_1",
+    "logic": "(Deepnest_East_16[left1] | Deepnest_East_16[bot1]) + QUAKE + $CASTSPELL[before:ROOMSOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Oro_Quake_Floor_2",
+    "logic": "Deepnest_East_14[top2] + QUAKE + $CASTSPELL[before:AREASOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Oro_Quake_Floor_3",
+    "logic": "Deepnest_East_14[top2] + Broke_Oro_Quake_Floor_2 + (RIGHTCLAW | WINGS | LEFTCLAW + ENEMYPOGOS) + QUAKE + $CASTSPELL[before:ROOMSOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_420_Rock_Quake_Floor_1",
+    "logic": "Deepnest_East_17[left1] + QUAKE + $CASTSPELL[before:AREASOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_420_Rock_Quake_Floor_2",
+    "logic": "Deepnest_East_17[left1] + Broke_420_Rock_Quake_Floor_1 + QUAKE + $CASTSPELL[before:AREASOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_420_Rock_Quake_Floor_3",
+    "logic": "Deepnest_East_17[left1] + Broke_420_Rock_Quake_Floor_1 + Broke_420_Rock_Quake_Floor_2 + QUAKE + $CASTSPELL[before:AREASOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_420_Rock_Quake_Floor_4",
+    "logic": "Deepnest_East_17[left1] + Broke_420_Rock_Quake_Floor_1 + Broke_420_Rock_Quake_Floor_2 + Broke_420_Rock_Quake_Floor_3 + QUAKE + $CASTSPELL[before:AREASOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_420_Rock_Quake_Floor_5",
+    "logic": "Deepnest_East_17[left1] + Broke_420_Rock_Quake_Floor_1 + Broke_420_Rock_Quake_Floor_2 + Broke_420_Rock_Quake_Floor_3 + Broke_420_Rock_Quake_Floor_4 + QUAKE + $CASTSPELL[before:AREASOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_420_Rock_Quake_Floor_6",
+    "logic": "Deepnest_East_17[left1] + Broke_420_Rock_Quake_Floor_1 + Broke_420_Rock_Quake_Floor_2 + Broke_420_Rock_Quake_Floor_3 + Broke_420_Rock_Quake_Floor_4 + Broke_420_Rock_Quake_Floor_5 + QUAKE + $CASTSPELL[before:AREASOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_420_Rock_Quake_Floor_7",
+    "logic": "Deepnest_East_17[left1] + Broke_420_Rock_Quake_Floor_1 + Broke_420_Rock_Quake_Floor_2 + Broke_420_Rock_Quake_Floor_3 + Broke_420_Rock_Quake_Floor_4 + Broke_420_Rock_Quake_Floor_5 + Broke_420_Rock_Quake_Floor_6 + QUAKE + $CASTSPELL[before:AREASOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_420_Rock_Quake_Floor_8",
+    "logic": "Deepnest_East_17[left1] + Broke_420_Rock_Quake_Floor_1 + Broke_420_Rock_Quake_Floor_2 + Broke_420_Rock_Quake_Floor_3 + Broke_420_Rock_Quake_Floor_4 + Broke_420_Rock_Quake_Floor_5 + Broke_420_Rock_Quake_Floor_6 + Broke_420_Rock_Quake_Floor_7 + QUAKE + $CASTSPELL[before:AREASOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_420_Rock_Quake_Floor_9",
+    "logic": "Deepnest_East_17[left1] + Broke_420_Rock_Quake_Floor_1 + Broke_420_Rock_Quake_Floor_2 + Broke_420_Rock_Quake_Floor_3 + Broke_420_Rock_Quake_Floor_4 + Broke_420_Rock_Quake_Floor_5 + Broke_420_Rock_Quake_Floor_6 + Broke_420_Rock_Quake_Floor_7 + Broke_420_Rock_Quake_Floor_8 + QUAKE + $CASTSPELL[before:AREASOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_420_Rock_Quake_Floor_10",
+    "logic": "Deepnest_East_17[left1] + Broke_420_Rock_Quake_Floor_1 + Broke_420_Rock_Quake_Floor_2 + Broke_420_Rock_Quake_Floor_3 + Broke_420_Rock_Quake_Floor_4 + Broke_420_Rock_Quake_Floor_5 + Broke_420_Rock_Quake_Floor_6 + Broke_420_Rock_Quake_Floor_7 + Broke_420_Rock_Quake_Floor_8 + Broke_420_Rock_Quake_Floor_9 + QUAKE + $CASTSPELL[before:AREASOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_420_Rock_Quake_Floor_11",
+    "logic": "Deepnest_East_17[left1] + Broke_420_Rock_Quake_Floor_1 + Broke_420_Rock_Quake_Floor_2 + Broke_420_Rock_Quake_Floor_3 + Broke_420_Rock_Quake_Floor_4 + Broke_420_Rock_Quake_Floor_5 + Broke_420_Rock_Quake_Floor_6 + Broke_420_Rock_Quake_Floor_7 + Broke_420_Rock_Quake_Floor_8 + Broke_420_Rock_Quake_Floor_9 + Broke_420_Rock_Quake_Floor_10 + QUAKE + $CASTSPELL[before:AREASOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Waterways_Bench_Quake_Floor_1",
+    "logic": "(Waterways_04[right1] | Waterways_04[left1] + ENEMYPOGOS) + QUAKE + $CASTSPELL", // omit additional branches which result in Waterways_04[right1]
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Waterways_Bench_Quake_Floor_2",
+    "logic": "Waterways_04[bot1] | (Waterways_04[right1] | Waterways_04[left1] + ENEMYPOGOS) + Broke_Waterways_Bench_Quake_Floor_1 + QUAKE + $CASTSPELL",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Waterways_Bench_Quake_Floor_3",
+    "logic": "Waterways_02[top3] + QUAKE + $CASTSPELL",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Flukemarm_Quake_Floor",
+    "logic": "Waterways_02[bot1] | (Waterways_02[top1] | Waterways_02[top2] + (ANYCLAW | WINGS | SWIM) | Waterways_02[top3] + Broke_Waterways_Bench_Quake_Floor_3 | Waterways_02[bot1] | Waterways_02[bot2] + (ANYCLAW | WINGS | SWIM)) + QUAKE + $CASTSPELL[before:ROOMSOUL]",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Dung_Defender_Quake_Floor",
+    "logic": "Waterways_05[bot2] | (Waterways_05[right1] | Waterways_05[bot1] + (ANYCLAW | WINGS) + Defeated_Dung_Defender) + QUAKE + $CASTSPELL",
+    "Stateless": true
+  },
+  {
+    "name": "Broke_Edge_Journal_Quake_Floor",
+    "logic": "Deepnest_East_18 + (ANYCLAW | WINGS | Deepnest_East_18[top1]) + QUAKE + $CASTSPELL",
+    "Stateless": true
+  },
+  {
+    "name": "Opened_Emilitia_Door",
+    "logic": "Ruins_House_03[left1] | (ANYCLAW + Ruins_House_03[left2])",
+    "Stateless": true
+  },
+  {
+    "name": "Lit_Abyss_Lighthouse",
+    "logic": "Abyss_Lighthouse_room[left1]",
+    "Stateless": true
+  },
+  {
+    "name": "Opened_Lower_Kingdom's_Edge_Wall",
+    "logic": "Deepnest_East_02",
+    "Stateless": true
+  },
+  {
+    "name": "Opened_Glade_Door",
+    "logic": "RestingGrounds_07[right1] + 200ESSENCE",
+    "Stateless": true
+  },
+  {
+    "name": "Opened_Waterways_Exit",
+    "logic": "(Waterways_09[left1] | Waterways_09[right1]) + (LEFTCLAW | WINGS | (RIGHTCLAW + (LEFTDASH | LEFTSUPERDASH))) | $StartLocation[West Waterways]",
+    "Stateless": true
+  },
+  {
+    "name": "Palace_Entrance_Lantern_Lit",
+    "logic": "White_Palace_02[left1] + (LEFTCLAW + WINGS | $SHRIEKPOGO[2,before:AREASOUL,NORIGHTSTALL]) + COMBAT[White_Palace_Arenas]",
+    "Stateless": true
+  },
+  {
+    "name": "Palace_Left_Lantern_Lit",
+    "logic": "White_Palace_14[right1]",
+    "Stateless": true
+  },
+  {
+    "name": "Palace_Right_Lantern_Lit",
+    "logic": "White_Palace_15[right1]",
+    "Stateless": true
+  },
+  {
+    "name": "Palace_Atrium_Gates_Opened",
+    "logic": "Palace_Left_Lantern_Lit + Palace_Right_Lantern_Lit",
+    "Stateless": true
+  },
+  {
+    "name": "Opened_Black_Egg_Temple",
+    "logic": "Room_temple[left1] + DREAMER3",
+    "Stateless": true
+  },
+  // note: bench waypoints may be modified or removed by connections which modify benches. They should not be relied on as room waypoints.
+  {
+    "name": "Bench-Dirtmouth",
+    "logic": "Town + $BENCHRESET | WARPSTARTTOBENCH + Bench-Dirtmouth"
+  },
+  {
+    "name": "Bench-Mato",
+    "logic": "Room_nailmaster[left1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Mato"
+  },
+  {
+    "name": "Bench-Crossroads_Hot_Springs",
+    "logic": "Crossroads_30[left1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Crossroads_Hot_Springs"
+  },
+  {
+    "name": "Bench-Crossroads_Stag",
+    "logic": "Crossroads_47[right1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Crossroads_Stag"
+  },
+  {
+    "name": "Bench-Salubra",
+    "logic": "Crossroads_04[door_charmshop] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Salubra"
+  },
+  {
+    "name": "Bench-Ancestral_Mound",
+    "logic": "Crossroads_ShamanTemple[left1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Ancestral_Mound"
+  },
+  {
+    "name": "Bench-Black_Egg_Temple",
+    "logic": "Room_temple[left1] + Opened_Black_Egg_Temple + $BENCHRESET | WARPSTARTTOBENCH + Bench-Black_Egg_Temple"
+  },
+  {
+    "name": "Bench-Waterfall",
+    "logic": "(Fungus1_01b[left1] | Fungus1_01b[right1]) + $BENCHRESET | WARPSTARTTOBENCH + Bench-Waterfall"
+  },
+  {
+    "name": "Bench-Stone_Sanctuary",
+    "logic": "Fungus1_37[left1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Stone_Sanctuary"
+  },
+  {
+    "name": "Bench-Greenpath_Toll",
+    "logic": "(Fungus1_31[bot1] | Fungus1_31[right1] | Fungus1_31[top1]) + $BENCHRESET | WARPSTARTTOBENCH + Bench-Greenpath_Toll"
+  },
+  {
+    "name": "Bench-Greenpath_Stag",
+    "logic": "Fungus1_16_alt[right1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Greenpath_Stag"
+  },
+  {
+    "name": "Bench-Lake_of_Unn",
+    "logic": "Room_Slug_Shrine[left1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Lake_of_Unn"
+  },
+  {
+    "name": "Bench-Sheo",
+    "logic": "Fungus1_15[door1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Sheo"
+  },
+  {
+    "name": "Bench-Archives",
+    "logic": "Fungus3_archive[bot1] + (ANYCLAW | WINGS) + $BENCHRESET | WARPSTARTTOBENCH + Bench-Archives"
+  },
+  {
+    "name": "Bench-Queen's_Station",
+    "logic": "Fungus2_02[right1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Queen's_Station"
+  },
+  {
+    "name": "Bench-Leg_Eater",
+    "logic": "Fungus2_26[left1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Leg_Eater"
+  },
+  {
+    "name": "Bench-Bretta",
+    "logic": "(Fungus2_13 + (LEFTDASH | LEFTSUPERDASH | ANYCLAW | WINGS | ACID | ENEMYPOGOS | PRECISEMOVEMENT) | Fungus2_13[left3] + (RIGHTDASH | ACID | WINGS | LEFTCLAW | RIGHTCLAW + PRECISEMOVEMENT | AIRSTALL + ROOMSOUL | TERMINALSHADESKIPS)) + $BENCHRESET | WARPSTARTTOBENCH + Bench-Bretta"
+  },
+  {
+    "name": "Bench-Mantis_Village",
+    "logic": "Fungus2_31[left1] + Defeated_Mantis_Lords + $BENCHRESET | WARPSTARTTOBENCH + Bench-Mantis_Village"
+  },
+  {
+    "name": "Bench-Quirrel",
+    "logic": "(Ruins1_02[bot1] + (ANYCLAW | WINGS) | Ruins1_02[top1]) + $BENCHRESET | WARPSTARTTOBENCH + Bench-Quirrel"
+  },
+  {
+    "name": "Bench-City_Toll",
+    "logic": "Ruins1_31[left1] + Can_Replenish_Geo + $BENCHRESET | WARPSTARTTOBENCH + Bench-City_Toll"
+  },
+  {
+    "name": "Bench-City_Storerooms",
+    "logic": "Ruins1_29[left1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-City_Storerooms"
+  },
+  {
+    "name": "Bench-Watcher's_Spire",
+    "logic": "Ruins1_18[right2] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Watcher's_Spire"
+  },
+  {
+    "name": "Bench-King's_Station",
+    "logic": "Ruins2_08[left1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-King's_Station"
+  },
+  {
+    "name": "Bench-Pleasure_House",
+    "logic": "Ruins_Bathhouse[door1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Pleasure_House"
+  },
+  {
+    "name": "Bench-Waterways",
+    "logic": "(Waterways_02[top3] + Broke_Waterways_Bench_Quake_Floor_3 | Waterways_02 + (LEFTCLAW | WINGS + RIGHTCLAW | ENEMYPOGOS + DANGEROUSSKIPS + (WINGS | RIGHTCLAW) | $SHRIEKPOGO[3,before:ROOMSOUL])) + $BENCHRESET | WARPSTARTTOBENCH + Bench-Waterways"
+  },
+  {
+    "name": "Bench-Godhome_Atrium",
+    "logic": "GG_Atrium + (RIGHTCLAW + (RIGHTDASH | LEFTCLAW + RIGHTSUPERDASH | WINGS) | LEFTCLAW + WINGS | $SHRIEKPOGO[4,NOLEFTSTALL]) + $BENCHRESET | WARPSTARTTOBENCH + Bench-Godhome_Atrium"
+  },
+  {
+    "name": "Bench-Godhome_Roof",
+    "logic": "FALSE + $BENCHRESET | WARPSTARTTOBENCH + Bench-Godhome_Roof"
+  },
+  {
+    "name": "Bench-Hall_of_Gods",
+    "logic": "GG_Workshop + (ANYCLAW | $SHRIEKPOGO[6]) + $BENCHRESET | WARPSTARTTOBENCH + Bench-Hall_of_Gods"
+  },
+  {
+    "name": "Bench-Deepnest_Hot_Springs",
+    "logic": "Deepnest_30[left1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Deepnest_Hot_Springs"
+  },
+  {
+    "name": "Bench-Failed_Tramway",
+    "logic": "Deepnest_14[left1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Failed_Tramway"
+  },
+  {
+    "name": "Bench-Beast's_Den",
+    "logic": "Deepnest_Spider_Town[left1] + (FULLCLAW | WINGS + ANYCLAW | WINGS + COMPLEXSKIPS + $SHADESKIP[2HITS] | ENEMYPOGOS + $SHRIEKPOGO[2,before:ROOMSOUL] + $SHRIEKPOGO[2,before:ROOMSOUL] + COMBAT[Left_Devout]) + $BENCHRESET | WARPSTARTTOBENCH + Bench-Beast's_Den"
+  },
+  {
+    "name": "Bench-Basin_Toll",
+    "logic": "Abyss_18[right1] + Can_Replenish_Geo + $BENCHRESET | WARPSTARTTOBENCH + Bench-Basin_Toll"
+  },
+  {
+    "name": "Bench-Hidden_Station",
+    "logic": "Abyss_22[left1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Hidden_Station"
+  },
+  {
+    "name": "Bench-Oro",
+    "logic": "Deepnest_East_06[door1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Oro"
+  },
+  {
+    "name": "Bench-Camp",
+    "logic": "Deepnest_East_13[bot1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Camp"
+  },
+  {
+    "name": "Bench-Colosseum",
+    "logic": "(Room_Colosseum_02[top1] | Room_Colosseum_02[top2]) + $BENCHRESET | WARPSTARTTOBENCH + Bench-Colosseum"
+  },
+  {
+    "name": "Bench-Hive",
+    "logic": "Hive_01[right2] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Hive"
+  },
+  {
+    "name": "Bench-Peak_Dark_Room",
+    "logic": "Mines_29[left1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Peak_Dark_Room"
+  },
+  {
+    "name": "Bench-Crystal_Guardian",
+    "logic": "Mines_18[left1] + Defeated_Crystal_Guardian + $BENCHRESET | WARPSTARTTOBENCH + Bench-Crystal_Guardian"
+  },
+  {
+    "name": "Bench-Grounds_Stag",
+    "logic": "RestingGrounds_09[left1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Grounds_Stag"
+  },
+  {
+    "name": "Bench-Grey_Mourner",
+    "logic": "RestingGrounds_12[door_Mansion] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Grey_Mourner"
+  },
+  {
+    "name": "Bench-Gardens_Cornifer",
+    "logic": "Fungus1_24[left1] + (ANYCLAW | WINGS) + $BENCHRESET | WARPSTARTTOBENCH + Bench-Gardens_Cornifer"
+  },
+  {
+    "name": "Bench-Gardens_Toll",
+    "logic": "Fungus3_50[right1] + Can_Replenish_Geo + $BENCHRESET | WARPSTARTTOBENCH + Bench-Gardens_Toll"
+  },
+  {
+    "name": "Bench-Gardens_Stag",
+    "logic": "Fungus3_40[right1] | Fungus3_40[top1] + (RIGHTDASH | WINGS | RIGHTCLAW | LEFTCLAW + RIGHTSUPERDASH | ENEMYPOGOS | $SHADESKIP | SPELLAIRSTALL + $CASTSPELL[before:ROOMSOUL,after:ROOMSOUL]) | Can_Stag + Queen's_Gardens_Stag"
+  },
+  {
+    "name": "Bench-Palace_Entrance",
+    "logic": "White_Palace_01 + $BENCHRESET | WARPSTARTTOBENCH + Bench-Palace_Entrance"
+  },
+  {
+    "name": "Bench-Palace_Atrium",
+    "logic": "White_Palace_03_hub + $BENCHRESET | WARPSTARTTOBENCH + Bench-Palace_Atrium"
+  },
+  {
+    "name": "Bench-Palace_Balcony",
+    "logic": "White_Palace_06[top1] + $BENCHRESET | WARPSTARTTOBENCH + Bench-Palace_Balcony"
+  },
+  {
+    "name": "Bench-Upper_Tram",
+    "logic": "Upper_Tram + $BENCHRESET | WARPSTARTTOBENCH + Bench-Upper_Tram"
+  },
+  {
+    "name": "Bench-Lower_Tram",
+    "logic": "Lower_Tram + $BENCHRESET | WARPSTARTTOBENCH + Bench-Lower_Tram"
+  },
+  {
+    "name": "Tutorial_01",
+    "logic": "Tutorial_01[right1] | Tutorial_01[top1] | Tutorial_01[top2]"
+  },
+  {
+    "name": "Town",
+    "logic": "Town[left1] | Town[top1] | Town[bot1] | Town[right1] | Town[door_station] | Town[door_sly] | Town[door_mapper] | Town[door_bretta] | Town[door_jiji] | Town[room_grimm] | Town[room_divine] | Bench-Dirtmouth"
+  },
+  {
+    "name": "Crossroads_03",
+    "logic": "Crossroads_03[right1] | Crossroads_03[right2] | Crossroads_03[left1] | Crossroads_03[left2] | Crossroads_03[bot1]"
+  },
+  {
+    "name": "Crossroads_07",
+    "logic": "Crossroads_07[left1] | Crossroads_07[left2] | Crossroads_07[left3] | Crossroads_07[right1] | Crossroads_07[right2] | Crossroads_07[bot1]"
+  },
+  {
+    "name": "Crossroads_08",
+    "logic": "Crossroads_08[left1] | Crossroads_08[left2] | Crossroads_08[right1] | Crossroads_08[right2]"
+  },
+  {
+    "name": "Crossroads_14",
+    "logic": "Crossroads_14[left1] | Crossroads_14[left2] | Crossroads_14[right1] | Crossroads_14[right2]"
+  },
+  {
+    "name": "Crossroads_18",
+    "logic": "Crossroads_18[right1] + (LEFTDASH | WINGS | INFECTED | LEFTCLAW + SPELLAIRSTALL + $CASTSPELL[2,before:AREASOUL,after:ITEMSOUL] | $SLOPEBALL[before:AREASOUL,after:ITEMSOUL]) | Crossroads_18[bot1] | Crossroads_18[right2]"
+  },
+  {
+    "name": "Crossroads_19",
+    "logic": "Crossroads_19[left1] | Crossroads_19[left2] | Crossroads_19[right1] | Crossroads_19[top1]"
+  },
+  {
+    "name": "Crossroads_21",
+    "logic": "Crossroads_21[left1] | Crossroads_21[right1] | Crossroads_21[top1]"
+  },
+  {
+    "name": "Crossroads_27",
+    "logic": "Crossroads_27[right1] | Crossroads_27[bot1] | Crossroads_27[left1] | Crossroads_27[left2]"
+  },
+  {
+    "name": "Crossroads_33",
+    "logic": "Crossroads_33[top1] | Crossroads_33[left1] | Crossroads_33[left2] | Crossroads_33[right1] | Crossroads_33[right2]"
+  },
+  {
+    "name": "Fungus1_11",
+    "logic": "Fungus1_11[left1] | Fungus1_11[top1] | Fungus1_11[bot1] | Fungus1_11[right1] | Fungus1_11[right2]"
+  },
+  {
+    "name": "Fungus1_21",
+    "logic": "Fungus1_21[left1] | Fungus1_21[top1] | Fungus1_21[right1] + (LEFTCLAW | RIGHTCLAW + LEFTSUPERDASH | WINGS | LEFTDASH | CYCLONE | GREATSLASH) | Fungus1_21[bot1]"
+  },
+  {
+    "name": "Fungus1_30",
+    "logic": "Fungus1_30[left1] | Fungus1_30[right1] | Fungus1_30[top1] | Fungus1_30[top3]"
+  },
+  {
+    "name": "Fungus3_01",
+    "logic": "Fungus3_01[left1] | Fungus3_01[top1] | Fungus3_01[right1] | Fungus3_01[right2]"
+  },
+  {
+    "name": "Fungus3_02",
+    "logic": "Fungus3_02[left1] | Fungus3_02[left2] | Fungus3_02[left3] | Fungus3_02[right1] | Fungus3_02[right2]"
+  },
+  {
+    "name": "Fungus3_26",
+    "logic": "Fungus3_26[top1] | Fungus3_26[left1] | Fungus3_26[left2] | Fungus3_26[left3] | Fungus3_26[right1]"
+  },
+  {
+    "name": "Fungus3_44",
+    "logic": "(Fungus3_44[bot1] + (RIGHTCLAW | WINGS)) | Fungus3_44[door1] | Fungus3_44[right1]"
+  },
+  {
+    "name": "Fungus3_47",
+    "logic": "Fungus3_47[left1] | Fungus3_47[door1] | Fungus3_47[right1]"
+  },
+  {
+    "name": "Fungus2_01",
+    "logic": "Fungus2_01[left1] | Fungus2_01[left2] | Fungus2_01[left3] | Fungus2_01[right1]"
+  },
+  {
+    "name": "Fungus2_03",
+    "logic": "Fungus2_03[left1] | Fungus2_03[bot1] | Fungus2_03[right1]"
+  },
+  {
+    "name": "Fungus2_04",
+    "logic": "Fungus2_04[left1] | Fungus2_04[right1] | Fungus2_04[right2] | Fungus2_04[top1]"
+  },
+  {
+    "name": "Fungus2_06",
+    "logic": "Fungus2_06[left1] | (Fungus2_06[left2] + ACID) | Fungus2_06[top1] | Fungus2_06[right1] | Fungus2_06[right2]"
+  },
+  {
+    "name": "Fungus2_11",
+    "logic": "Fungus2_11[top1] | Fungus2_11[left1] | Fungus2_11[left2] | Fungus2_11[right1]"
+  },
+  {
+    "name": "Fungus2_13",
+    "logic": "Fungus2_13[top1] | Fungus2_13[left2] | Fungus2_13[left3] + (RIGHTDASH | ACID | WINGS | LEFTCLAW | RIGHTCLAW + PRECISEMOVEMENT | SPELLAIRSTALL + $CASTSPELL[before:AREASOUL,after:ROOMSOUL] | PRECISEMOVEMENT + $SHADESKIP) | Bench-Bretta + (RIGHTDASH | RIGHTSUPERDASH | ANYCLAW | WINGS | ENEMYPOGOS | PRECISEMOVEMENT)"
+  },
+  {
+    "name": "Fungus2_14",
+    "logic": "Fungus2_14[top1] | Fungus2_14[bot3] | Fungus2_14[right1] + (LEFTDASH | LEFTCLAW + (RIGHTCLAW | PRECISEMOVEMENT) | WINGS | LEFTSUPERDASH | ACID)"
+  },
+  {
+    "name": "Fungus2_15", // the bottom of the upper chamber
+    "logic": "Fungus2_15[top3] | Fungus2_15[left1] + (RIGHTCLAW | LEFTCLAW + RIGHTSUPERDASH + WINGS | $SHRIEKPOGO[7]) | Fungus2_15[right1] + (LEFTCLAW | WINGS + RIGHTCLAW)"
+  },
+  {
+    "name": "Fungus2_17",
+    "logic": "Fungus2_17[right1] | Fungus2_17[left1] | Fungus2_17[bot1]"
+  },
+  {
+    "name": "Fungus2_18",
+    "logic": "Fungus2_18[top1] | Fungus2_18[right1] + (LEFTDASH | LEFTCLAW | WINGS | RIGHTCLAW | ENEMYPOGOS) | Fungus2_18[bot1] + (RIGHTCLAW | WINGS)"
+  },
+  {
+    "name": "Fungus2_20",
+    "logic": "Fungus2_20[left1] | Fungus2_20[right1]"
+  },
+  {
+    "name": "Fungus2_23",
+    "logic": "Fungus2_23[right1] | Fungus2_23[right2] + Opened_Waterways_Exit"
+  },
+  {
+    "name": "Deepnest_01",
+    "logic": "Deepnest_01[left1] | Deepnest_01[bot1] | Deepnest_01[right1]"
+  },
+  {
+    "name": "Deepnest_01b",
+    "logic": "Deepnest_01b[top1] | Deepnest_01b[top2] | Deepnest_01b[right1] | (Deepnest_01b[right2] + (ANYCLAW | WINGS)) | (Deepnest_01b[bot1] + (ANYCLAW | WINGS))"
+  },
+  {
+    "name": "Deepnest_02",
+    "logic": "Deepnest_02[left1] | Deepnest_02[left2] | Deepnest_02[right1]"
+  },
+  {
+    "name": "Deepnest_03",
+    "logic": "Deepnest_03[right1] | Deepnest_03[top1] | Deepnest_03[left1] | Deepnest_03[left2]"
+  },
+  {
+    "name": "Deepnest_10",
+    "logic": "Deepnest_10[right1] | Deepnest_10[right2] | Deepnest_10[door1] | Deepnest_10[door2]"
+  },
+  {
+    "name": "Deepnest_14",
+    "logic": "Deepnest_14[left1] | Deepnest_14[bot1] | Deepnest_14[bot2]"
+  },
+  {
+    "name": "Deepnest_17",
+    "logic": "Deepnest_17[left1] | Deepnest_17[right1] | Deepnest_17[top1] | Deepnest_17[bot1]"
+  },
+  {
+    "name": "Deepnest_26",
+    "logic": "Deepnest_26[right1] | Deepnest_26[bot1] | Deepnest_26[left1] + (RIGHTCLAW | (LEFTCLAW + RIGHTSUPERDASH) | WINGS) + Opened_Tramway_Exit_Gate"
+  },
+  {
+    "name": "Deepnest_34",
+    "logic": "(LANTERN | DARKROOMS) + (Deepnest_34[left1] | Deepnest_34[right1] | Deepnest_34[top1])"
+  },
+  {
+    "name": "Deepnest_35",
+    "logic": "(LANTERN | DARKROOMS) + (Deepnest_35[bot1] + (ANYCLAW | ENEMYPOGOS + $SHADESKIP[2HITS] + WINGS + ANYDASH | ENEMYPOGOS + $SHRIEKPOGO[4,before:AREASOUL,after:AREASOUL]) | Deepnest_35[left1] | Deepnest_35[top1])"
+  },
+  {
+    "name": "Deepnest_37",
+    "logic": "Deepnest_37[left1] | Deepnest_37[top1] | Deepnest_37[right1] | Deepnest_37[bot1]"
+  },
+  {
+    "name": "Deepnest_39",
+    "logic": "(LANTERN | DARKROOMS) + (Deepnest_39[right1] | Deepnest_39[door1] | Deepnest_39[top1] | Deepnest_39[left1])"
+  },
+  {
+    "name": "Deepnest_41",
+    "logic": "(LANTERN | DARKROOMS) + (Deepnest_41[left1] + (RIGHTCLAW | LEFTCLAW + WINGS | (LEFTCLAW | WINGS) + ENEMYPOGOS) | Deepnest_41[left2] + (FULLCLAW | WINGS + ANYCLAW) | Deepnest_41[right1] + (LEFTCLAW | WINGS))"
+  },
+  {
+    "name": "Deepnest_42",
+    "logic": "(LANTERN | DARKROOMS) + ((Deepnest_42[bot1] + FULLCLAW) | Deepnest_42[left1] | Deepnest_42[top1])"
+  },
+  {
+    "name": "Deepnest_East_02",
+    "logic": "Deepnest_East_02[bot1] + (LEFTCLAW | WINGS | ENEMYPOGOS + (RIGHTCLAW | ANYDASH + COMPLEXSKIPS)) | Deepnest_East_02[top1] | Deepnest_East_02[right1]"
+  },
+  {
+    "name": "Deepnest_East_03",
+    "logic": "Deepnest_East_03[left1] | Deepnest_East_03[left2] | Deepnest_East_03[top1] | Deepnest_East_03[right1] | Deepnest_East_03[right2] | Deepnest_East_03[top2]"
+  },
+  {
+    "name": "Deepnest_East_04",
+    "logic": "Deepnest_East_04[left1] + (ACID | RIGHTSKIPACID | ACIDSKIPS + DAMAGEBOOSTS + WINGS + RIGHTDASH + RIGHTSUPERDASH + $TAKEDAMAGE | ACIDSKIPS + RIGHTDASH + $SHRIEKPOGO[before:AREASOUL,after:ROOMSOUL]) | Deepnest_East_04[left2] | Deepnest_East_04[right2] | Deepnest_East_04[right1] + (ACID | LEFTDASH | WINGS | SPELLAIRSTALL + $CASTSPELL[before:AREASOUL,after:ROOMSOUL] | DAMAGEBOOSTS + $TAKEDAMAGE)"
+  },
+  {
+    "name": "Deepnest_East_07",
+    "logic": "Deepnest_East_07[right1] | Deepnest_East_07[left1] | Deepnest_East_07[left2]"
+  },
+  {
+    "name": "Deepnest_East_11",
+    "logic": "Deepnest_East_11[left1] | Deepnest_East_11[bot1] | Deepnest_East_11[top1] + Broke_Camp_Bench_Wall | Deepnest_East_11[right1]"
+  },
+  {
+    "name": "Deepnest_East_18",
+    "logic": "Deepnest_East_18[top1] | Deepnest_East_18[bot1] | (Deepnest_East_18[right2] + LEFTSHADOWDASH)"
+  },
+  {
+    "name": "Hive_03_c",
+    "logic": "Hive_03_c[left1] | Hive_03_c[top1] | Hive_03_c[right2] | Hive_03_c[right3]"
+  },
+  {
+    "name": "Abyss_03",
+    "logic": "Abyss_03[top1] | (Abyss_03[bot1] + (RIGHTCLAW | WINGS)) | Abyss_03[bot2]"
+  },
+  {
+    "name": "Abyss_03_b",
+    "logic": "Abyss_03_b[left1]"
+  },
+  {
+    "name": "Abyss_03_c",
+    "logic": "Abyss_03_c[top1] | Abyss_03_c[right1]"
+  },
+  {
+    "name": "Abyss_04",
+    "logic": "Abyss_04[top1] | Abyss_04[right1] | Abyss_04[bot1] | Abyss_04[left1]"
+  },
+  {
+    "name": "Abyss_06_Core",
+    "logic": "(Abyss_06_Core[top1] + BRAND) | Abyss_06_Core[left1] | Abyss_06_Core[left3] | Abyss_06_Core[bot1] | Abyss_06_Core[right2]"
+  },
+  {
+    "name": "Abyss_09",
+    "logic": "Abyss_09[left1] + (RIGHTCLAW + (RIGHTDASH | RIGHTSUPERDASH | SWIM + VOIDHEART) | WINGS | DAMAGEBOOSTS + (RIGHTDASH | SPELLAIRSTALL + $CASTSPELL) + $SHADESKIP + $TAKEDAMAGE) | Abyss_09[right1] + (Lit_Abyss_Lighthouse | VOIDHEART) + (LEFTSUPERDASH | SWIM | LEFTSHARPSHADOW + $SHRIEKPOGO[1,1,1,1,1,1,1]) | Abyss_09[right2]"
+  },
+  {
+    "name": "Abyss_19",
+    "logic": "(Abyss_19[bot1] + (ANYCLAW | WINGS)) | Abyss_19[right1]"
+  },
+  {
+    "name": "Abyss_01",
+    "logic": "Abyss_01[left1] | Abyss_01[right1] | Abyss_01[left3] + (RIGHTCLAW | LEFTCLAW + WINGS | $SHRIEKPOGO[before:AREASOUL]) | Abyss_01[left2] + (RIGHTSUPERDASH | SPIKETUNNELS + RIGHTDASH + (DASHMASTER | SPELLAIRSTALL + $CASTSPELL)) | Abyss_01[right2] + (LEFTSUPERDASH | SPIKETUNNELS + LEFTDASH + (DASHMASTER | SPELLAIRSTALL + $CASTSPELL[2]))"
+  },
+  {
+    "name": "Waterways_01",
+    "logic": "Waterways_01[top1] | Waterways_01[right1] | Waterways_01[bot1] | Waterways_01[left1]"
+  },
+  {
+    "name": "Waterways_02",
+    "logic": "Waterways_02[top1] | Waterways_02[top2] | Waterways_02[top3] + Broke_Waterways_Bench_Quake_Floor_3 | Waterways_02[bot1] | Waterways_02[bot2] | Bench-Waterways"
+  },
+  {
+    "name": "Waterways_04",
+    "logic": "Waterways_04[right1] | Waterways_04[left1] + (RIGHTCLAW | WINGS | ENEMYPOGOS) | Waterways_04[left2] + ((RIGHTCLAW | WINGS + ENEMYPOGOS) + (SWIM | RIGHTSKIPACID) | ACIDSKIPS + RIGHTDASH + (LEFTCLAW + $SHRIEKPOGO[1,1] | RIGHTCLAW + $SHRIEKPOGO[1,1,1,1,1] | $SHRIEKPOGO[1,1,1,1,1,1,1]))"
+  },
+  {
+    "name": "Waterways_04b",
+    "logic": "Waterways_04b[right1] | Waterways_04b[right2] | Waterways_04b[left1]"
+  },
+  {
+    "name": "Waterways_07",
+    "logic": "Waterways_07[left1] + (ACID + (RIGHTCLAW | WINGS) | FULLCLAW + RIGHTSUPERDASH | WINGS + RIGHTDASH + ANYCLAW | RIGHTDASH + $SHRIEKPOGO[1,after:ROOMSOUL]) | Waterways_07[right1] + (ANYCLAW | WINGS) | Waterways_07[right2] + (ACID | ACIDSKIPS + DANGEROUSSKIPS + DIFFICULTSKIPS + LEFTDASH + $SHRIEKPOGO[2,after:ROOMSOUL]) | Waterways_07[door1] | Waterways_07[top1]"
+  },
+  {
+    "name": "Waterways_13", // equivalent to *Isma's_Tear
+    "logic": "Waterways_13[left1] + (FULLCLAW | ANYCLAW + (WINGS | ENEMYPOGOS) | LEFTCLAW + (RIGHTDASH | RIGHTSUPERDASH) | ENEMYPOGOS + $SHRIEKPOGO[5]) | Waterways_13[left2] + (ACID + (RIGHTCLAW | WINGS | ENEMYPOGOS) | ACIDSKIPS + LEFTCLAW + RIGHTSUPERDASH + (WINGS | RIGHTCLAW) | ACIDSKIPS + RIGHTDASH + $SHRIEKPOGO[1,1])"
+  },
+  {
+    "name": "GG_Waterways",
+    "logic": "GG_Waterways[door1] | GG_Waterways[right1] + (LEFTSUPERDASH | SWIM) | Warp-Godhome_to_Junk_Pit"
+  },
+  {
+    "name": "Room_GG_Shortcut", // equivalent to *Geo_Rock-Fluke_Hermit_Dupe
+    // A  to first ledge: (LEFTCLAW + WINGS | RIGHTCLAW)
+    // B  up from first ledge without crossing pool: RIGHTCLAW + WINGS
+    // C  to left side of pool: LEFTDASH + WINGS | LEFTSUPERDASH + WINGS | SWIM | LEFTSUPERDASH + LEFTDASH + LEFTCLAW + PRECISEMOVEMENT
+    // D  up from left side with right claw: RIGHTCLAW + (RIGHTDASH | WINGS | LEFTCLAW + RIGHTSUPERDASH | LEFTCLAW + ENEMYPOGOS)
+    // E  up from left side without right claw: LEFTCLAW + RIGHTDASH + WINGS + PRECISEMOVEMENT
+    // Room_GG_Shortcut[left1] + A + (B | C + (D | E))
+    "logic": "Room_GG_Shortcut[top1] | Room_GG_Shortcut[left1] + (LEFTCLAW + WINGS | RIGHTCLAW) + (RIGHTCLAW + WINGS | (LEFTDASH + WINGS | LEFTSUPERDASH + WINGS | SWIM | LEFTSUPERDASH + LEFTDASH + LEFTCLAW + PRECISEMOVEMENT | $SHRIEKPOGO[2]) + (RIGHTCLAW + (RIGHTDASH | WINGS | LEFTCLAW + (RIGHTSUPERDASH | ENEMYPOGOS)) | LEFTCLAW + RIGHTDASH + WINGS + PRECISEMOVEMENT | LEFTCLAW + $SHRIEKPOGO[2]))"
+  },
+  {
+    "name": "Warp-Junk_Pit_to_Godhome",
+    "logic": "GG_Waterways + GODTUNERUNLOCK + DREAMNAIL"
+  },
+  {
+    "name": "Warp-Godhome_to_Junk_Pit",
+    "logic": "Warp-Junk_Pit_to_Godhome | GG_Atrium"
+  },
+  {
+    "name": "GG_Atrium",
+    "logic": "Warp-Junk_Pit_to_Godhome + (RIGHTCLAW | WINGS | LEFTCLAW + RIGHTSUPERDASH) | GG_Workshop + (LEFTCLAW | RIGHTCLAW + WINGS | $SHRIEKPOGO[5]) | Bench-Godhome_Atrium"
+  },
+  {
+    "name": "GG_Workshop",
+    "logic": "GG_Atrium + (SWIM + $HOTSPRINGRESET | ANY) | Bench-Hall_of_Gods"
+  },
+  {
+    "name": "Ruins1_03",
+    "logic": "Ruins1_03[top1] | Ruins1_03[left1] | Ruins1_03[right1] | Ruins1_03[right2]"
+  },
+  {
+    "name": "Ruins1_05b",
+    "logic": "Ruins1_05b[top1] | Ruins1_05b[right1] | Ruins1_05b[left1] | Ruins1_05b[bot1]"
+  },
+  {
+    "name": "Ruins1_05c",
+    "logic": "Ruins1_05c[bot1] | Ruins1_05c[left2] | Ruins1_05c[top1] | Ruins1_05c[top2] | Ruins1_05c[top3]"
+  },
+  {
+    "name": "Ruins1_05",
+    "logic": "Ruins1_05[bot3] | Ruins1_05[right1] | Ruins1_05[right2] | Ruins1_05[top1]"
+  },
+  {
+    "name": "Ruins1_23",
+    "logic": "Ruins1_23[right2] | Ruins1_23[left1] | Ruins1_23[bot1]"
+  },
+  {
+    "name": "Ruins1_28",
+    "logic": "Ruins1_28[left1] + (RIGHTCLAW | WINGS | RIGHTDASH | LEFTCLAW + RIGHTSUPERDASH | BACKGROUNDPOGOS | $SHADESKIP) | Ruins1_28[bot1] | Ruins1_28[right1]"
+  },
+  {
+    "name": "Ruins1_30",
+    "logic": "Ruins1_30[left1] | (Ruins1_30[left2] + (LEFTCLAW | RIGHTCLAW + BACKGROUNDPOGOS | WINGS) + Broke_Sanctum_Escape_Quake_Floor_1 + Broke_Sanctum_Escape_Quake_Floor_2) | Ruins1_30[bot1] | Ruins1_30[right1]"
+  },
+  {
+    "name": "Ruins1_31",
+    "logic": "Ruins1_31[right1] | Ruins1_31[left2] | Ruins1_31[left3]"
+  },
+  {
+    "name": "Ruins2_01",
+    "logic": "Ruins2_01[top1] | Ruins2_01[bot1] | Ruins2_01[left2]"
+  },
+  {
+    "name": "Ruins2_01_b",
+    "logic": "Ruins2_01_b[top1] | Ruins2_01_b[left1] | Ruins2_01_b[right1]"
+  },
+  {
+    "name": "Ruins2_03b",
+    "logic": "Ruins2_03b[top1] | Ruins2_03b[top2] | Ruins2_03b[left1] | Ruins2_03b[bot1]"
+  },
+  {
+    "name": "Ruins2_04",
+    "logic": "Ruins2_04[left1] | Ruins2_04[left2] | Ruins2_04[right1] | Ruins2_04[right2] | Ruins2_04[door_Ruin_House_01] | Ruins2_04[door_Ruin_House_02] | Ruins2_04[door_Ruin_House_03] | Ruins2_04[door_Ruin_Elevator]"
+  },
+  {
+    "name": "Ruins2_10",
+    "logic": "Ruins2_10[right1] | Ruins2_10[left1] | Right_Elevator"
+  },
+  {
+    "name": "RestingGrounds_02",
+    "logic": "RestingGrounds_02[top1] | RestingGrounds_02[left1] | RestingGrounds_02[bot1] | RestingGrounds_02[right1]"
+  },
+  {
+    "name": "RestingGrounds_05",
+    "logic": "RestingGrounds_05[left1] | RestingGrounds_05[left2] | RestingGrounds_05[left3] | RestingGrounds_05[right1] | RestingGrounds_05[right2] | RestingGrounds_05[bot1]"
+  },
+  {
+    "name": "RestingGrounds_10",
+    "logic": "RestingGrounds_10[left1] | RestingGrounds_10[top1] | RestingGrounds_10[top2]"
+  },
+  {
+    "name": "Mines_02",
+    "logic": "Mines_02[top1] | Mines_02[top2] | Mines_02[left1] | Mines_02[right1]"
+  },
+  {
+    "name": "Mines_03",
+    "logic": "Mines_03[right1] | Mines_03[top1] | Mines_03[bot1]"
+  },
+  {
+    "name": "Mines_04",
+    "logic": "Mines_04[left1] | Mines_04[left2] | Mines_04[left3] + (FULLCLAW | WINGS + (ANYCLAW | ENEMYPOGOS) | $SHRIEKPOGO[2,2,before:AREASOUL,after:AREASOUL]) | Mines_04[right1] | Mines_04[top1]"
+  },
+  {
+    "name": "Mines_05",
+    "logic": "Mines_05[right1] | Mines_05[top1] | Mines_05[bot1] | Mines_05[left1] | Mines_05[left2]"
+  },
+  {
+    "name": "Mines_10", // deprecated
+    "logic": "Mines_10[left1] + Mines_10[bot1] | Mines_10[bot1] + Mines_10[left1]"
+  },
+  {
+    "name": "Mines_11",
+    "logic": "Mines_11[bot1] + (LEFTCLAW | WINGS | RIGHTCLAW + BACKGROUNDPOGOS) | Mines_11[right1] | Mines_11[top1]"
+  },
+  {
+    "name": "Mines_18",
+    "logic": "Mines_18[left1] | Mines_18[right1] | Mines_18[top1]"
+  },
+  {
+    "name": "Mines_20",
+    "logic": "Mines_20[left1] | Mines_20[right1] | (Mines_20[right2] + (FULLCLAW | WINGS + ANYCLAW))"
+  },
+  {
+    "name": "Mines_23",
+    "logic": "(FULLDASH | WINGS | FULLCLAW + FULLSUPERDASH | Mines_23[right1]) + (Mines_23[left1] | Mines_23[top1] | Mines_23[right1] | Mines_23[right2])"
+  },
+  {
+    "name": "Fungus3_04",
+    "logic": "Fungus3_04[left1] | Fungus3_04[left2] | Fungus3_04[right1] | Fungus3_04[right2]"
+  },
+  {
+    "name": "Fungus3_11",
+    "logic": "Fungus3_11[left1] | Fungus3_11[left2] + (LEFTCLAW | RIGHTCLAW + WINGS | ENEMYPOGOS + $SHRIEKPOGO[before:AREASOUL,after:ROOMSOUL]) | Fungus3_11[right1] + (LEFTCLAW | WINGS | RIGHTCLAW + ENEMYPOGOS)"
+  },
+  {
+    "name": "Fungus3_13",
+    "logic": "Fungus3_13[left1] | Fungus3_13[left2] | Fungus3_13[left3] | Fungus3_13[bot1] | Fungus3_13[right1]"
+  },
+  {
+    "name": "Fungus3_22",
+    "logic": "Fungus3_22[right1] | Fungus3_22[left1] | Fungus3_22[bot1]"
+  },
+  {
+    "name": "Fungus3_34",
+    "logic": "(Fungus3_34[left1] + (RIGHTDASH | RIGHTSUPERDASH | WINGS)) | Fungus3_34[right1] | Fungus3_34[top1]"
+  },
+  {
+    "name": "Fungus3_40",
+    "logic": "Fungus3_40[top1] | Fungus3_40[right1]"
+  },
+  {
+    "name": "Cliffs_01",
+    "logic": "Cliffs_01[right1] | Cliffs_01[right2] | Cliffs_01[right3] | Cliffs_01[right4]"
+  },
+  {
+    "name": "Cliffs_02",
+    "logic": "Cliffs_02[bot1] + (LEFTCLAW | WINGS | (RIGHTCLAW + (LEFTDASH | LEFTSUPERDASH | ENEMYPOGOS))) | (Cliffs_02[door1] | Cliffs_02[left1]) + (ANYCLAW | WINGS | ENEMYPOGOS) | Cliffs_02[left2]"
+  },
+  {
+    "name": "White_Palace_01",
+    "logic": "White_Palace_01[left1] + (WINGS | RIGHTCLAW + ANYDASH)  | (White_Palace_01[right1] + (LEFTDASH | LEFTSUPERDASH + RIGHTCLAW | LEFTCLAW + PRECISEMOVEMENT | WINGS) | White_Palace_01[top1] + Palace_Entrance_Lantern_Lit) + (LEFTDASH + (BACKGROUNDPOGOS | LEFTCLAW) | LEFTSUPERDASH + RIGHTCLAW | WINGS) | Bench-Palace_Entrance"
+  },
+  {
+    "name": "White_Palace_03_hub",
+    "logic": "White_Palace_03_hub[left1] | White_Palace_03_hub[left2] | White_Palace_03_hub[bot1] + (ANYCLAW | $SHRIEKPOGO[4,after:AREASOUL]) | White_Palace_03_hub[right1] | White_Palace_03_hub[top1] + Palace_Atrium_Gates_Opened | Bench-Palace_Atrium"
+  },
+  {
+    "name": "White_Palace_13",
+    "logic": "(White_Palace_13[left2] + (RIGHTSUPERDASH | RIGHTDASH + WINGS | RIGHTDASH + ANYCLAW | WINGS + ANYCLAW | (RIGHTDASH | WINGS) + PRECISEMOVEMENT) | White_Palace_13[right1] + OBSCURESKIPS + LEFTSUPERDASH + (WINGS | LEFTDASH)) + (FULLCLAW + WINGS + (LEFTDASH | LEFTSUPERDASH) | LEFTCLAW + LEFTDASH + (WINGS | SPELLAIRSTALL + $CASTSPELL[3,before:ROOMSOUL,after:ROOMSOUL]) + (RIGHTDASH | RIGHTSUPERDASH) | FULLCLAW + RIGHTDASH + LEFTSUPERDASH + (LEFTDASH | SPELLAIRSTALL + $CASTSPELL[before:ROOMSOUL]) | LEFTCLAW + $SHRIEKPOGO[2,before:ROOMSOUL,after:ROOMSOUL] | RIGHTCLAW + $SHRIEKPOGO[3,before:ROOMSOUL,after:ROOMSOUL,NOSTALL]) | White_Palace_13[left1] + (RIGHTCLAW + FULLSUPERDASH | RIGHTSUPERDASH + SPIKETUNNELS + LEFTDASH + (DASHMASTER | SPELLAIRSTALL + $CASTSPELL[after:ROOMSOUL])) | White_Palace_13[left3]"
+  },
+  {
+    "name": "Abyss_05",
+    "logic": "Abyss_05[left1] | Abyss_05[right1] | Warp-White_Palace_Entrance_to_Palace_Grounds | Warp-White_Palace_Atrium_to_Palace_Grounds"
+  }
+]

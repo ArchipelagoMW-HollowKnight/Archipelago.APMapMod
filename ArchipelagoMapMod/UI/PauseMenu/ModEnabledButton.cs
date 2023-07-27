@@ -26,7 +26,7 @@ internal class ModEnabledButton : MainButton
 
     public override void Update()
     {
-        Button.BorderColor = apmmColors.GetColor(apmmColorSetting.UI_Borders);
+        Button.BorderColor = APmmColors.GetColor(APmmColorSetting.UI_Borders);
 
         if (MapChanger.Settings.CurrentMode().Mod is ArchipelagoMapMod.MOD)
             Button.Visibility = Visibility.Visible;
@@ -35,12 +35,12 @@ internal class ModEnabledButton : MainButton
 
         if (MapChanger.Settings.MapModEnabled())
         {
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_On);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_On);
             Button.Content = "Map Mod\nEnabled";
         }
         else
         {
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Disabled);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Disabled);
             Button.Content = "Map Mod\nDisabled";
         }
     }

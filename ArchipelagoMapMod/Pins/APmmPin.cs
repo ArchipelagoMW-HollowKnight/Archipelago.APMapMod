@@ -6,11 +6,10 @@ using MapChanger;
 using MapChanger.MonoBehaviours;
 using RandomizerCore.Logic;
 using UnityEngine;
-//using L = RandomizerMod.Localization;
 
 namespace ArchipelagoMapMod.Pins;
 
-internal abstract class apmmPin : BorderedPin, ISelectable
+internal abstract class APmmPin : BorderedPin, ISelectable
 {
     private const float SMALL_SCALE = 0.56f;
     private const float MEDIUM_SCALE = 0.67f;
@@ -81,7 +80,7 @@ internal abstract class apmmPin : BorderedPin, ISelectable
             }
         );
 
-        //if (RandomizerMod.RandomizerMod.RS.TrackerData.lm.LogicLookup.TryGetValue(name, out var logic)) Logic = logic;
+        if (ArchipelagoMapMod.LS.TrackerData.lm.LogicLookup.TryGetValue(name, out var logic)) Logic = logic;
 
         BorderSprite = new EmbeddedSprite("Pins.Border").Value;
         BorderPlacement = BorderPlacement.InFront;
@@ -112,9 +111,9 @@ internal abstract class apmmPin : BorderedPin, ISelectable
 
         var text = "\n";
 
-        // foreach (var hint in hints)
-        //     if (hint.CanGet(RandomizerMod.RandomizerMod.RS.TrackerData.pm))
-        //         text += $"\n{hint.Name}";
+        foreach (var hint in hints)
+            if (hint.CanGet(ArchipelagoMapMod.LS.TrackerData.pm))
+                text += $"\n{hint.Name}";
 
         HintText = text is not "\n" ? text : null;
     }

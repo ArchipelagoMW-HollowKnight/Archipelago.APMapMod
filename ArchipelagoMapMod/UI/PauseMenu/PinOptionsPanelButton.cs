@@ -31,12 +31,12 @@ internal class PinOptionsPanelButton : MainButton
     {
         base.Update();
 
-        Button.BorderColor = apmmColors.GetColor(apmmColorSetting.UI_Borders);
+        Button.BorderColor = APmmColors.GetColor(APmmColorSetting.UI_Borders);
 
         if (PinOptionsPanel.Instance.ExtraButtonsGrid.Visibility == Visibility.Visible)
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Custom);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Custom);
         else
-            Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Neutral);
+            Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Neutral);
 
         Button.Content = "More Pin\nOptions";
     }

@@ -33,10 +33,10 @@ internal class PoolButton : ExtraButton
 
         Button.ContentColor = ArchipelagoMapMod.LS.GetPoolGroupSetting(PoolGroup) switch
         {
-            PoolState.On => apmmColors.GetColor(apmmColorSetting.UI_On),
-            PoolState.Off => apmmColors.GetColor(apmmColorSetting.UI_Neutral),
-            PoolState.Mixed => apmmColors.GetColor(apmmColorSetting.UI_Custom),
-            _ => apmmColors.GetColor(apmmColorSetting.UI_On)
+            PoolState.On => APmmColors.GetColor(APmmColorSetting.UI_On),
+            PoolState.Off => APmmColors.GetColor(APmmColorSetting.UI_Neutral),
+            PoolState.Mixed => APmmColors.GetColor(APmmColorSetting.UI_Custom),
+            _ => APmmColors.GetColor(APmmColorSetting.UI_On)
         };
     }
 }

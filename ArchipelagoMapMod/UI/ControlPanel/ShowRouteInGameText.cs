@@ -17,10 +17,10 @@ internal class ShowRouteInGameText : ControlPanelText
     {
         return ArchipelagoMapMod.GS.RouteTextInGame switch
         {
-            RouteTextInGame.Hide => apmmColors.GetColor(apmmColorSetting.UI_Neutral),
-            RouteTextInGame.Show => apmmColors.GetColor(apmmColorSetting.UI_On),
-            RouteTextInGame.NextTransitionOnly => apmmColors.GetColor(apmmColorSetting.UI_On),
-            _ => apmmColors.GetColor(apmmColorSetting.UI_Neutral)
+            RouteTextInGame.Hide => APmmColors.GetColor(APmmColorSetting.UI_Neutral),
+            RouteTextInGame.Show => APmmColors.GetColor(APmmColorSetting.UI_On),
+            RouteTextInGame.NextTransitionOnly => APmmColors.GetColor(APmmColorSetting.UI_On),
+            _ => APmmColors.GetColor(APmmColorSetting.UI_Neutral)
         };
     }
 

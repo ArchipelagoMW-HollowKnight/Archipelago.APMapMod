@@ -35,7 +35,7 @@ internal class DefaultSettingsButton : ExtraButton
     {
         var text = "Reset global\nsettings";
 
-        Button.ContentColor = apmmColors.GetColor(apmmColorSetting.UI_Special);
+        Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Special);
 
         Button.Content = text;
     }

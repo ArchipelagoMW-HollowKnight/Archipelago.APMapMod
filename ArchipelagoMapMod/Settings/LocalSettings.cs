@@ -1,4 +1,6 @@
 ﻿using ArchipelagoMapMod.Pins;
+using ArchipelagoMapMod.RC;
+using Newtonsoft.Json;
 
 namespace ArchipelagoMapMod.Settings;
 
@@ -9,6 +11,11 @@ public class LocalSettings
 
     public Dictionary<string, PoolState> PoolSettings;
     public bool RandomizedOn = true;
+    
+    public TrackerData TrackerData;
+    public TrackerData TrackerDataWithoutSequenceBreaks;
+    [JsonIgnore]
+    public APRandoContext Context;
 
     public bool SpoilerOn;
     public bool VanillaOn;
@@ -17,7 +24,7 @@ public class LocalSettings
     {
         if (InitializedPreviously) return;
 
-        PoolSettings = apmmPinManager.AllPoolGroups.ToDictionary(poolGroup => poolGroup, poolGroup => PoolState.On);
+        PoolSettings = APmmPinManager.AllPoolGroups.ToDictionary(poolGroup => poolGroup, poolGroup => PoolState.On);
         ResetPoolSettings();
 
         InitializedPreviously = true;
@@ -78,7 +85,7 @@ public class LocalSettings
     /// </summary>
     private void ResetPoolSettings()
     {
-        foreach (var poolGroup in apmmPinManager.AllPoolGroups)
+        foreach (var poolGroup in APmmPinManager.AllPoolGroups)
             SetPoolGroupSetting(poolGroup, GetResetPoolState(poolGroup));
 
         PoolState GetResetPoolState(string poolGroup)
@@ -88,13 +95,13 @@ public class LocalSettings
 
             if (GroupBy == GroupBySetting.Item)
             {
-                IsRando = apmmPinManager.RandoItemPoolGroups.Contains(poolGroup);
-                IsVanilla = apmmPinManager.VanillaItemPoolGroups.Contains(poolGroup);
+                IsRando = APmmPinManager.RandoItemPoolGroups.Contains(poolGroup);
+                IsVanilla = APmmPinManager.VanillaItemPoolGroups.Contains(poolGroup);
             }
             else
             {
-                IsRando = apmmPinManager.RandoLocationPoolGroups.Contains(poolGroup);
-                IsVanilla = apmmPinManager.VanillaLocationPoolGroups.Contains(poolGroup);
+                IsRando = APmmPinManager.RandoLocationPoolGroups.Contains(poolGroup);
+                IsVanilla = APmmPinManager.VanillaLocationPoolGroups.Contains(poolGroup);
             }
 
             if (IsRando && IsVanilla && ArchipelagoMapMod.LS.RandomizedOn != ArchipelagoMapMod.LS.VanillaOn)

@@ -6,12 +6,12 @@ namespace ArchipelagoMapMod;
 
 internal class BenchRandoInterop
 {
-    internal static Dictionary<apmmBenchKey, string> GetBenches()
+    internal static Dictionary<APmmBenchKey, string> GetBenches()
     {
         var bsm = ItemChangerMod.Modules.Get<BRLocalSettingsModule>();
         return bsm.LS.Benches.ToDictionary(
             benchName =>
-                new apmmBenchKey(BenchLookup[benchName].SceneName, BenchLookup[benchName].GetRespawnMarkerName()),
+                new APmmBenchKey(BenchLookup[benchName].SceneName, BenchLookup[benchName].GetRespawnMarkerName()),
             benchName => benchName);
     }
 

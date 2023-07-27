@@ -42,7 +42,7 @@ internal class TransitionRoomSelector : RoomSelector
         {
             attackHoldTimer.Reset();
 
-            if (!apmmPinSelector.Instance.BenchSelected()) TryBenchwarp();
+            if (!APmmPinSelector.Instance.BenchSelected()) TryBenchwarp();
         }
     }
 
@@ -107,11 +107,11 @@ internal class TransitionRoomSelector : RoomSelector
         text += $"\n\nPress {Utils.GetBindingsText(bindings)}";
 
         if (RouteManager.CanCycleRoute(selectedScene))
-            text += $" to change starting / final transitions of current route.";
+            text += " to change starting / final transitions of current route.";
         else
-            text += $" to find a new route.";
+            text += " to find a new route.";
 
-        if (!apmmPinSelector.Instance.BenchSelected() && RouteManager.TryGetBenchwarpKey(out var _))
+        if (!APmmPinSelector.Instance.BenchSelected() && RouteManager.TryGetBenchwarpKey(out var _))
         {
             bindings = new List<BindingSource>(InputHandler.Instance.inputActions.attack.Bindings);
 

@@ -7,7 +7,7 @@ using Finder = MapChanger.Finder;
 
 namespace ArchipelagoMapMod.Pins;
 
-internal sealed class BenchPin : apmmPin
+internal sealed class BenchPin : APmmPin
 {
     private static readonly ISprite benchSprite = new PinLocationSprite("Benches");
     internal override HashSet<string> ItemPoolGroups => new() {"Benches"};
@@ -22,16 +22,10 @@ internal sealed class BenchPin : apmmPin
         SceneName = sceneName;
 
         LocationPoolGroup = "Benches";
-
-        if (InteropProperties.GetDefaultMapLocations(benchName) is (string, float, float)[] mapLocations)
+        
+        if (benchName is BenchwarpInterop.BENCH_WARP_START)
         {
-            MapRoomPosition mapPosition = new(mapLocations);
-            MapPosition = mapPosition;
-            MapZone = mapPosition.MapZone;
-        }
-        else if (benchName is BenchwarpInterop.BENCH_WARP_START)
-        {
-            var start = Ref.Settings.Start;
+            var start = ArchipelagoMapMod.LS.Context.StartDef;
 
             if (Finder.IsMappedScene(SceneName))
             {
@@ -47,9 +41,15 @@ internal sealed class BenchPin : apmmPin
                 MapZone = mapPosition.MapZone;
             }
         }
+        else if (InteropProperties.GetDefaultMapLocations(benchName) is (string, float, float)[] mapLocations)
+        {
+            MapRoomPosition mapPosition = new(mapLocations);
+            MapPosition = mapPosition;
+            MapZone = mapPosition.MapZone;
+        }
         else
         {
-            apmmPinManager.GridPins.Add(this);
+            APmmPinManager.GridPins.Add(this);
         }
     }
 
@@ -91,7 +91,7 @@ internal sealed class BenchPin : apmmPin
     {
         Vector4 color;
 
-        color = apmmColors.GetColor(apmmColorSetting.Pin_Normal);
+        color = APmmColors.GetColor(APmmColorSetting.Pin_Normal);
 
         if (!IsVisitedBench())
         {
