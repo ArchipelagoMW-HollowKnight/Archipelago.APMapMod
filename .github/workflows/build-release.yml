@@ -22,7 +22,7 @@ jobs:
         uses: BadMagic100/setup-hk@v1
         with:
           apiPath: API
-          dependencyFilePath: Archipelago.APMapMod/ModDependencies.txt
+          dependencyFilePath: ArchipelagoMapMod/ModDependencies.txt
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ArchipelagoMapMod
-          path: Archipelago.APMapMod/bin/Publish
+          path: ArchipelagoMapMod/bin/Publish
   release:
     needs:
       - build
