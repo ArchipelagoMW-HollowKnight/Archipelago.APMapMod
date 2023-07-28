@@ -1,0 +1,5 @@
+﻿Archipelago
+RandomizerCore
+RCPathfinder
+MapChanger
+ConnectionMetadataInjector
