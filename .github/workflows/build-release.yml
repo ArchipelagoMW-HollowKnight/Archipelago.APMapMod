@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ArchipelagoMapMod
-          path: ArchipelagoMapMod/bin/Publish
+          path: Archipelago.APMapMod/bin/Publish
   release:
     needs:
       - build
