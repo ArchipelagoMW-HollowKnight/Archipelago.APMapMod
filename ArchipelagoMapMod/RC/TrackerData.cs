@@ -1,11 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using ArchipelagoMapMod.IC;
+using ItemChanger;
+using ItemChanger.Internal;
+using Newtonsoft.Json;
 using RandomizerCore;
 using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
 using RandomizerCore.Updater;
 
 namespace ArchipelagoMapMod.RC;
-using TrackerUpdate = IC.TrackerUpdate;
 
 // class for storing data related to seed progress
 // updating handled through IC.TrackerUpdate
@@ -17,6 +19,7 @@ public class TrackerData
     /// <summary>
     /// The CTX indices of the items that have been obtained.
     /// </summary>
+    [JsonIgnore]
     public HashSet<int> obtainedItems = new();
     /// <summary>
     /// A set which tracks the placements which have been previewed, by the Name property of the corresponding RandoLocation.
@@ -58,7 +61,8 @@ public class TrackerData
     [JsonIgnore] public LogicManager lm;
     [JsonIgnore] public APRandoContext ctx;
     private MainUpdater mu;
-
+    public string logFileName;
+    
     public void Setup(APRandoContext ctx)
     {
         this.ctx = ctx;
@@ -109,6 +113,37 @@ public class TrackerData
         mu.AddEntries(ctx.transitionPlacements.Select((p, id) => new DelegateUpdateEntry(p.Source, OnCanGetTransition(id))));
         mu.StartUpdating(); // automatically handle tracking reachable unobtained locations/transitions and adding vanilla progression to pm
 
+        foreach (var placement in Ref.Settings.Placements.Values)
+        {
+            if (placement.AllObtained())
+            {
+                clearedLocations.Add(placement.Name);
+                uncheckedReachableLocations.Remove(placement.Name);
+            }
+
+            if (placement.Visited.HasFlag(VisitState.Previewed))
+                previewedLocations.Add(placement.Name);
+            
+            foreach (var placementItem in placement.Items)
+            {
+                if (!placementItem.WasEverObtained())
+                    continue;
+                
+                var id = ctx.itemPlacements.FindIndex(itemPlacement => itemPlacement.Item.Name == placementItem.name);
+                obtainedItems.Add(id);
+            }
+        }
+        
+        // foreach (var loc in clearedLocations)
+        // {
+        //     var placement = Ref.Settings.Placements[loc];
+        //     foreach (var placementItem in placement.Items)
+        //     {
+        //         var id = ctx.itemPlacements.FindIndex(itemPlacement => itemPlacement.Item.Name == placementItem.name);
+        //         obtainedItems.Add(id);
+        //     }
+        // }
+        
         foreach (int i in obtainedItems)
         {
             if (outOfLogicObtainedItems.Contains(i)) continue;
@@ -138,24 +173,24 @@ public class TrackerData
 
     private void HookTrackerUpdate()
     {
-        TrackerUpdate.OnItemObtained += OnItemObtained;
-        TrackerUpdate.OnPlacementPreviewed += OnPlacementPreviewed;
-        TrackerUpdate.OnPlacementCleared += OnPlacementCleared;
-        TrackerUpdate.OnTransitionVisited += OnTransitionVisited;
-        TrackerUpdate.OnPreviewsCleared += OnPreviewsCleared;
-        TrackerUpdate.OnFoundTransitionsCleared += OnFoundTransitionsCleared;
-        TrackerUpdate.OnUnload += UnhookTrackerUpdate;
+        APmmTrackerUpdate.OnItemObtained += OnItemObtained;
+        APmmTrackerUpdate.OnPlacementPreviewed += OnPlacementPreviewed;
+        APmmTrackerUpdate.OnPlacementCleared += OnPlacementCleared;
+        APmmTrackerUpdate.OnTransitionVisited += OnTransitionVisited;
+        APmmTrackerUpdate.OnPreviewsCleared += OnPreviewsCleared;
+        APmmTrackerUpdate.OnFoundTransitionsCleared += OnFoundTransitionsCleared;
+        APmmTrackerUpdate.OnUnload += UnhookTrackerUpdate;
     }
 
     public void UnhookTrackerUpdate()
     {
-        TrackerUpdate.OnItemObtained -= OnItemObtained;
-        TrackerUpdate.OnPlacementPreviewed -= OnPlacementPreviewed;
-        TrackerUpdate.OnPlacementCleared -= OnPlacementCleared;
-        TrackerUpdate.OnTransitionVisited -= OnTransitionVisited;
-        TrackerUpdate.OnPreviewsCleared -= OnPreviewsCleared;
-        TrackerUpdate.OnFoundTransitionsCleared -= OnFoundTransitionsCleared;
-        TrackerUpdate.OnUnload -= UnhookTrackerUpdate;
+        APmmTrackerUpdate.OnItemObtained -= OnItemObtained;
+        APmmTrackerUpdate.OnPlacementPreviewed -= OnPlacementPreviewed;
+        APmmTrackerUpdate.OnPlacementCleared -= OnPlacementCleared;
+        APmmTrackerUpdate.OnTransitionVisited -= OnTransitionVisited;
+        APmmTrackerUpdate.OnPreviewsCleared -= OnPreviewsCleared;
+        APmmTrackerUpdate.OnFoundTransitionsCleared -= OnFoundTransitionsCleared;
+        APmmTrackerUpdate.OnUnload -= UnhookTrackerUpdate;
     }
 
     private Action<ProgressionManager> OnCanGetLocation(int id)
@@ -276,6 +311,7 @@ public class TrackerData
     private void AppendToDebug(string line)
     {
         ArchipelagoMapMod.Instance.LogDebug(line);
+        //LogManager.Append(line + Environment.NewLine, logFileName);
     }
 
     private void AppendWaypointToDebug(LogicWaypoint w)

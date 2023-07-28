@@ -1,4 +1,7 @@
-﻿using ConnectionMetadataInjector;
+﻿using Archipelago.HollowKnight.IC;
+using Archipelago.MultiClient.Net.Enums;
+using ArchipelagoMapMod.IC;
+using ConnectionMetadataInjector;
 using ItemChanger;
 using UnityEngine;
 
@@ -16,7 +19,26 @@ internal class PinItemSprite : ISprite
     {
         Key = SupplementalMetadata.Of(item).Get(InjectedProps.ItemPoolGroup);
 
-        Value = PinSpriteManager.GetSprite(Key, true);
+        if (Key == "Other")
+        {
+            if (item.GetTag(out ArchipelagoItemTag apTag))
+            {
+                if (apTag.Flags == ItemFlags.Advancement)
+                    Value = PinSprite.APProgression.Value;
+                else if (apTag.Flags == ItemFlags.NeverExclude)
+                    Value = PinSprite.APUseful.Value;
+                else if (apTag.Flags == ItemFlags.None)
+                    Value = PinSprite.APTrash.Value;
+            }
+            else
+            {
+                Value = PinSpriteManager.GetSprite(Key, true);
+            }
+        }
+        else
+        {
+            Value = PinSpriteManager.GetSprite(Key, true);
+        }
     }
 
     /// <summary>

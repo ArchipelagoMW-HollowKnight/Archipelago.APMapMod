@@ -1,4 +1,5 @@
-﻿using ItemChanger;
+﻿using ArchipelagoMapMod.RC;
+using ItemChanger;
 using ItemChanger.Internal;
 using MapChanger;
 using MapChanger.Defs;
@@ -25,7 +26,7 @@ internal sealed class BenchPin : APmmPin
         
         if (benchName is BenchwarpInterop.BENCH_WARP_START)
         {
-            var start = ArchipelagoMapMod.LS.Context.StartDef;
+            var start = APLogicSetup.Context.StartDef;
 
             if (Finder.IsMappedScene(SceneName))
             {

@@ -84,9 +84,13 @@
         <EmbeddedResource Include="Resources\roomTextsAM.json" />
         <EmbeddedResource Include="Resources\Data\*.json" />
         <EmbeddedResource Include="Resources\Logic\*.json" />
+        <EmbeddedResource Include="Resources\Sprites\Pins\*.png" />
     </ItemGroup>
 
     <ItemGroup>
+        <Reference Include="Archipelago.MultiClient.Net">
+          <HintPath>$(HollowKnightRefs)\Mods\Archipelago\Archipelago.MultiClient.Net.dll</HintPath>
+        </Reference>
         <Reference Include="Assembly-CSharp">
             <HintPath>$(HollowKnightRefs)\Assembly-CSharp.dll</HintPath>
         </Reference>

@@ -1,5 +1,6 @@
 ﻿using ArchipelagoMapMod.RandomizerData;
 using RandomizerCore;
+using RandomizerCore.Logic;
 
 namespace ArchipelagoMapMod.RC;
 
@@ -16,4 +17,9 @@ public class APLocation : RandoLocation
     /// <br/>This field is serialized, and is safe to use after reloading the game. May rarely be null for external items which choose not to supply a value.
     /// </summary>
     public LocationDef LocationDef;
+
+    public APLocation(LogicDef logic)
+    {
+        base.logic = logic;
+    }
 }

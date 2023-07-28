@@ -3,7 +3,7 @@ using ItemChanger;
 
 namespace ArchipelagoMapMod.IC;
 
-public class TrackerUpdate : ItemChanger.Modules.Module
+public class APmmTrackerUpdate : ItemChanger.Modules.Module
 {
     public override void Initialize()
     {
@@ -50,7 +50,7 @@ public class TrackerUpdate : ItemChanger.Modules.Module
 
         OnItemObtained?.Invoke(id, itemName, placementName);
         
-        if (args.Placement.GetTag<APmmPlacementTag>() is APmmPlacementTag apmmpt && apmmpt.ids.All(i => APmmTracker.Items[i].WasEverObtained()))
+        if (args.Placement.Items.All(item => item.WasEverObtained()))
         {
             OnPlacementCleared?.Invoke(placementName);
         }
@@ -63,7 +63,7 @@ public class TrackerUpdate : ItemChanger.Modules.Module
     /// </summary>
     public static void SendTransitionFound(ItemChanger.Transition source)
     {
-        if (ItemChangerMod.Modules.Get<TrackerUpdate>() is TrackerUpdate instance) instance.OnTransitionFound(source.ToString());
+        if (ItemChangerMod.Modules.Get<APmmTrackerUpdate>() is APmmTrackerUpdate instance) instance.OnTransitionFound(source.ToString());
     }
 
     public static void ClearFoundTransitions()
@@ -89,11 +89,10 @@ public class TrackerUpdate : ItemChanger.Modules.Module
         {
             OnTransitionVisited?.Invoke(sourceName, targetName);
             
-            // TODO: Revisit once transitional randomization is enabled in AP and this info becomes available.
-            // if (global::ArchipelagoMapMod.LS.GenerationSettings.TransitionSettings.Coupled && transitionLookup.ContainsKey(targetName))
-            // {
-            //     OnTransitionVisited?.Invoke(targetName, sourceName);
-            // }
+            if (APLogicSetup.Context.GenerationSettings.TransitionSettings.Coupled && transitionLookup.ContainsKey(targetName))
+            {
+                OnTransitionVisited?.Invoke(targetName, sourceName);
+            }
 
             OnFinishedUpdate?.Invoke();
         }

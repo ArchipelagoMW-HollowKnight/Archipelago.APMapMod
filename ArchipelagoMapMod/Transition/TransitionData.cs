@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using ArchipelagoMapMod.RC;
 using MapChanger;
 using RD = ArchipelagoMapMod.RandomizerData.Data;
 namespace ArchipelagoMapMod.Transition;
@@ -28,7 +29,7 @@ internal class TransitionData : HookModule
         _placements = new Dictionary<string, string>();
 
         // Add transition placements
-        foreach ((var location, var item) in ArchipelagoMapMod.LS.Context.Vanilla.Select(p => (p.Location.Name, p.Item.Name))
+        foreach ((var location, var item) in APLogicSetup.Context.Vanilla.Select(p => (p.Location.Name, p.Item.Name))
                      .Concat(ExtraVanillaTransitions))
         {
             if (RD.IsTransition(location) && RD.IsTransition(item))
@@ -50,8 +51,8 @@ internal class TransitionData : HookModule
             }
         }
 
-        if (ArchipelagoMapMod.LS.Context.transitionPlacements is not null)
-            foreach ((var source, var target) in ArchipelagoMapMod.LS.Context.transitionPlacements.Select(p =>
+        if (APLogicSetup.Context.transitionPlacements is not null)
+            foreach ((var source, var target) in APLogicSetup.Context.transitionPlacements.Select(p =>
                          (p.Source.TransitionDef, p.Target.TransitionDef)))
             {
                 _randomizedTransitions[source.Name] = new APmmTransitionDef(source);
@@ -157,7 +158,7 @@ internal class TransitionData : HookModule
 
         text += BuildTransitionStringList(visitedTransitionsTo, "Visited to", true, text != "");
 
-        var vanillaTransitions = ArchipelagoMapMod.LS.Context.Vanilla
+        var vanillaTransitions = APLogicSetup.Context.Vanilla
             .Where(t => RD.IsTransition(t.Location.Name)
                         && TryGetScene(t.Location.Name, out var s) && s == scene)
             .ToDictionary(t => GetTransitionDef(t.Location.Name), t => GetTransitionDef(t.Item.Name));
@@ -165,7 +166,7 @@ internal class TransitionData : HookModule
 
         text += BuildTransitionStringList(vanillaTransitions, "Vanilla", false, text != "");
 
-        var vanillaTransitionsTo = ArchipelagoMapMod.LS.Context.Vanilla
+        var vanillaTransitionsTo = APLogicSetup.Context.Vanilla
             .Where(t => RD.IsTransition(t.Location.Name)
                         && TryGetScene(t.Item.Name, out var s) && s == scene
                         && !vanillaTransitions.Keys.Any(td => td.Name == t.Item.Name))

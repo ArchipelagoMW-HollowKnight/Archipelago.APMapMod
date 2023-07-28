@@ -14,8 +14,8 @@ public class LocalSettings
     
     public TrackerData TrackerData;
     public TrackerData TrackerDataWithoutSequenceBreaks;
-    [JsonIgnore]
-    public APRandoContext Context;
+
+    public int ProfileID => GameManager.instance.profileID;
 
     public bool SpoilerOn;
     public bool VanillaOn;

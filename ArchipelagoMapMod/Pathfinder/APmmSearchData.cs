@@ -207,8 +207,8 @@ internal class APmmSearchData : SearchData
 
         // Emulate a transition being possibly available via having the required term
         foreach (var kvp in conditionalTerms
-                     .Where(kvp => ArchipelagoMapMod.LS.Context.LM.GetTerm(kvp.Key) is not null
-                                   && ArchipelagoMapMod.LS.Context.LM.GetTerm(kvp.Value) is Term valueTerm
+                     .Where(kvp => APLogicSetup.Context.LM.GetTerm(kvp.Key) is not null
+                                   && APLogicSetup.Context.LM.GetTerm(kvp.Value) is Term valueTerm
                                    && valueTerm.Type is not TermType.State))
             if (ArchipelagoMapMod.LS.TrackerData.pm.Get(kvp.Key) > 0)
                 LocalPM.Set(kvp.Value, 1);

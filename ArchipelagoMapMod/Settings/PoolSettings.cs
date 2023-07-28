@@ -28,4 +28,6 @@ public class PoolSettings
     public bool LoreTablets = AP.Instance.SlotOptions.RandomizeLoreTablets;
     public bool JournalEntries = AP.Instance.SlotOptions.RandomizeJournalEntries;
     public bool JunkPitChests = AP.Instance.SlotOptions.RandomizeJunkPitChests;
+    public bool Shops = true;
+    public bool Mimics = AP.Instance.SlotOptions.RandomizeMimics;
 }

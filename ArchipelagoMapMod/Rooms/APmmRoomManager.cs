@@ -51,6 +51,6 @@ internal class APmmRoomManager
 
         var transitionRoomSelector =
             Utils.MakeMonoBehaviour<TransitionRoomSelector>(null, "ArchipelagoMapMod Transition Room Selector");
-        //transitionRoomSelector.Initialize(BuiltInObjects.MappedRooms.Values.Concat(MoRoomTexts.Children));
+        transitionRoomSelector.Initialize(BuiltInObjects.MappedRooms.Values.Concat(MoRoomTexts.Children));
     }
 }

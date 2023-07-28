@@ -23,7 +23,7 @@ internal static class PlacementExtensions
     // copies or substantial portions of the Software.
     internal static ItemPlacement RandoPlacement(this AbstractItem item)
     {
-        if (item.GetTag(out APmmItemTag tag)) return ArchipelagoMapMod.LS.Context.itemPlacements[tag.id];
+        if (item.GetTag(out APmmItemTag tag)) return APLogicSetup.Context.itemPlacements[tag.id];
         return default;
     }
 

@@ -1,4 +1,5 @@
-﻿using Archipelago.HollowKnight.IC;
+﻿using System.Net.NetworkInformation;
+using Archipelago.HollowKnight.IC;
 using ArchipelagoMapMod.Modes;
 using ConnectionMetadataInjector;
 using ConnectionMetadataInjector.Util;
@@ -12,6 +13,7 @@ using Newtonsoft.Json;
 using RandomizerCore;
 using RandomizerCore.Logic;
 using ArchipelagoMapMod.IC;
+using ArchipelagoMapMod.RC;
 using UnityEngine;
 using Events = MapChanger.Events;
 using RD = ArchipelagoMapMod.RandomizerData;
@@ -52,14 +54,14 @@ internal class APmmPinManager : HookModule
 
     public override void OnEnterGame()
     {
-        TrackerUpdate.OnFinishedUpdate += UpdateRandoPins;
+        APmmTrackerUpdate.OnFinishedUpdate += UpdateRandoPins;
         Events.OnWorldMap += ArrangeWorldMapPinGrid;
         Events.OnQuickMap += ArrangeQuickMapPinGrid;
     }
 
     public override void OnQuitToMenu()
     {
-        TrackerUpdate.OnFinishedUpdate -= UpdateRandoPins;
+        APmmTrackerUpdate.OnFinishedUpdate -= UpdateRandoPins;
         Events.OnWorldMap -= ArrangeWorldMapPinGrid;
         Events.OnQuickMap -= ArrangeQuickMapPinGrid;
     }
@@ -75,16 +77,16 @@ internal class APmmPinManager : HookModule
 
         MapObjectUpdater.Add(MoPins);
 
-        foreach (var placement in Ref.Settings.Placements.Values.Where(placement =>
-                     placement.HasTag<ArchipelagoPlacementTag>()))
+        foreach (var placement in Ref.Settings.Placements.Values.Where(placement => placement.Items.Any(item => item.HasTag<APmmItemTag>())))
         {
             if (SupplementalMetadata.Of(placement).Get(InteropProperties.DoNotMakePin)) continue;
-            MakeRandoPin(placement);
+                MakeRandoPin(placement);
         }
-
-        foreach (var placement in ArchipelagoMapMod.LS.Context.Vanilla.Where(placement =>
+    
+        foreach (var placement in APLogicSetup.Context.Vanilla.Where(placement =>
                      RD.Data.IsLocation(placement.Location.Name) && !Pins.ContainsKey(placement.Location.Name)))
             MakeVanillaPin(placement);
+        
         if (Interop.HasBenchwarp())
             foreach (var kvp in BenchwarpInterop.BenchNames.Where(kvp => !Pins.ContainsKey(kvp.Value)))
                 MakeBenchPin(kvp.Value, kvp.Key.SceneName);

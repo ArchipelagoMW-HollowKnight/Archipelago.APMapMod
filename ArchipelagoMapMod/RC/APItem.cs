@@ -1,5 +1,6 @@
 ﻿using ArchipelagoMapMod.RandomizerData;
 using RandomizerCore;
+using RandomizerCore.LogicItems;
 
 namespace ArchipelagoMapMod.RC;
 
@@ -16,4 +17,15 @@ public class APItem : RandoItem
     /// <br/>This field is serialized, and is safe to use after reloading the game. May rarely be null for external items which choose not to supply a value.
     /// </summary>
     public ItemDef ItemDef;
+
+    public APItem(LogicItem logicItem)
+    {
+        item = logicItem;
+    }
+
+
+    public APItem(string name)
+    {
+        item = new EmptyItem(name);
+    }
 }
