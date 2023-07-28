@@ -3,3 +3,4 @@ RandomizerCore
 RCPathfinder
 MapChanger
 ConnectionMetadataInjector
+BenchRando
