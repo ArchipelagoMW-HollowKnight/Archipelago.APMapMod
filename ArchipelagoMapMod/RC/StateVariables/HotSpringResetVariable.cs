@@ -12,7 +12,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
     {
         public override string Name { get; }
         protected override State ResetState { get; }
-        protected override string? ResetLogicProperty => "HotSpringResetCondition";
+        protected override string ResetLogicProperty => "HotSpringResetCondition";
         protected override bool OptIn => true;
         public const string Prefix = "$HOTSPRINGRESET";
 

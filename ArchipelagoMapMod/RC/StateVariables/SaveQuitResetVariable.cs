@@ -15,7 +15,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
         public const string Prefix = "$SAVEQUITRESET";
         protected override State ResetState { get; }
 
-        protected override string? ResetLogicProperty => "SaveQuitConditionalReset";
+        protected override string ResetLogicProperty => "SaveQuitConditionalReset";
         protected override bool OptIn => true;
 
         public SaveQuitResetVariable(string term, LogicManager lm) : base(lm)

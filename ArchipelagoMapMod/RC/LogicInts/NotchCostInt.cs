@@ -5,6 +5,8 @@ namespace ArchipelagoMapMod.RC.LogicInts
     /// <summary>
     /// LogicInt which returns 1 less than the number of notches to equip the charm with or without overcharming.
     /// </summary>
+    
+    #nullable enable
     [Obsolete("Use EquipCharmVariable")]
     public class NotchCostInt : LogicInt
     {
@@ -20,9 +22,9 @@ namespace ArchipelagoMapMod.RC.LogicInts
             Name = $"$NotchCost[{string.Join(",", charmIDs)}]";
         }
 
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
+        public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
         {
-            if (VariableResolver.TryMatchPrefix(term, Prefix, out string[] parameters))
+            if (VariableResolver.TryMatchPrefix(term, Prefix, out string[]? parameters))
             {
                 int[] charmIDs = parameters.Select(int.Parse).ToArray();
                 variable = new NotchCostInt(charmIDs);
@@ -34,7 +36,7 @@ namespace ArchipelagoMapMod.RC.LogicInts
 
         public override int GetValue(object? sender, ProgressionManager pm)
         {
-            List<int> notchCosts = (pm.ctx as APRandoContext)?.notchCosts;
+            List<int>? notchCosts = (pm.ctx as APRandoContext)?.notchCosts;
             if (notchCosts != null && notchCosts.Count >= charmIDs[charmIDs.Length - 1])
             {
                 return charmIDs.Sum(i => notchCosts[i - 1]) - charmIDs.Max(i => notchCosts[i - 1]);

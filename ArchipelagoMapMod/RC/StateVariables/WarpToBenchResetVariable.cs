@@ -1,4 +1,5 @@
-﻿using RandomizerCore.Logic;
+﻿#nullable enable
+using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
 
 namespace ArchipelagoMapMod.RC.StateVariables
@@ -31,7 +32,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
             }
         }
 
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
+        public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
         {
             if (VariableResolver.TryMatchPrefix(term, Prefix, out _))
             {
@@ -42,7 +43,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
             return false;
         }
 
-        public override IEnumerable<LazyStateBuilder>? ProvideState(object? sender, ProgressionManager pm)
+        public override IEnumerable<LazyStateBuilder> ProvideState(object? sender, ProgressionManager pm)
         {
             return Enumerable.Empty<LazyStateBuilder>();
         }

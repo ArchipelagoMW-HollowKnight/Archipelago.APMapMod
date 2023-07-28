@@ -14,7 +14,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
         public override string Name { get; }
         public const string Prefix = "$STARTRESPAWN";
         protected override State ResetState { get; }
-        protected override string? ResetLogicProperty => "StartRespawnResetCondition";
+        protected override string ResetLogicProperty => "StartRespawnResetCondition";
         protected override bool OptIn => true;
 
         public StartRespawnResetVariable(string term, LogicManager lm) : base(lm)

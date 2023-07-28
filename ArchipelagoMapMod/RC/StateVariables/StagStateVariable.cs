@@ -1,4 +1,5 @@
-﻿using RandomizerCore.Logic;
+﻿#nullable enable
+using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
 
 namespace ArchipelagoMapMod.RC.StateVariables
@@ -11,10 +12,10 @@ namespace ArchipelagoMapMod.RC.StateVariables
     public class StagStateVariable : StateModifier
     {
         public override string Name { get; }
-        protected readonly StateBool NoFlower;
+        protected readonly StateBool? NoFlower;
         public const string Prefix = "$STAGSTATEMODIFIER";
 
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
+        public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
         {
             if (term == Prefix)
             {
@@ -48,14 +49,14 @@ namespace ArchipelagoMapMod.RC.StateVariables
             return Enumerable.Empty<Term>();
         }
 
-        public override IEnumerable<LazyStateBuilder>? ProvideState(object? sender, ProgressionManager pm)
+        public override IEnumerable<LazyStateBuilder> ProvideState(object? sender, ProgressionManager pm)
         {
             return Enumerable.Empty<LazyStateBuilder>();
         }
 
         public override IEnumerable<LazyStateBuilder> ModifyState(object? sender, ProgressionManager pm, LazyStateBuilder state)
         {
-            state.SetBool(NoFlower, true);
+            state.SetBool(NoFlower!, true);
             yield return state;
         }
     }

@@ -1,4 +1,5 @@
-﻿using RandomizerCore.Logic;
+﻿#nullable enable
+using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
 
 namespace ArchipelagoMapMod.RC.StateVariables
@@ -53,9 +54,9 @@ namespace ArchipelagoMapMod.RC.StateVariables
             }
         }
 
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
+        public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
         {
-            if (VariableResolver.TryMatchPrefix(term, Prefix, out string[] parameters))
+            if (VariableResolver.TryMatchPrefix(term, Prefix, out string[]? parameters))
             {
                 bool canDreamgate = !parameters.Contains("noDG");
                 int requiredShadeHealth = 1;

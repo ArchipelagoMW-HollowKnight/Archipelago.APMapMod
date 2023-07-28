@@ -6,6 +6,7 @@ namespace ArchipelagoMapMod.RC.LogicInts
     /// <summary>
     /// LogicInt which is true exactly when the GenerationSettings StartLocation equals its argument.
     /// </summary>
+    #nullable enable
     public class StartLocationDelta : StateProvider
     {
         protected readonly Term? StartStateTerm;
@@ -20,9 +21,9 @@ namespace ArchipelagoMapMod.RC.LogicInts
             StartStateTerm = lm.GetTerm("Start_State");
         }
 
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
+        public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
         {
-            if (VariableResolver.TryMatchPrefix(term, Prefix, out string[] parameters))
+            if (VariableResolver.TryMatchPrefix(term, Prefix, out string[]? parameters))
             {
                 string location = parameters[0];
                 variable = new StartLocationDelta(term, lm, location);
@@ -34,7 +35,7 @@ namespace ArchipelagoMapMod.RC.LogicInts
 
         public override StateUnion? GetInputState(object? sender, ProgressionManager pm)
         {
-            return pm.GetState(StartStateTerm);
+            return pm.GetState(StartStateTerm!);
         }
 
         public override IEnumerable<Term> GetTerms()
@@ -44,7 +45,7 @@ namespace ArchipelagoMapMod.RC.LogicInts
 
         public override int GetValue(object? sender, ProgressionManager pm)
         {
-            return ((APRandoContext)pm.ctx).GenerationSettings.StartLocation == Location ? TRUE : FALSE;
+            return ((APRandoContext)pm.ctx!).GenerationSettings.StartLocation == Location ? TRUE : FALSE;
         }
     }
 }

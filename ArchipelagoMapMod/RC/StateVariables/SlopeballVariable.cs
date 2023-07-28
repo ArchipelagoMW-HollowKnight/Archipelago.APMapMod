@@ -1,4 +1,5 @@
-﻿using RandomizerCore.Logic;
+﻿#nullable enable
+using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
 
 namespace ArchipelagoMapMod.RC.StateVariables
@@ -12,7 +13,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
         public const string Prefix = "$SLOPEBALL";
         protected override string InnerPrefix => CastSpellVariable.Prefix;
 
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
+        public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
         {
             if (term.StartsWith(Prefix))
             {

@@ -1,4 +1,5 @@
-﻿using RandomizerCore.Logic;
+﻿#nullable enable
+using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
 
 namespace ArchipelagoMapMod.RC.StateVariables
@@ -13,13 +14,13 @@ namespace ArchipelagoMapMod.RC.StateVariables
     {
         public override string Name { get; }
         protected int CharmID;
-        protected Term CharmTerm;
-        protected StateBool AnticharmBool;
+        protected Term CharmTerm = null!;
+        protected StateBool AnticharmBool = null!;
         protected StateBool OvercharmBool;
 
         protected readonly StateBool NoPassedCharmEquip;
         protected readonly Term NotchesTerm;
-        protected readonly StateBool CharmBool;
+        protected readonly StateBool CharmBool = null!;
         protected readonly StateBool HasTakenDamage;
         protected readonly StateInt UsedNotchesInt;
         protected readonly StateInt MaxNotchCost;
@@ -69,9 +70,9 @@ namespace ArchipelagoMapMod.RC.StateVariables
             return $"{Prefix}[{charmID}]";
         }
 
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
+        public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
         {
-            if (VariableResolver.TryMatchPrefix(term, Prefix, out string[] parameters))
+            if (VariableResolver.TryMatchPrefix(term, Prefix, out string[]? parameters))
             {
                 int charmID;
                 string charmName;
@@ -85,7 +86,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
                     charmName = LogicConstUtil.GetCharmTerm(charmID);
                 }
 
-                EquipCharmVariable ecv;
+                EquipCharmVariable? ecv;
                 if (23 <= charmID && charmID <= 25)
                 {
                     ecv = new FragileCharmVariable(term, charmName, charmID, lm);
@@ -122,7 +123,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
 
         public virtual int GetNotchCost<T>(ProgressionManager pm, T state) where T : IState
         {
-            return ((APRandoContext)pm.ctx).notchCosts[CharmID - 1];
+            return ((APRandoContext)pm.ctx!).notchCosts[CharmID - 1];
         }
 
         public virtual bool HasCharmProgression(ProgressionManager pm) => pm.Has(CharmTerm);

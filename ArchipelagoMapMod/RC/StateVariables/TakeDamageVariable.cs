@@ -113,7 +113,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
             return hp;
         }
 
-        public override IEnumerable<LazyStateBuilder> ModifyState(object? sender, ProgressionManager pm, LazyStateBuilder state)
+        public override IEnumerable<LazyStateBuilder> ModifyState(object sender, ProgressionManager pm, LazyStateBuilder state)
         {
             bool firstTime = !state.GetBool(HasTakenDamage);
             int amount = CalculateAmount(pm, state);

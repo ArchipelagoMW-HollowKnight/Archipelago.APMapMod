@@ -1,16 +1,18 @@
-﻿using RandomizerCore;
+﻿
+using RandomizerCore;
 using RandomizerCore.Logic;
 using ArchipelagoMapMod.RandomizerData;
 using ArchipelagoMapMod.Settings;
 
 namespace ArchipelagoMapMod.RC
 {
+    #nullable enable
     public class ProgressionInitializer : ILogicItem
     {
         /// <summary>
         /// Event invoked after base randomizer term modifiers are added to the initializer.
         /// </summary>
-        public static event Action<LogicManager, GenerationSettings, ProgressionInitializer> OnCreateProgressionInitializer;
+        public static event Action<LogicManager, GenerationSettings, ProgressionInitializer>? OnCreateProgressionInitializer;
 
         public ProgressionInitializer() { }
         public ProgressionInitializer(LogicManager lm, GenerationSettings gs, StartDef startDef)

@@ -1,4 +1,5 @@
-﻿using RandomizerCore.Logic.StateLogic;
+﻿#nullable enable
+using RandomizerCore.Logic.StateLogic;
 using RandomizerCore.Logic;
 
 namespace ArchipelagoMapMod.RC.StateVariables
@@ -41,9 +42,9 @@ namespace ArchipelagoMapMod.RC.StateVariables
             }
         }
 
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
+        public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
         {
-            if (VariableResolver.TryMatchPrefix(term, Prefix, out string[] parameters))
+            if (VariableResolver.TryMatchPrefix(term, Prefix, out string[]? parameters))
             {
                 if (parameters.Length < 1 || !int.TryParse(parameters[0], out int amount))
                 {
