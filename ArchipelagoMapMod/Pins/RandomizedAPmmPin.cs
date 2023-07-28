@@ -349,9 +349,9 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
         if (placementState is RPS.PreviewedUnreachable or RPS.PreviewedReachable &&
             placement.TryGetPreviewText(out var previewText))
         {
-            text += $"\n\nPreviewed item(s):";
+            text += $"\n\nPreviewed item(s):\n";
 
-            foreach (var preview in previewText) text += $" {ToCleanPreviewText(preview)},";
+            foreach (var preview in previewText) text += $"  {ToCleanPreviewText(preview)}\n";
 
             text = text.Substring(0, text.Length - 1);
         }
