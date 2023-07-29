@@ -4,3 +4,4 @@ RCPathfinder
 MapChanger
 ConnectionMetadataInjector
 BenchRando
+Satchel
