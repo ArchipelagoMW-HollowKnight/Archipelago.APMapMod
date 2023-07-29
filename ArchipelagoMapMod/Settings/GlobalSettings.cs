@@ -29,6 +29,10 @@ public class GlobalSettings
     public bool ShowReticle = true;
     public bool ShowRouteCompass = true;
     public OffRouteBehaviour WhenOffRoute = OffRouteBehaviour.Reevaluate;
+    
+    public int gameplayHints = 3;
+    public int hintFontSize = 30;
+    public int pauseMenuHints = 9;
 
     internal void ToggleControlPanel()
     {

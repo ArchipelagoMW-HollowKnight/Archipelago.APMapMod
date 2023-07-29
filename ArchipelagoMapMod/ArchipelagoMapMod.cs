@@ -179,6 +179,9 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
 
             // Construct pause menu
             title.Make();
+            
+            // Construct Hint Display
+            HintDisplay.Make();
 
             foreach (var button in mainButtons) button.Make();
 
@@ -198,5 +201,7 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
         Events.OnSetGameMap -= OnSetGameMap;
 
         foreach (var hookModule in hookModules) hookModule.OnQuitToMenu();
+        
+        HintDisplay.Destroy();
     }
 }
