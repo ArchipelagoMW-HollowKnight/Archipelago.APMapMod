@@ -25,7 +25,7 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
 
     private Coroutine periodicUpdate;
     private AbstractPlacement placement;
-    private RPS placementState;
+    internal RPS placementState;
 
     private IEnumerable<AbstractItem> remainingItems;
 

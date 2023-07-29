@@ -2,27 +2,27 @@
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
+using ArchipelagoMapMod.Pins;
 using ItemChanger;
 using ItemChanger.Internal;
 using MagicUI.Core;
 using MagicUI.Elements;
 using MapChanger;
 using UnityEngine.UI;
-using Finder = ItemChanger.Finder;
+using HT = Archipelago.HollowKnight.HintTracker;
 
 namespace ArchipelagoMapMod.UI;
 
 public static class HintDisplay
 {
-    private static LayoutRoot layout;
+    private static LayoutRoot _layout;
     private static readonly List<TextFormatter<Hint>> Formatters = new();
 
     private static ArchipelagoSession Session => Archipelago.HollowKnight.Archipelago.Instance.session;
-    private static List<Hint> hints = new();
 
-    private static bool visible = true;
+    private static bool _visible = true;
     private const int MaxHints = 20;
-    private static int hintsShown = ArchipelagoMapMod.GS.gameplayHints;
+    private static int _hintsShown = ArchipelagoMapMod.GS.gameplayHints;
 
     public static void Make()
     {
@@ -32,18 +32,17 @@ public static class HintDisplay
         On.InvAnimateUpAndDown.AnimateDown += CloseInv;
         On.UIManager.UIGoToPauseMenu += OpenPause;
         On.UIManager.UIClosePauseMenu += ClosePause;
+        Archipelago.HollowKnight.HintTracker.OnArchipelagoHintUpdate += SortHints;
 
-        if (layout == null)
+        if (_layout == null)
         {
-#if DEBUG
             ArchipelagoMapMod.Instance.Log("Creating hint display");
-#endif
-            layout = new(true, "Hint Display");
+            _layout = new(true, "Hint Display");
             //layout.RenderDebugLayoutBounds = true;
-            layout.VisibilityCondition = () => !(States.WorldMapOpen || States.QuickMapOpen) && visible;
-            layout.Interactive = false;
+            _layout.VisibilityCondition = () => !(States.WorldMapOpen || States.QuickMapOpen) && _visible;
+            _layout.Interactive = false;
 
-            StackLayout hintLayout = new(layout, "Hints")
+            StackLayout hintLayout = new(_layout, "Hints")
             {
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Bottom,
@@ -54,14 +53,14 @@ public static class HintDisplay
 
             for (var i = 0; i < MaxHints; i++)
             {
-                TextObject hintText = new(layout)
+                TextObject hintText = new(_layout)
                 {
                     HorizontalAlignment = HorizontalAlignment.Right,
                     VerticalAlignment = VerticalAlignment.Center,
                     Font = MagicUI.Core.UI.Perpetua,
                     FontSize =  ArchipelagoMapMod.GS.hintFontSize,
                 };
-                TextFormatter<Hint> f = new(layout, null, FormatHint)
+                TextFormatter<Hint> f = new(_layout, null, FormatHint)
                 {
                     HorizontalAlignment = HorizontalAlignment.Right,
                     VerticalAlignment = VerticalAlignment.Center,
@@ -76,13 +75,9 @@ public static class HintDisplay
             {
                 hintLayout.Children.Add(formatter);
             }
-#if DEBUG
-            ArchipelagoMapMod.Instance.Log("finished hint display");
-#endif
         }
-
-        var session = Archipelago.HollowKnight.Archipelago.Instance.session;
-        session.DataStorage.TrackHints(UpdateHints);
+        
+        SortHints();
         UpdateDisplay();
     }
 
@@ -92,84 +87,41 @@ public static class HintDisplay
         On.InvAnimateUpAndDown.AnimateDown -= CloseInv;
         On.UIManager.UIGoToPauseMenu -= OpenPause;
         On.UIManager.UIClosePauseMenu -= ClosePause;
-
-        hints.Clear();
-        layout?.Destroy();
-        layout = null;
+        
+        _layout?.Destroy();
+        _layout = null;
     }
 
     private static void ClosePause(On.UIManager.orig_UIClosePauseMenu orig, UIManager self)
     {
         orig(self);
-        visible = true;
+        _visible = true;
         UpdateDisplay(ArchipelagoMapMod.GS.gameplayHints);
     }
 
     private static void OpenPause(On.UIManager.orig_UIGoToPauseMenu orig, UIManager self)
     {
         orig(self);
-        visible = true;
+        _visible = true;
         UpdateDisplay(ArchipelagoMapMod.GS.pauseMenuHints);
     }
 
     private static void OpenInv(On.InvAnimateUpAndDown.orig_AnimateUp orig, InvAnimateUpAndDown self)
     {
         orig(self);
-        visible = false;
+        _visible = false;
     }
 
 
     private static void CloseInv(On.InvAnimateUpAndDown.orig_AnimateDown orig, InvAnimateUpAndDown self)
     {
         orig(self);
-        visible = true;
+        _visible = true;
     }
 
-    private static void UpdateHints(Hint[] arrayHints)
+    private static void SortHints()
     {
-        hints = arrayHints.ToList();
-#if DEBUG
-        ArchipelagoMapMod.Instance.Log($"updating {hints.Count} hints");
-#endif
-        foreach (var hint in hints)
-        {
-            if (hint.FindingPlayer != Session.ConnectionInfo.Slot)
-                continue;
-
-            var locationName = StripShopSuffix(Session.Locations.GetLocationNameFromId(hint.LocationId));
-            var location = Finder.GetLocation(locationName);
-            if (location == null)
-                continue;
-            if (!Ref.Settings.Placements.ContainsKey(locationName))
-                continue;
-
-            var placement = Ref.Settings.Placements[locationName];
-
-            if (placement == null)
-                continue;
-            foreach (var item in placement.Items)
-            {
-                var tag = item.GetTag<ArchipelagoItemTag>();
-                if (tag.Location != hint.LocationId) continue;
-                tag.Hinted = true;
-            }
-
-            if (placement.Items.Count > 1) continue;
-            placement.GetTag<ArchipelagoPlacementTag>().Hinted = true;
-        }
-#if DEBUG
-        ArchipelagoMapMod.Instance.Log($"done marking hints on map.");
-#endif
-        SortHints();
-    }
-
-    public static void SortHints()
-    {
-#if DEBUG
-        ArchipelagoMapMod.Instance.Log($"sorting {hints.Count} hints");
-#endif
-
-        hints.Sort((hint1, hint2) =>
+        HT.Hints.Sort((hint1, hint2) =>
         {
             // if same location return 0
             if (hint1.LocationId == hint2.LocationId)
@@ -209,16 +161,13 @@ public static class HintDisplay
             // how did we get here?
             return 0;
         });
-
-#if DEBUG
-        ArchipelagoMapMod.Instance.Log("hints sorted");
-#endif
+        
         UpdateDisplay();
     }
 
     public static void UpdateDisplay(int hintsToShow)
     {
-        hintsShown = hintsToShow;
+        _hintsShown = hintsToShow;
         UpdateDisplay();
     }
 
@@ -226,11 +175,9 @@ public static class HintDisplay
     {
         if (!(Archipelago.HollowKnight.Archipelago.Instance?.ArchipelagoEnabled).GetValueOrDefault(false))
             return;
-#if DEBUG
-        ArchipelagoMapMod.Instance.Log($"updating display of {hints.Count}");
-#endif
+        
         int shown = 0;
-        foreach (var hint in hints)
+        foreach (var hint in HT.Hints)
         {
             if (hint.FindingPlayer != Session.ConnectionInfo.Slot)
                 continue;
@@ -249,16 +196,12 @@ public static class HintDisplay
             int x = Formatters.Count - 1 - shown;
             Formatters[x].Data = hint;
             Formatters[x].Visibility =
-                shown >= hintsShown ? Visibility.Collapsed : Visibility.Visible;
+                shown >= _hintsShown ? Visibility.Collapsed : Visibility.Visible;
             Formatters[x].Text.FontSize = ArchipelagoMapMod.GS.hintFontSize;
             shown++;
             if (shown >= MaxHints)
                 break;
         }
-#if DEBUG
-        ArchipelagoMapMod.Instance.Log($"finished total shown {shown}");
-
-#endif
     }
 
     private static bool IsShop(string location)
@@ -318,11 +261,15 @@ public static class HintDisplay
     private static ColorResult GetColor(long locationID)
     {
         var locationName = StripShopSuffix(Session.Locations.GetLocationNameFromId(locationID));
-        if (!ArchipelagoMapMod.LS.TrackerData.uncheckedReachableLocations.Contains(locationName) && !ArchipelagoMapMod.LS.TrackerData.previewedLocations.Contains(locationName)) return ColorResult.Red;
         if (!Ref.Settings.Placements.ContainsKey(locationName)) return ColorResult.Red;
 
         var geo = true;
         var other = true;
+        RandomizedAPmmPin pin = (RandomizedAPmmPin) APmmPinManager.Pins[locationName];
+        if (pin.placementState is RandoPlacementState.UncheckedUnreachable or RandoPlacementState.PreviewedUnreachable)
+            return ColorResult.Red;
+
+
         foreach (var item in Ref.Settings.Placements[locationName].Items)
         {
             // if for some reason this is not a AP taggable item just continue past it
