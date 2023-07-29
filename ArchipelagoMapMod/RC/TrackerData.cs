@@ -61,7 +61,6 @@ public class TrackerData
     [JsonIgnore] public LogicManager lm;
     [JsonIgnore] public APRandoContext ctx;
     private MainUpdater mu;
-    public string logFileName;
     
     public void Setup(APRandoContext ctx)
     {
