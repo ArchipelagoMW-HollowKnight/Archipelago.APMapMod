@@ -16,7 +16,7 @@ namespace ArchipelagoMapMod.UI;
 public static class HintDisplay
 {
     private static LayoutRoot _layout;
-    private static readonly List<TextFormatter<Hint>> Formatters = new();
+    private static List<TextFormatter<Hint>> _formatters;
 
     private static ArchipelagoSession Session => Archipelago.HollowKnight.Archipelago.Instance.session;
 
@@ -34,10 +34,14 @@ public static class HintDisplay
         On.UIManager.UIClosePauseMenu += ClosePause;
         Archipelago.HollowKnight.HintTracker.OnArchipelagoHintUpdate += SortHints;
 
+        _visible = true;
+        _hintsShown = ArchipelagoMapMod.GS.gameplayHints;
+        
         if (_layout == null)
         {
             ArchipelagoMapMod.Instance.Log("Creating hint display");
             _layout = new(true, "Hint Display");
+            _formatters = new();
             //layout.RenderDebugLayoutBounds = true;
             _layout.VisibilityCondition = () => !(States.WorldMapOpen || States.QuickMapOpen) && _visible;
             _layout.Interactive = false;
@@ -68,10 +72,10 @@ public static class HintDisplay
                     Visibility = Visibility.Collapsed
                 };
                 hintText.GameObject.GetComponent<Text>().supportRichText = true;
-                Formatters.Add(f);
+                _formatters.Add(f);
             }
 
-            foreach (var formatter in Formatters)
+            foreach (var formatter in _formatters)
             {
                 hintLayout.Children.Add(formatter);
             }
@@ -90,6 +94,7 @@ public static class HintDisplay
         
         _layout?.Destroy();
         _layout = null;
+        _formatters = null;
     }
 
     private static void ClosePause(On.UIManager.orig_UIClosePauseMenu orig, UIManager self)
@@ -176,6 +181,9 @@ public static class HintDisplay
         if (!(Archipelago.HollowKnight.Archipelago.Instance?.ArchipelagoEnabled).GetValueOrDefault(false))
             return;
         
+        if (_layout == null || _formatters == null)
+            return;
+        
         int shown = 0;
         foreach (var hint in HT.Hints)
         {
@@ -193,11 +201,11 @@ public static class HintDisplay
             if (ArchipelagoMapMod.LS.TrackerData.clearedLocations.Contains(locationString))
                 continue;
 
-            int x = Formatters.Count - 1 - shown;
-            Formatters[x].Data = hint;
-            Formatters[x].Visibility =
+            int x = _formatters.Count - 1 - shown;
+            _formatters[x].Data = hint;
+            _formatters[x].Visibility =
                 shown >= _hintsShown ? Visibility.Collapsed : Visibility.Visible;
-            Formatters[x].Text.FontSize = ArchipelagoMapMod.GS.hintFontSize;
+            _formatters[x].Text.FontSize = ArchipelagoMapMod.GS.hintFontSize;
             shown++;
             if (shown >= MaxHints)
                 break;
