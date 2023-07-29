@@ -224,6 +224,8 @@ public static class HintDisplay
 
     public static void UpdateDisplay()
     {
+        if (!(Archipelago.HollowKnight.Archipelago.Instance?.ArchipelagoEnabled).GetValueOrDefault(false))
+            return;
 #if DEBUG
         ArchipelagoMapMod.Instance.Log($"updating display of {hints.Count}");
 #endif

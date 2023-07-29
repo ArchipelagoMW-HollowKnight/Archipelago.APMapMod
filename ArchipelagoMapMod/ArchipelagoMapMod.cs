@@ -16,7 +16,7 @@ using UnityEngine;
 
 namespace ArchipelagoMapMod;
 
-public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<GlobalSettings>
+public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<GlobalSettings>, ICustomMenuMod
 {
     internal const string MOD = "ArchipelagoMapMod";
 
@@ -204,4 +204,11 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
         
         HintDisplay.Destroy();
     }
+    
+    public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggleDelegates)
+    {
+        return BetterMenu.GetMenuScreen(modListMenu, toggleDelegates);
+    }
+
+    public bool ToggleButtonInsideMenu => false;
 }
