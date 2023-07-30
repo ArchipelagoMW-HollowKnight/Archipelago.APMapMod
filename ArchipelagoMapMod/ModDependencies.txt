@@ -1,4 +1,4 @@
-﻿Archipelago
+﻿Archipelago from https://github.com/ArchipelagoMW-HollowKnight/Archipelago.HollowKnight/suites/14671584365/artifacts/832705427
 RandomizerCore
 RCPathfinder
 MapChanger
