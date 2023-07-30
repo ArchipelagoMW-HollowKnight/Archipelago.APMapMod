@@ -10,6 +10,7 @@ using MagicUI.Elements;
 using MapChanger;
 using UnityEngine.UI;
 using HT = Archipelago.HollowKnight.HintTracker;
+using Image = MagicUI.Elements.Image;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -42,7 +43,7 @@ public static class HintDisplay
             ArchipelagoMapMod.Instance.Log("Creating hint display");
             _layout = new(true, "Hint Display");
             _formatters = new();
-            //layout.RenderDebugLayoutBounds = true;
+            //_layout.RenderDebugLayoutBounds = true;
             _layout.VisibilityCondition = () => !(States.WorldMapOpen || States.QuickMapOpen) && _visible;
             _layout.Interactive = false;
 
@@ -277,7 +278,6 @@ public static class HintDisplay
         if (pin.placementState is RandoPlacementState.UncheckedUnreachable or RandoPlacementState.PreviewedUnreachable)
             return ColorResult.Red;
 
-
         foreach (var item in Ref.Settings.Placements[locationName].Items)
         {
             // if for some reason this is not a AP taggable item just continue past it
@@ -289,42 +289,25 @@ public static class HintDisplay
             if (item.WasEverObtained())
                 return ColorResult.Obtained;
             
-            // this is our item and it has no cost yay! return green
-            if (!item.HasTag<CostTag>())
+            List<Cost> costs = GetCosts(item);
+            
+            if (costs.Count == 0)
                 return ColorResult.Green;
-
-            if (item.GetTag<CostTag>().Cost is MultiCost costs)
+        
+            foreach (var cost in costs)
             {
-                //multicost cycle though all costs and check if they are obtainable
-                foreach (var cost in costs)
-                {
-                    if (cost is GeoCost geoCost)
-                    {
-                        if (!geoCost.CanPay())
-                            geo = false;
-                    }
-                    else
-                    {
-                        if (cost.CanPay()) continue;
-                        other = false;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                //single cost check of obtainable.
-                if (item.GetTag<CostTag>().Cost is GeoCost geoCost)
+                if (cost is GeoCost geoCost)
                 {
                     if (!geoCost.CanPay())
                         geo = false;
                 }
-                else if (!item.GetTag<CostTag>().Cost.CanPay())
+                else
                 {
+                    if (cost.CanPay()) continue;
                     other = false;
+                    break;
                 }
             }
-
             break;
         }
         if (other)
@@ -332,6 +315,21 @@ public static class HintDisplay
             return geo ? ColorResult.Green : ColorResult.Yellow;
         }
         return ColorResult.Red;
+    }
+
+    private static List<Cost> GetCosts(AbstractItem item)
+    {
+        var costs = new List<Cost>();
+        var c = item.GetTag<CostTag>().Cost;
+        while (c is MultiCost cost)
+        {
+            if ((MultiCost)c is MultiCost)
+                costs.Add(item.GetTag<CostTag>().Cost);
+        }
+
+
+        
+        return costs;
     }
 
     private static string FormatHint(Hint hint)

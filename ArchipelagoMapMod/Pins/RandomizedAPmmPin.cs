@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Archipelago.HollowKnight.IC;
 using ArchipelagoMapMod.Rooms;
 using ArchipelagoMapMod.Settings;
 using ConnectionMetadataInjector;
@@ -193,7 +194,8 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
                          && (ArchipelagoMapMod.LS.SpoilerOn
                              || (placementState is RPS.PreviewedUnreachable or RPS.PreviewedReachable &&
                                  placement.CanPreview())
-                             || placementState is RPS.ClearedPersistent);
+                             || placementState is RPS.ClearedPersistent
+                             || placement.Items.Any(item => (item.GetTag<ArchipelagoItemTag>()?.Hinted).GetValueOrDefault(false)));
 
         StopPeriodicUpdate();
 
@@ -204,14 +206,16 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
 
     private protected override void UpdatePinSprite()
     {
-        if (showItemSprite)
+        if (showItemSprite
+            && itemSprites.TryGetValue(remainingItems.ElementAt(itemIndex),
+                out (ISprite itemSprite, float scale) spriteInfo)
+            && ((remainingItems.ElementAt(itemIndex).GetTag<ArchipelagoItemTag>()?.Hinted).GetValueOrDefault(false)
+                || placementState is RandoPlacementState.PreviewedUnreachable
+                    or RandoPlacementState.PreviewedReachable))
         {
-            if (itemSprites.TryGetValue(remainingItems.ElementAt(itemIndex),
-                    out (ISprite itemSprite, float scale) spriteInfo))
-            {
-                Sprite = spriteInfo.itemSprite.Value;
-                Sr.transform.localScale = new Vector3(spriteInfo.scale, spriteInfo.scale, 1f);
-            }
+            Sprite = spriteInfo.itemSprite.Value;
+            Sr.transform.localScale = new Vector3(spriteInfo.scale, spriteInfo.scale, 1f);
+
         }
         else
         {
@@ -258,6 +262,9 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
             RPS.ClearedPersistent => APmmColors.GetColor(APmmColorSetting.Pin_Persistent),
             _ => APmmColors.GetColor(APmmColorSetting.Pin_Normal)
         };
+        
+        if(placement.Items.Any(item => (item.GetTag<ArchipelagoItemTag>()?.Hinted).GetValueOrDefault(false)))
+            color = APmmColors.GetColor(APmmColorSetting.Pin_Previewed);
 
         if (placementState is RPS.UncheckedUnreachable or RPS.PreviewedUnreachable)
             BorderColor = new Vector4(color.x * UNREACHABLE_COLOR_MULTIPLIER, color.y * UNREACHABLE_COLOR_MULTIPLIER,
@@ -346,12 +353,11 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
 
         text += $"\n\nLogic: {Logic?.InfixSource ?? "not found"}";
 
-        if (placementState is RPS.PreviewedUnreachable or RPS.PreviewedReachable &&
-            placement.TryGetPreviewText(out var previewText))
+        if ((placementState is RPS.PreviewedUnreachable or RPS.PreviewedReachable || placement.Items.Any(item => (item.GetTag<ArchipelagoItemTag>()?.Hinted).GetValueOrDefault(false))) && placement.TryGetPreviewText(out List<string> previewText))
         {
             text += $"\n\nPreviewed item(s):\n";
 
-            foreach (var preview in previewText) text += $"  {ToCleanPreviewText(preview)}\n";
+            foreach (string preview in previewText) text += $"  {ToCleanPreviewText(preview)}\n";
 
             text = text.Substring(0, text.Length - 1);
         }
