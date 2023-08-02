@@ -25,7 +25,14 @@ jobs:
           dependencyFilePath: ArchipelagoMapMod/ModDependencies.txt
           
       - name: extractAP
-        run: if (Test-Path -Path "./API/Archipelago/Archipelago.zip") {Expand-Archive "./API/Archipelago/Archipelago.zip"}
+        run: |
+          $ap = "./API/Archipelago/Archipelago.zip"
+          if (Test-Path -Path $ap) {
+            Expand-Archive $ap
+            Write-Output "Extracting double AP zip."
+          } else {
+            Write-Output "No double Zip Found"
+          }
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
