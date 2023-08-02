@@ -8,6 +8,7 @@ using ItemChanger.Internal;
 using MagicUI.Core;
 using MagicUI.Elements;
 using MapChanger;
+using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
 using HT = Archipelago.HollowKnight.HintTracker;
 using Image = MagicUI.Elements.Image;
@@ -41,8 +42,8 @@ public static class HintDisplay
         if (_layout == null)
         {
             ArchipelagoMapMod.Instance.Log("Creating hint display");
-            _layout = new(true, "Hint Display");
-            _formatters = new();
+            _layout = new LayoutRoot(true, "Hint Display");
+            _formatters = new List<TextFormatter<Hint>>();
             //_layout.RenderDebugLayoutBounds = true;
             _layout.VisibilityCondition = () => !(States.WorldMapOpen || States.QuickMapOpen) && _visible;
             _layout.Interactive = false;
@@ -56,7 +57,7 @@ public static class HintDisplay
                 Spacing = 5f
             };
 
-            for (var i = 0; i < MaxHints; i++)
+            for (int i = 0; i < MaxHints; i++)
             {
                 TextObject hintText = new(_layout)
                 {
@@ -76,7 +77,7 @@ public static class HintDisplay
                 _formatters.Add(f);
             }
 
-            foreach (var formatter in _formatters)
+            foreach (TextFormatter<Hint> formatter in _formatters)
             {
                 hintLayout.Children.Add(formatter);
             }
@@ -133,8 +134,8 @@ public static class HintDisplay
             if (hint1.LocationId == hint2.LocationId)
                 return 0;
 
-            var hint1Color = GetColor(hint1.LocationId);
-            var hint2Color = GetColor(hint2.LocationId);
+            ColorResult hint1Color = GetColor(hint1.LocationId);
+            ColorResult hint2Color = GetColor(hint2.LocationId);
             
             // if same color sort by location id
             if( hint1Color == hint2Color)
@@ -186,7 +187,7 @@ public static class HintDisplay
             return;
         
         int shown = 0;
-        foreach (var hint in HT.Hints)
+        foreach (Hint hint in HT.Hints)
         {
             if (hint.FindingPlayer != Session.ConnectionInfo.Slot)
                 continue;
@@ -195,7 +196,7 @@ public static class HintDisplay
             if(!hint.ItemFlags.HasFlag(ItemFlags.Advancement))
                 continue;
 
-            var locationString = Session.Locations.GetLocationNameFromId(hint.LocationId);
+            string locationString = Session.Locations.GetLocationNameFromId(hint.LocationId);
             if (GetColor(hint.LocationId) == ColorResult.Obtained)
                 return;
 
@@ -218,21 +219,13 @@ public static class HintDisplay
         if (string.IsNullOrEmpty(location))
             return false;
 
-        var names = new[]
+        string[] names =
         {
             LocationNames.Sly_Key, LocationNames.Sly, LocationNames.Iselda, LocationNames.Salubra,
             LocationNames.Leg_Eater, LocationNames.Egg_Shop, LocationNames.Seer, LocationNames.Grubfather
         };
 
-        foreach (var name in names)
-        {
-            if (location.StartsWith(name))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return names.Any(location.StartsWith);
     }
 
     private static string StripShopSuffix(string location)
@@ -242,13 +235,13 @@ public static class HintDisplay
             return null;
         }
 
-        var names = new[]
+        string[] names =
         {
             LocationNames.Sly_Key, LocationNames.Sly, LocationNames.Iselda, LocationNames.Salubra,
             LocationNames.Leg_Eater, LocationNames.Egg_Shop, LocationNames.Seer, LocationNames.Grubfather
         };
 
-        foreach (var name in names)
+        foreach (string name in names)
         {
             if (location.StartsWith(name))
             {
@@ -269,23 +262,17 @@ public static class HintDisplay
 
     private static ColorResult GetColor(long locationID)
     {
-        var locationName = StripShopSuffix(Session.Locations.GetLocationNameFromId(locationID));
+        string locationName = StripShopSuffix(Session.Locations.GetLocationNameFromId(locationID));
         if (!Ref.Settings.Placements.ContainsKey(locationName)) return ColorResult.Red;
 
-        var geo = true;
-        var other = true;
+        bool geo = true;
+        bool other = true;
         RandomizedAPmmPin pin = (RandomizedAPmmPin) APmmPinManager.Pins[locationName];
         if (pin.placementState is RandoPlacementState.UncheckedUnreachable or RandoPlacementState.PreviewedUnreachable)
             return ColorResult.Red;
 
-        foreach (var item in Ref.Settings.Placements[locationName].Items)
+        foreach (AbstractItem item in Ref.Settings.Placements[locationName].Items.Where(item => item.GetTag<ArchipelagoItemTag>()?.Location == locationID))
         {
-            // if for some reason this is not a AP taggable item just continue past it
-            if (!item.HasTag<ArchipelagoItemTag>())
-                continue;
-            if (item.GetTag<ArchipelagoItemTag>().Location != locationID)
-                continue;
-
             if (item.WasEverObtained())
                 return ColorResult.Obtained;
             
@@ -294,7 +281,7 @@ public static class HintDisplay
             if (costs.Count == 0)
                 return ColorResult.Green;
         
-            foreach (var cost in costs)
+            foreach (Cost cost in costs)
             {
                 if (cost is GeoCost geoCost)
                 {
@@ -317,17 +304,18 @@ public static class HintDisplay
         return ColorResult.Red;
     }
 
-    private static List<Cost> GetCosts(AbstractItem item)
+    private static List<Cost> GetCosts(TaggableObject item)
     {
-        var costs = new List<Cost>();
-        var c = item.GetTag<CostTag>().Cost;
-        while (c is MultiCost cost)
+        List<Cost> costs = new();
+        Cost cost = item.GetTag<CostTag>().Cost;
+        if (cost is MultiCost multiCost)
         {
-            if ((MultiCost)c is MultiCost)
-                costs.Add(item.GetTag<CostTag>().Cost);
+            costs.AddRange(multiCost);
         }
-
-
+        else
+        {
+            costs.Add(cost);
+        }
         
         return costs;
     }
@@ -335,7 +323,7 @@ public static class HintDisplay
     private static string FormatHint(Hint hint)
         {
             if (hint == null) return "";
-            var color = GetColor(hint.LocationId) switch
+            string color = GetColor(hint.LocationId) switch
             {
                 ColorResult.Green => "green",
                 ColorResult.Yellow => "yellow",
