@@ -133,9 +133,6 @@ internal class TransitionData : HookModule
 
                 text += "\n";
 
-                if (!ArchipelagoMapMod.LS.TrackerDataWithoutSequenceBreaks.uncheckedReachableTransitions.Contains(transition))
-                    text += "*";
-
                 text += td.DoorName;
             }
         }
@@ -149,12 +146,11 @@ internal class TransitionData : HookModule
         var visitedTransitionsTo = ArchipelagoMapMod.LS.TrackerData.visitedTransitions
             .Where(t => TryGetScene(t.Value, out var s) && s == scene)
             .ToDictionary(t => GetTransitionDef(t.Key), t => GetTransitionDef(t.Value));
-
-        // TODO: Revisit once transitional randomization is enabled in AP and this info becomes available.
-        // // Display only one-way transitions in coupled rando
-        // if (ArchipelagoMapMod.LS.GenerationSettings.TransitionSettings.Coupled)
-        //     visitedTransitionsTo = visitedTransitionsTo.Where(t => !visitedTransitions.ContainsKey(t.Value))
-        //         .ToDictionary(t => t.Key, t => t.Value);
+        
+        // Display only one-way transitions in coupled rando
+        if (APLogicSetup.Context.GenerationSettings.TransitionSettings.Coupled)
+            visitedTransitionsTo = visitedTransitionsTo.Where(t => !visitedTransitions.ContainsKey(t.Value))
+                .ToDictionary(t => t.Key, t => t.Value);
 
         text += BuildTransitionStringList(visitedTransitionsTo, "Visited to", true, text != "");
 
@@ -191,8 +187,6 @@ internal class TransitionData : HookModule
         foreach (var kvp in transitions)
         {
             text += "\n";
-
-            if (ArchipelagoMapMod.LS.TrackerDataWithoutSequenceBreaks.outOfLogicVisitedTransitions.Contains(kvp.Key.Name)) text += "*";
 
             if (to)
                 text += $"{kvp.Key.Name} -> {kvp.Value.DoorName}";

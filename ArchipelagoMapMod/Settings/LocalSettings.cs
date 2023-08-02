@@ -13,7 +13,6 @@ public class LocalSettings
     public bool RandomizedOn = true;
     
     public TrackerData TrackerData;
-    public TrackerData TrackerDataWithoutSequenceBreaks;
 
     public int ProfileID => GameManager.instance.profileID;
 

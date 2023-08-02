@@ -31,7 +31,6 @@ public class APmmTrackerUpdate : ItemChanger.Modules.Module
     public static event Action OnUnload;
 
     private TrackerData TD => ArchipelagoMapMod.LS.TrackerData;
-    private TrackerData TD_WSB => ArchipelagoMapMod.LS.TrackerDataWithoutSequenceBreaks;
     private Dictionary<string, string> transitionLookup;
 
     private void OnRandoPlacementVisitStateChanged(VisitStateChangedEventArgs args)

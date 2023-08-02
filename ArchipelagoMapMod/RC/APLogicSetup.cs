@@ -25,9 +25,7 @@ public class APLogicSetup : HookModule
         
         //TODO: fix start location when AP provides the info.
         Context ??= new APRandoContext(new GenerationSettings(), Data.Starts["King's Pass"]);
-        ArchipelagoMapMod.LS.TrackerData ??= new TrackerData {AllowSequenceBreaks = true};
-        ArchipelagoMapMod.LS.TrackerDataWithoutSequenceBreaks ??= new TrackerData {AllowSequenceBreaks = false};
-        ArchipelagoMapMod.LS.TrackerDataWithoutSequenceBreaks?.Setup(Context);
+        ArchipelagoMapMod.LS.TrackerData ??= new TrackerData();
         ArchipelagoMapMod.LS.TrackerData?.Setup(Context);
     }
 

@@ -290,13 +290,9 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
             else
                 placementState = RPS.PreviewedUnreachable;
         }
-        else if (ArchipelagoMapMod.LS.TrackerDataWithoutSequenceBreaks.uncheckedReachableLocations.Contains(name))
-        {
-            placementState = RPS.UncheckedReachable;
-        }
         else if (ArchipelagoMapMod.LS.TrackerData.uncheckedReachableLocations.Contains(name))
         {
-            placementState = RPS.OutOfLogicReachable;
+            placementState = RPS.UncheckedReachable;
         }
         else
         {

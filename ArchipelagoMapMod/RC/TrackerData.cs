@@ -41,19 +41,7 @@ public class TrackerData
     /// A set which tracks the transitions which are reachable in logic and have not been visited.
     /// </summary>
     public HashSet<string> uncheckedReachableTransitions = new();
-
-    /// <summary>
-    /// Should out of logic items and transitions be immediately added to current progression when acquired, or deferred until their locations are reachable?
-    /// </summary>
-    public bool AllowSequenceBreaks;
-    /// <summary>
-    /// The subset of obtainedItems that are currently out of logic, and were obtained by sequence breaking. Entries are removed as they become in logic.
-    /// </summary>
-    public HashSet<int> outOfLogicObtainedItems = new();
-    /// <summary>
-    /// The subset of visited transitions that are currently out of logic, and were visited by sequence breaking.
-    /// </summary>
-    public HashSet<string> outOfLogicVisitedTransitions = new();
+    
     /// <summary>
     /// The ProgressionManager for the current state, with the information available to the player.
     /// </summary>
@@ -145,7 +133,6 @@ public class TrackerData
         
         foreach (int i in obtainedItems)
         {
-            if (outOfLogicObtainedItems.Contains(i)) continue;
 
             (RandoItem item, RandoLocation loc) = ctx.itemPlacements[i];
             AppendRandoItemToDebug(item, loc);
@@ -154,7 +141,6 @@ public class TrackerData
 
         foreach (KeyValuePair<string, string> kvp in visitedTransitions)
         {
-            if (outOfLogicVisitedTransitions.Contains(kvp.Key)) continue;
 
             LogicTransition tt = lm.GetTransitionStrict(kvp.Value);
             LogicTransition st = lm.GetTransitionStrict(kvp.Key);
@@ -202,11 +188,6 @@ public class TrackerData
             {
                 pm.Add(ilw.GetReachableEffect());
             }
-            if (outOfLogicObtainedItems.Remove(id))
-            {
-                AppendRandoItemToDebug(item, location);
-                pm.Add(item, location);
-            }
             if (!clearedLocations.Contains(location.Name) && !previewedLocations.Contains(location.Name))
             {
                 uncheckedReachableLocations.Add(location.Name);
@@ -226,12 +207,6 @@ public class TrackerData
                 AppendProgressionTransitionToDebug(source.lt);
                 pm.Add(source.GetReachableEffect());
             }
-            
-            if (outOfLogicVisitedTransitions.Remove(source.Name))
-            {
-                AppendTransitionTargetToDebug(target.lt, source.lt);
-                pm.Add(target, source);
-            }
 
             if (!visitedTransitions.ContainsKey(source.Name))
             {
@@ -244,14 +219,10 @@ public class TrackerData
     {
         (RandoItem ri, RandoLocation rl) = ctx.itemPlacements[id];
         obtainedItems.Add(id);
-        if (AllowSequenceBreaks || rl.logic.CanGet(pm))
+        if (rl.logic.CanGet(pm))
         {
             AppendRandoItemToDebug(ri, rl);
             pm.Add(ri, rl);
-        }
-        else
-        {
-            outOfLogicObtainedItems.Add(id);
         }
     }
 
@@ -274,7 +245,7 @@ public class TrackerData
         uncheckedReachableTransitions.Remove(source);
 
         LogicTransition st = lm.GetTransition(source);
-        if (AllowSequenceBreaks || st.CanGet(pm))
+        if (st.CanGet(pm))
         {
             LogicTransition tt = lm.GetTransition(target);
             if (!pm.Has(st.term))
@@ -285,10 +256,6 @@ public class TrackerData
 
             AppendTransitionTargetToDebug(tt, st);
             pm.Add(tt, st);
-        }
-        else
-        {
-            outOfLogicVisitedTransitions.Add(source);
         }
     }
 
@@ -301,7 +268,6 @@ public class TrackerData
     public void OnFoundTransitionsCleared()
     {
         visitedTransitions.Clear();
-        outOfLogicVisitedTransitions.Clear();
         uncheckedReachableTransitions.Clear();
         uncheckedReachableLocations.Clear();
         Reset();
