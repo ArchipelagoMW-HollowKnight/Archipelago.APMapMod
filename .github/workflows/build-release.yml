@@ -23,6 +23,9 @@ jobs:
         with:
           apiPath: API
           dependencyFilePath: ArchipelagoMapMod/ModDependencies.txt
+          
+      - name: extractAP
+        run: if (Test-Path -Path "./API/Archipelago/Archipelago.zip") {Expand-Archive "./API/Archipelago/Archipelago.zip"}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
