@@ -26,9 +26,9 @@ jobs:
           
       - name: extractAP
         run: |
-          $ap = "./API/Archipelago/Archipelago.zip"
+          $ap = "./API/Mods/Archipelago/Archipelago.zip"
           if (Test-Path -Path $ap) {
-            Expand-Archive $ap
+            Expand-Archive $ap .
             Write-Output "Extracting double AP zip."
           } else {
             Write-Output "No double Zip Found"
