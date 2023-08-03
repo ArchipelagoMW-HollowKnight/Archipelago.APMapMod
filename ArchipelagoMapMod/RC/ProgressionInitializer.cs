@@ -19,10 +19,10 @@ namespace ArchipelagoMapMod.RC
         {
             foreach (string setting in Data.GetApplicableLogicSettings(gs))
             {
-                Setters.Add(new(lm.GetTermStrict(setting), 1));
+                Setters.Add(new TermValue(lm.GetTermStrict(setting), 1));
             }
 
-            Setters.Add(new(lm.GetTermStrict(gs.TransitionSettings.Mode switch
+            Setters.Add(new TermValue(lm.GetTermStrict(gs.TransitionSettings.Mode switch
             {
                 TransitionSettings.TransitionMode.None => "ITEMRANDO",
                 TransitionSettings.TransitionMode.MapAreaRandomizer => "MAPAREARANDO",
@@ -36,13 +36,13 @@ namespace ArchipelagoMapMod.RC
                 else Setters.Add(tv);
             }
 
-            Setters.Add(new(lm.GetTermStrict("GRUBS"), -gs.CostSettings.GrubTolerance));
-            Setters.Add(new(lm.GetTermStrict("ESSENCE"), -gs.CostSettings.EssenceTolerance));
-            Setters.Add(new(lm.GetTermStrict("RANCIDEGGS"), -gs.CostSettings.EggTolerance));
-            Setters.Add(new(lm.GetTermStrict("CHARMS"), -gs.CostSettings.CharmTolerance));
+            Setters.Add(new TermValue(lm.GetTermStrict("GRUBS"), -gs.CostSettings.GrubTolerance));
+            Setters.Add(new TermValue(lm.GetTermStrict("ESSENCE"), -gs.CostSettings.EssenceTolerance));
+            Setters.Add(new TermValue(lm.GetTermStrict("RANCIDEGGS"), -gs.CostSettings.EggTolerance));
+            Setters.Add(new TermValue(lm.GetTermStrict("CHARMS"), -gs.CostSettings.CharmTolerance));
 
-            Setters.Add(new(lm.GetTermStrict("MASKSHARDS"), 20 - 4 * gs.CursedSettings.CursedMasks));
-            Setters.Add(new(lm.GetTermStrict("NOTCHES"), 3 - gs.CursedSettings.CursedNotches));
+            Setters.Add(new TermValue(lm.GetTermStrict("MASKSHARDS"), 20 - 4 * gs.CursedSettings.CursedMasks));
+            Setters.Add(new TermValue(lm.GetTermStrict("NOTCHES"), 3 - gs.CursedSettings.CursedNotches));
 
             StartStateTerm = lm.GetTerm("Start_State");
 

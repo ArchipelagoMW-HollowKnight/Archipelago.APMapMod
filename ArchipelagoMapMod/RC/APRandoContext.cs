@@ -1,12 +1,15 @@
-﻿using Archipelago.HollowKnight.IC;
+﻿using System.Diagnostics;
+using Archipelago.HollowKnight.IC;
 using ArchipelagoMapMod.IC;
 using ArchipelagoMapMod.RandomizerData;
 using ArchipelagoMapMod.Settings;
 using ConnectionMetadataInjector;
+using ItemChanger;
 using ItemChanger.Internal;
 using Newtonsoft.Json;
 using RandomizerCore;
 using RandomizerCore.Logic;
+using StartDef = ArchipelagoMapMod.RandomizerData.StartDef;
 
 namespace ArchipelagoMapMod.RC;
 
@@ -22,25 +25,21 @@ public class APRandoContext : RandoContext
 
         Vanilla = new List<GeneralizedPlacement>();
         
-        foreach (var transition in Data.Transitions)
+        foreach (KeyValuePair<string, TransitionDef> transition in Data.Transitions)
         {
             if (transition.Value.VanillaTarget == null) continue;
-#if DEBUG
-            ArchipelagoMapMod.Instance.LogDebug(
-                $"creating transition {transition.Key} and linking it to {transition.Value.VanillaTarget}");
-#endif
-            var item = LM.TransitionLookup[transition.Key];
-            var location = LM.GetTransition(transition.Value.VanillaTarget);
+            LogicTransition location = LM.TransitionLookup[transition.Key];
+            LogicTransition item = LM.GetTransition(transition.Value.VanillaTarget);
             Vanilla.Add(new GeneralizedPlacement(item, location));
         }
 
-        var externalItems = ItemChanger.Finder.ItemNames.ToList(); 
+        //List<string> externalItems = ItemChanger.Finder.ItemNames.ToList(); 
         itemPlacements = new List<ItemPlacement>();
-        foreach (var entry in Ref.Settings.Placements)
+        foreach (KeyValuePair<string, AbstractPlacement> entry in Ref.Settings.Placements)
         {
-            entry.Value.GetOrAddTag<APmmPlacementTag>();
+            AbstractPlacement placement = entry.Value;
             
-            foreach (var abstractItem in entry.Value.Items)
+            foreach (AbstractItem abstractItem in entry.Value.Items)
             {
                 APItem item = new(abstractItem.name);
 
@@ -49,9 +48,9 @@ public class APRandoContext : RandoContext
                 //check if this is an AP item.
                 if (abstractItem.GetTag(out ArchipelagoItemTag aptag))
                 {
-                    if ((bool) Util.Get(GenerationSettings,
-                            $"PoolSettings.{SupplementalMetadata.Of(entry.Value).Get(InjectedProps.LocationPoolGroup).Replace(" ", "")}"))
+                    if ((bool) GenerationSettings.Get($"PoolSettings.{SupplementalMetadata.Of(entry.Value).Get(InjectedProps.LocationPoolGroup).Replace(" ", "")}"))
                     {
+                        entry.Value.GetOrAddTag<APmmPlacementTag>();
                         abstractItem.GetOrAddTag<APmmItemTag>();
                         
                         // only add an actual logical item if its for us. otherwise leave it as a dummy item
@@ -59,7 +58,7 @@ public class APRandoContext : RandoContext
                         {
                             item.item = LM.GetItem(abstractItem.name);
                             // item is for us we can remove it from the external list
-                            externalItems.Remove(abstractItem.name);
+                            //externalItems.Remove(abstractItem.name);
                         }
 
                         ArchipelagoMapMod.Instance.LogDebug(
@@ -75,24 +74,24 @@ public class APRandoContext : RandoContext
                     }
                 }
             }
-
-            for (int i = 0; i < itemPlacements.Count; i++)
-            {
-                itemPlacements[i] = itemPlacements[i] with { Index = i };
-            }
         }
         
-        ArchipelagoMapMod.Instance.LogDebug($"Local Items set, {externalItems.Count} remain adding to start region.");
-        foreach (var externalItem in externalItems)
+        // ArchipelagoMapMod.Instance.LogDebug($"Local Items set, {externalItems.Count} remain adding to Remote region.");
+        // foreach (string externalItem in externalItems)
+        // {
+        //     // there are some oddball items like the charm repair and Iselda's map pins that are not in here
+        //     // so just skip those.
+        //     if (! LM.ItemLookup.ContainsKey(externalItem)) continue;
+        //     
+        //     APItem item = new(LM.GetItem(externalItem));
+        //     APLocation location = new(LM.GetLogicDef("Remote"));
+        //
+        //     itemPlacements.Add(new ItemPlacement(item, location));
+        // }
+        
+        for (int i = 0; i < itemPlacements.Count; i++)
         {
-            // there are some oddball items like the charm repair and Iselda's map pins that are not in here
-            // so just skip those.
-            if (! LM.ItemLookup.ContainsKey(externalItem)) continue;
-            
-            APItem item = new(LM.GetItem(externalItem));
-            APLocation location = new(LM.GetLogicDef("Start"));
-
-            itemPlacements.Add(new ItemPlacement(item, location));
+            itemPlacements[i] = itemPlacements[i] with { Index = i };
         }
     }
 

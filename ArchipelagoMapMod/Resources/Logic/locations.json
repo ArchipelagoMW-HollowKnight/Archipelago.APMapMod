@@ -4,6 +4,10 @@
     "logic": "ANY"
   },
   {
+    "name": "Remote",
+    "logic": "ANY"
+  },
+  {
     "name": "Sly",
     "logic": "Room_shop[left1] + Rescued_Sly"
   },

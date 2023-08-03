@@ -1,4 +1,5 @@
-﻿using ArchipelagoMapMod.IC;
+﻿using Archipelago.MultiClient.Net.Models;
+using ArchipelagoMapMod.IC;
 using ItemChanger;
 using ItemChanger.Internal;
 using Newtonsoft.Json;
@@ -135,6 +136,14 @@ public class TrackerData
             }
         }
         
+        foreach (NetworkItem netItem in Archipelago.HollowKnight.Archipelago.Instance.session.Items.AllItemsReceived)
+        {
+            // Don't add items obtained from our own world to Remote
+            if(netItem.Player == Archipelago.HollowKnight.Archipelago.Instance.session.ConnectionInfo.Slot ) continue;
+
+            AddRemoteItem(netItem);
+        }
+        
         // foreach (var loc in clearedLocations)
         // {
         //     var placement = Ref.Settings.Placements[loc];
@@ -147,6 +156,12 @@ public class TrackerData
         
         foreach (int i in obtainedItems)
         {
+            if (i == -1 || ctx.itemPlacements.Count < i-1)
+            {
+                ArchipelagoMapMod.Instance.LogError($"invalid Index {i} found in obtained items");
+                ArchipelagoMapMod.Instance.LogError($"obtained Items: {string.Join(", ", obtainedItems)}");
+                continue;
+            }
 
             (RandoItem item, RandoLocation loc) = ctx.itemPlacements[i];
             AppendRandoItemToDebug(item, loc);
@@ -168,6 +183,22 @@ public class TrackerData
             AppendTransitionTargetToDebug(tt, st);
             pm.Add(tt, st);
         }
+    }
+
+    private void AddRemoteItem(NetworkItem netItem)
+    {
+        string itemName = Archipelago.HollowKnight.Archipelago.Instance.session.Items.GetItemName(netItem.Item);
+        AppendToDebug($"Adding Remote item {itemName} to Remote Placement");
+        APItem item = new(lm.GetItem(itemName));
+        APLocation location = new(lm.GetLogicDef("Remote"));
+        ItemPlacement itemPlacement = new(item, location)
+        {
+            Index = ctx.itemPlacements.Count
+        };
+        mu.AddEntry(new DelegateUpdateEntry(location.logic, OnCanGetLocation(itemPlacement.Index)));
+        ctx.itemPlacements.Add(itemPlacement);
+            
+        obtainedItems.Add(itemPlacement.Index);
     }
 
     private void HookTrackerUpdate()
