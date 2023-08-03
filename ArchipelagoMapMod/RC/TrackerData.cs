@@ -62,7 +62,7 @@ public class TrackerData
     public void Reset()
     {
         ArchipelagoMapMod.Instance.Log("Setting up TrackerData...");
-        pm = new(lm, ctx);
+        pm = new ProgressionManager(lm, ctx);
 
         mu = pm.mu;
 
@@ -84,9 +84,12 @@ public class TrackerData
                 AppendImprovedStateToDebug(su.term, su.value);
             }
         };
-
+        
+        AppendToDebug("Adding waypoints");
         mu.AddWaypoints(lm.Waypoints);
+        AppendToDebug("Adding transitions");
         mu.AddTransitions(lm.TransitionLookup.Values);
+        AppendToDebug("Adding Vanilla entries");
         mu.AddEntries(ctx.Vanilla.Select(v => new DelegateUpdateEntry(v.Location, pm =>
         {
             AppendVanillaToDebug(v);
@@ -96,11 +99,16 @@ public class TrackerData
                 pm.Add(ilw.GetReachableEffect());
             }
         })));
+        AppendToDebug("Adding randomized entries");
         mu.AddEntries(ctx.itemPlacements.Select((p, id) => new DelegateUpdateEntry(p.Location.logic, OnCanGetLocation(id))));
+        AppendToDebug("Adding transitions");
         mu.AddEntries(ctx.transitionPlacements.Select((p, id) => new DelegateUpdateEntry(p.Source, OnCanGetTransition(id))));
+        AppendToDebug("running first update cycle");
         mu.StartUpdating(); // automatically handle tracking reachable unobtained locations/transitions and adding vanilla progression to pm
 
-        foreach (var placement in Ref.Settings.Placements.Values)
+        AppendToDebug($"Finished logic setup, marking previously obtained items.");
+        
+        foreach (AbstractPlacement placement in Ref.Settings.Placements.Values)
         {
             if (placement.AllObtained())
             {
@@ -111,13 +119,19 @@ public class TrackerData
             if (placement.Visited.HasFlag(VisitState.Previewed))
                 previewedLocations.Add(placement.Name);
             
-            foreach (var placementItem in placement.Items)
+            if(!placement.HasTag<APmmPlacementTag>()) continue;
+            placement.GetTag<APmmPlacementTag>().ids.Clear();
+            foreach (AbstractItem placementItem in placement.Items)
             {
+                if(!placementItem.HasTag<APmmItemTag>()) continue;
+                ItemPlacement ctxItem = ctx.itemPlacements.Find(itemPlacement => itemPlacement.Item.Name == placementItem.name);
+                if(placementItem.GetTag(out APmmItemTag itemTag)) itemTag.id = ctxItem.Index;
+                if(placement.GetTag(out APmmPlacementTag placementTag)) placementTag.ids.Add(ctxItem.Index);
+                
                 if (!placementItem.WasEverObtained())
                     continue;
                 
-                var id = ctx.itemPlacements.FindIndex(itemPlacement => itemPlacement.Item.Name == placementItem.name);
-                obtainedItems.Add(id);
+                obtainedItems.Add(ctxItem.Index);
             }
         }
         

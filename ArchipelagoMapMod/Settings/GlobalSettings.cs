@@ -30,9 +30,9 @@ public class GlobalSettings
     public bool ShowRouteCompass = true;
     public OffRouteBehaviour WhenOffRoute = OffRouteBehaviour.Reevaluate;
     
-    public int gameplayHints = 3;
-    public int hintFontSize = 30;
-    public int pauseMenuHints = 9;
+    public int GameplayHints = 3;
+    public int HintFontSize = 30;
+    public int PauseMenuHints = 9;
 
     internal void ToggleControlPanel()
     {

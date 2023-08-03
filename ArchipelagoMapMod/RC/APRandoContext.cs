@@ -75,7 +75,11 @@ public class APRandoContext : RandoContext
                     }
                 }
             }
-            
+
+            for (int i = 0; i < itemPlacements.Count; i++)
+            {
+                itemPlacements[i] = itemPlacements[i] with { Index = i };
+            }
         }
         
         ArchipelagoMapMod.Instance.LogDebug($"Local Items set, {externalItems.Count} remain adding to start region.");

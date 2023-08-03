@@ -8,10 +8,8 @@ using ItemChanger.Internal;
 using MagicUI.Core;
 using MagicUI.Elements;
 using MapChanger;
-using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
 using HT = Archipelago.HollowKnight.HintTracker;
-using Image = MagicUI.Elements.Image;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -24,7 +22,7 @@ public static class HintDisplay
 
     private static bool _visible = true;
     private const int MaxHints = 20;
-    private static int _hintsShown = ArchipelagoMapMod.GS.gameplayHints;
+    private static int _hintsShown = ArchipelagoMapMod.GS.GameplayHints;
 
     public static void Make()
     {
@@ -37,7 +35,7 @@ public static class HintDisplay
         Archipelago.HollowKnight.HintTracker.OnArchipelagoHintUpdate += SortHints;
 
         _visible = true;
-        _hintsShown = ArchipelagoMapMod.GS.gameplayHints;
+        _hintsShown = ArchipelagoMapMod.GS.GameplayHints;
         
         if (_layout == null)
         {
@@ -64,7 +62,7 @@ public static class HintDisplay
                     HorizontalAlignment = HorizontalAlignment.Right,
                     VerticalAlignment = VerticalAlignment.Center,
                     Font = MagicUI.Core.UI.Perpetua,
-                    FontSize =  ArchipelagoMapMod.GS.hintFontSize,
+                    FontSize =  ArchipelagoMapMod.GS.HintFontSize,
                 };
                 TextFormatter<Hint> f = new(_layout, null, FormatHint)
                 {
@@ -103,14 +101,14 @@ public static class HintDisplay
     {
         orig(self);
         _visible = true;
-        UpdateDisplay(ArchipelagoMapMod.GS.gameplayHints);
+        UpdateDisplay(ArchipelagoMapMod.GS.GameplayHints);
     }
 
     private static void OpenPause(On.UIManager.orig_UIGoToPauseMenu orig, UIManager self)
     {
         orig(self);
         _visible = true;
-        UpdateDisplay(ArchipelagoMapMod.GS.pauseMenuHints);
+        UpdateDisplay(ArchipelagoMapMod.GS.PauseMenuHints);
     }
 
     private static void OpenInv(On.InvAnimateUpAndDown.orig_AnimateUp orig, InvAnimateUpAndDown self)
@@ -207,7 +205,7 @@ public static class HintDisplay
             _formatters[x].Data = hint;
             _formatters[x].Visibility =
                 shown >= _hintsShown ? Visibility.Collapsed : Visibility.Visible;
-            _formatters[x].Text.FontSize = ArchipelagoMapMod.GS.hintFontSize;
+            _formatters[x].Text.FontSize = ArchipelagoMapMod.GS.HintFontSize;
             shown++;
             if (shown >= MaxHints)
                 break;
@@ -266,7 +264,6 @@ public static class HintDisplay
         if (!Ref.Settings.Placements.ContainsKey(locationName)) return ColorResult.Red;
 
         bool geo = true;
-        bool other = true;
         RandomizedAPmmPin pin = (RandomizedAPmmPin) APmmPinManager.Pins[locationName];
         if (pin.placementState is RandoPlacementState.UncheckedUnreachable or RandoPlacementState.PreviewedUnreachable)
             return ColorResult.Red;
@@ -291,23 +288,20 @@ public static class HintDisplay
                 else
                 {
                     if (cost.CanPay()) continue;
-                    other = false;
-                    break;
+                    return ColorResult.Red;
                 }
             }
             break;
         }
-        if (other)
-        {
-            return geo ? ColorResult.Green : ColorResult.Yellow;
-        }
-        return ColorResult.Red;
+        return geo ? ColorResult.Green : ColorResult.Yellow;
     }
 
     private static List<Cost> GetCosts(TaggableObject item)
     {
         List<Cost> costs = new();
-        Cost cost = item.GetTag<CostTag>().Cost;
+        if (!item.GetTag(out CostTag costTag)) return costs;
+        
+        Cost cost = costTag.Cost;
         if (cost is MultiCost multiCost)
         {
             costs.AddRange(multiCost);
@@ -316,7 +310,7 @@ public static class HintDisplay
         {
             costs.Add(cost);
         }
-        
+
         return costs;
     }
 

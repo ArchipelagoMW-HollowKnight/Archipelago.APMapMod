@@ -24,10 +24,10 @@ internal static class BetterMenu
                 b =>
                 {
                     //APMapMod.Instance.Log($"Setting gameplay hints to {b} from satchel");
-                    ArchipelagoMapMod.GS.gameplayHints = Mathf.RoundToInt(b);
+                    ArchipelagoMapMod.GS.GameplayHints = Mathf.RoundToInt(b);
                     HintDisplay.UpdateDisplay();
                 },
-                () => ArchipelagoMapMod.GS.gameplayHints,
+                () => ArchipelagoMapMod.GS.GameplayHints,
                 minValue: 0, maxValue: 20, wholeNumbers: true
             ),
             new CustomSlider(
@@ -35,10 +35,10 @@ internal static class BetterMenu
                 b =>
                 {
                     //ArchipelagoMapMod.Instance.Log($"Setting pause menu hints to {b} from satchel");
-                    ArchipelagoMapMod.GS.pauseMenuHints = Mathf.RoundToInt(b);
-                    HintDisplay.UpdateDisplay(ArchipelagoMapMod.GS.pauseMenuHints);
+                    ArchipelagoMapMod.GS.PauseMenuHints = Mathf.RoundToInt(b);
+                    HintDisplay.UpdateDisplay(ArchipelagoMapMod.GS.PauseMenuHints);
                 },
-                () => ArchipelagoMapMod.GS.pauseMenuHints,
+                () => ArchipelagoMapMod.GS.PauseMenuHints,
                 minValue: 0, maxValue: 20, wholeNumbers: true
             ),
             new CustomSlider(
@@ -46,10 +46,10 @@ internal static class BetterMenu
                 b =>
                 {
                     //ArchipelagoMapMod.Instance.Log($"Setting hint size to {b} from satchel");
-                    ArchipelagoMapMod.GS.hintFontSize = Mathf.RoundToInt(b);
+                    ArchipelagoMapMod.GS.HintFontSize = Mathf.RoundToInt(b);
                     HintDisplay.UpdateDisplay();
                 },
-                () => ArchipelagoMapMod.GS.hintFontSize,
+                () => ArchipelagoMapMod.GS.HintFontSize,
                 minValue: 10, maxValue: 50, wholeNumbers: true
             ),
         });
