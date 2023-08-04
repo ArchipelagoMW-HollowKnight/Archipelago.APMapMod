@@ -60,6 +60,7 @@ internal static class PinSpriteManager
             builtInKey = key switch
             {
                 "Shops" => "Shop",
+                "Benches" => "Bench",
                 _ => "Unknown"
             };
         else if (style is PinStyle.Q_Marks_2)
@@ -71,6 +72,7 @@ internal static class PinSpriteManager
                 "Geo Rocks" => "UnknownGeoRockInv",
                 "Soul Totems" => "UnknownTotemInv",
                 "Shops" => "Shop",
+                "Benches" => "Bench",
                 _ => "Unknown"
             };
         else if (style is PinStyle.Q_Marks_3)
@@ -82,6 +84,7 @@ internal static class PinSpriteManager
                 "Geo Rocks" => "UnknownGeoRock",
                 "Soul Totems" => "UnknownTotem",
                 "Shops" => "Shop",
+                "Benches" => "Bench",
                 _ => "Unknown"
             };
 
