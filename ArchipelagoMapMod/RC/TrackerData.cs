@@ -1,4 +1,5 @@
-﻿using Archipelago.MultiClient.Net.Models;
+﻿using Archipelago.HollowKnight.IC;
+using Archipelago.MultiClient.Net.Models;
 using ArchipelagoMapMod.IC;
 using ItemChanger;
 using ItemChanger.Internal;
@@ -141,18 +142,8 @@ public class TrackerData
             // Don't add items obtained from our own world to Remote
             if(netItem.Player == Archipelago.HollowKnight.Archipelago.Instance.session.ConnectionInfo.Slot ) continue;
 
-            AddRemoteItem(netItem);
+            AddRemoteItem(Archipelago.HollowKnight.Archipelago.Instance.session.Items.GetItemName(netItem.Item));
         }
-        
-        // foreach (var loc in clearedLocations)
-        // {
-        //     var placement = Ref.Settings.Placements[loc];
-        //     foreach (var placementItem in placement.Items)
-        //     {
-        //         var id = ctx.itemPlacements.FindIndex(itemPlacement => itemPlacement.Item.Name == placementItem.name);
-        //         obtainedItems.Add(id);
-        //     }
-        // }
         
         foreach (int i in obtainedItems)
         {
@@ -185,9 +176,9 @@ public class TrackerData
         }
     }
 
-    private void AddRemoteItem(NetworkItem netItem)
+    private ItemPlacement AddRemoteItem(string itemName)
     {
-        string itemName = Archipelago.HollowKnight.Archipelago.Instance.session.Items.GetItemName(netItem.Item);
+        
         AppendToDebug($"Adding Remote item {itemName} to Remote Placement");
         APItem item = new(lm.GetItem(itemName));
         APLocation location = new(lm.GetLogicDef("Remote"));
@@ -195,10 +186,11 @@ public class TrackerData
         {
             Index = ctx.itemPlacements.Count
         };
-        mu.AddEntry(new DelegateUpdateEntry(location.logic, OnCanGetLocation(itemPlacement.Index)));
         ctx.itemPlacements.Add(itemPlacement);
-            
+        mu.AddEntry(new DelegateUpdateEntry(location.logic, OnCanGetLocation(itemPlacement.Index)));
+
         obtainedItems.Add(itemPlacement.Index);
+        return itemPlacement;
     }
 
     private void HookTrackerUpdate()
@@ -210,6 +202,7 @@ public class TrackerData
         APmmTrackerUpdate.OnPreviewsCleared += OnPreviewsCleared;
         APmmTrackerUpdate.OnFoundTransitionsCleared += OnFoundTransitionsCleared;
         APmmTrackerUpdate.OnUnload += UnhookTrackerUpdate;
+        AbstractItem.AfterGiveGlobal += OnAfterGiveGlobal;
     }
 
     public void UnhookTrackerUpdate()
@@ -221,6 +214,16 @@ public class TrackerData
         APmmTrackerUpdate.OnPreviewsCleared -= OnPreviewsCleared;
         APmmTrackerUpdate.OnFoundTransitionsCleared -= OnFoundTransitionsCleared;
         APmmTrackerUpdate.OnUnload -= UnhookTrackerUpdate;
+    }
+    
+    private void OnAfterGiveGlobal(ReadOnlyGiveEventArgs args)
+    {
+
+        if (args.Placement is RemotePlacement)
+        {
+            ItemPlacement itemPlacement = AddRemoteItem(args.Item.name);
+            pm.Add(itemPlacement.Item, itemPlacement.Location);
+        }
     }
 
     private Action<ProgressionManager> OnCanGetLocation(int id)

@@ -37,7 +37,6 @@ public class APRandoContext : RandoContext
         itemPlacements = new List<ItemPlacement>();
         foreach (KeyValuePair<string, AbstractPlacement> entry in Ref.Settings.Placements)
         {
-            AbstractPlacement placement = entry.Value;
             
             foreach (AbstractItem abstractItem in entry.Value.Items)
             {
@@ -60,16 +59,10 @@ public class APRandoContext : RandoContext
                             // item is for us we can remove it from the external list
                             //externalItems.Remove(abstractItem.name);
                         }
-
-                        ArchipelagoMapMod.Instance.LogDebug(
-                                $"Creating Item Placement [{aptag.Player}] {item.item?.Name} at {entry.Key}");
-                            itemPlacements.Add(new ItemPlacement(item, location));
-                            
+                        itemPlacements.Add(new ItemPlacement(item, location));
                     }
                     else
                     {
-                        ArchipelagoMapMod.Instance.LogDebug(
-                            $"Creating Vanilla Item Placement [{aptag.Player}] {item.item?.Name} at {entry.Key}");
                         Vanilla.Add(new ItemPlacement(item, location));
                     }
                 }
