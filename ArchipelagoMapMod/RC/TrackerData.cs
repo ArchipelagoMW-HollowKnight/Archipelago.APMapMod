@@ -137,12 +137,13 @@ public class TrackerData
             }
         }
         
-        foreach (NetworkItem netItem in Archipelago.HollowKnight.Archipelago.Instance.session.Items.AllItemsReceived)
+        // AP puts all remote item in a placement called `Remote_Items`
+        if (Ref.Settings.Placements.TryGetValue(RemotePlacement.SINGLETON_NAME, out AbstractPlacement pmt))
         {
-            // Don't add items obtained from our own world to Remote
-            if(netItem.Player == Archipelago.HollowKnight.Archipelago.Instance.session.ConnectionInfo.Slot ) continue;
-
-            AddRemoteItem(Archipelago.HollowKnight.Archipelago.Instance.session.Items.GetItemName(netItem.Item));
+            foreach (AbstractItem remoteItem in pmt.Items)
+            {
+                AddRemoteItem(remoteItem.name);
+            }
         }
         
         foreach (int i in obtainedItems)
@@ -218,12 +219,10 @@ public class TrackerData
     
     private void OnAfterGiveGlobal(ReadOnlyGiveEventArgs args)
     {
-
-        if (args.Placement is RemotePlacement)
-        {
-            ItemPlacement itemPlacement = AddRemoteItem(args.Item.name);
-            pm.Add(itemPlacement.Item, itemPlacement.Location);
-        }
+        if (args.Placement is not RemotePlacement) return;
+        
+        ItemPlacement itemPlacement = AddRemoteItem(args.Item.name);
+        pm.Add(itemPlacement.Item, itemPlacement.Location);
     }
 
     private Action<ProgressionManager> OnCanGetLocation(int id)
