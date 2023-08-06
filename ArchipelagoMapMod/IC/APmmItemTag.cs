@@ -12,6 +12,7 @@ public class APmmItemTag : Tag
 
     public override void Load(object parent)
     {
+        TagHandlingProperties = TagHandlingFlags.AllowDeserializationFailure;
         ((AbstractItem)parent).AfterGive += Broadcast;
         try
         {

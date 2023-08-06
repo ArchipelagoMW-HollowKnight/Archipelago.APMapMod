@@ -7,6 +7,7 @@ public class APmmTrackerUpdate : ItemChanger.Modules.Module
 {
     public override void Initialize()
     {
+        ModuleHandlingProperties = ModuleHandlingFlags.AllowDeserializationFailure;
         APmmItemTag.AfterRandoItemGive += AfterRandoItemGive;
         APmmPlacementTag.OnRandoPlacementVisitStateChanged += OnRandoPlacementVisitStateChanged;
         Events.OnTransitionOverride += OnTransitionOverride;
@@ -32,7 +33,7 @@ public class APmmTrackerUpdate : ItemChanger.Modules.Module
 
     private TrackerData TD => ArchipelagoMapMod.LS.TrackerData;
     private Dictionary<string, string> transitionLookup;
-
+    
     private void OnRandoPlacementVisitStateChanged(VisitStateChangedEventArgs args)
     {
         if ((args.NewFlags & VisitState.Previewed) == VisitState.Previewed)

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Archipelago.HollowKnight.IC;
+﻿using Archipelago.HollowKnight.IC;
 using ArchipelagoMapMod.IC;
 using ArchipelagoMapMod.RandomizerData;
 using ArchipelagoMapMod.Settings;
@@ -56,8 +55,6 @@ public class APRandoContext : RandoContext
                         if (aptag.Player == Archipelago.HollowKnight.Archipelago.Instance.session.ConnectionInfo.Slot)
                         {
                             item.item = LM.GetItem(abstractItem.name);
-                            // item is for us we can remove it from the external list
-                            //externalItems.Remove(abstractItem.name);
                         }
                         itemPlacements.Add(new ItemPlacement(item, location));
                     }
@@ -68,19 +65,6 @@ public class APRandoContext : RandoContext
                 }
             }
         }
-        
-        // ArchipelagoMapMod.Instance.LogDebug($"Local Items set, {externalItems.Count} remain adding to Remote region.");
-        // foreach (string externalItem in externalItems)
-        // {
-        //     // there are some oddball items like the charm repair and Iselda's map pins that are not in here
-        //     // so just skip those.
-        //     if (! LM.ItemLookup.ContainsKey(externalItem)) continue;
-        //     
-        //     APItem item = new(LM.GetItem(externalItem));
-        //     APLocation location = new(LM.GetLogicDef("Remote"));
-        //
-        //     itemPlacements.Add(new ItemPlacement(item, location));
-        // }
         
         for (int i = 0; i < itemPlacements.Count; i++)
         {

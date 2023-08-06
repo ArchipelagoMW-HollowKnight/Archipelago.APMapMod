@@ -121,7 +121,7 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
 
     public override string GetVersion()
     {
-        return "2.0.0";
+        return "2.0.0-preview";
     }
 
     public override int LoadPriority()
@@ -136,7 +136,7 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
         foreach (var dependency in dependencies)
             if (ModHooks.GetMod(dependency) is not Mod)
             {
-                MapChangerMod.Instance.LogWarn($"Dependency not found for {GetType().Name}: {dependency}");
+                LogWarn($"Dependency not found for {GetType().Name}: {dependency}");
                 return;
             }
 

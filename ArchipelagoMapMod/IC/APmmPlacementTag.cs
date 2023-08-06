@@ -14,6 +14,7 @@ public class APmmPlacementTag : Tag
 
     public override void Load(object parent)
     {
+        TagHandlingProperties = TagHandlingFlags.AllowDeserializationFailure;
         ((AbstractPlacement)parent).OnVisitStateChanged += OnVisitStateChanged;
         try
         {

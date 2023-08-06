@@ -1,5 +1,4 @@
 ﻿using Archipelago.HollowKnight.IC;
-using Archipelago.MultiClient.Net.Models;
 using ArchipelagoMapMod.IC;
 using ItemChanger;
 using ItemChanger.Internal;
