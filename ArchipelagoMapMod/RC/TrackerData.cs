@@ -1,5 +1,6 @@
 ﻿using Archipelago.HollowKnight.IC;
 using ArchipelagoMapMod.IC;
+using ArchipelagoMapMod.Pins;
 using ItemChanger;
 using ItemChanger.Internal;
 using Newtonsoft.Json;
@@ -120,14 +121,10 @@ public class TrackerData
             if (placement.Visited.HasFlag(VisitState.Previewed))
                 previewedLocations.Add(placement.Name);
             
-            if(!placement.HasTag<APmmPlacementTag>()) continue;
-            placement.GetTag<APmmPlacementTag>().ids.Clear();
             foreach (AbstractItem placementItem in placement.Items)
             {
-                if(!placementItem.HasTag<APmmItemTag>()) continue;
-                ItemPlacement ctxItem = ctx.itemPlacements.Find(itemPlacement => itemPlacement.Item.Name == placementItem.name);
-                if(placementItem.GetTag(out APmmItemTag itemTag)) itemTag.id = ctxItem.Index;
-                if(placement.GetTag(out APmmPlacementTag placementTag)) placementTag.ids.Add(ctxItem.Index);
+                if (!placementItem.GetTag(out APmmItemTag tag)) continue;
+                ItemPlacement ctxItem = ctx.itemPlacements[tag.id];
                 
                 if (!placementItem.WasEverObtained())
                     continue;
@@ -187,7 +184,6 @@ public class TrackerData
             Index = ctx.itemPlacements.Count
         };
         ctx.itemPlacements.Add(itemPlacement);
-        mu.AddEntry(new DelegateUpdateEntry(location.logic, OnCanGetLocation(itemPlacement.Index)));
 
         obtainedItems.Add(itemPlacement.Index);
         return itemPlacement;
@@ -222,6 +218,7 @@ public class TrackerData
         
         ItemPlacement itemPlacement = AddRemoteItem(args.Item.name);
         pm.Add(itemPlacement.Item, itemPlacement.Location);
+        APmmPinManager.UpdateRandoPins();
     }
 
     private Action<ProgressionManager> OnCanGetLocation(int id)

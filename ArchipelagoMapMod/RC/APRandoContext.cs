@@ -31,44 +31,38 @@ public class APRandoContext : RandoContext
             LogicTransition item = LM.GetTransition(transition.Value.VanillaTarget);
             Vanilla.Add(new GeneralizedPlacement(item, location));
         }
-
-        //List<string> externalItems = ItemChanger.Finder.ItemNames.ToList(); 
+        
         itemPlacements = new List<ItemPlacement>();
-        foreach (KeyValuePair<string, AbstractPlacement> entry in Ref.Settings.Placements)
+        foreach (AbstractPlacement placement in Ref.Settings.Placements.Values)
         {
-            
-            foreach (AbstractItem abstractItem in entry.Value.Items)
+            foreach (AbstractItem item in placement.Items)
             {
-                APItem item = new(abstractItem.name);
-
-                APLocation location = new(LM.GetLogicDef(entry.Key));
-
                 //check if this is an AP item.
-                if (abstractItem.GetTag(out ArchipelagoItemTag aptag))
+                if (!item.HasTag<ArchipelagoItemTag>()) continue;
+                
+                APItem logicItem = new(item.name);
+
+                APLocation logicLocation = new(LM.GetLogicDef(placement.Name));
+                    
+                if ((bool) GenerationSettings.Get($"PoolSettings.{SupplementalMetadata.Of(placement).Get(InjectedProps.LocationPoolGroup).Replace(" ", "")}"))
                 {
-                    if ((bool) GenerationSettings.Get($"PoolSettings.{SupplementalMetadata.Of(entry.Value).Get(InjectedProps.LocationPoolGroup).Replace(" ", "")}"))
-                    {
-                        entry.Value.GetOrAddTag<APmmPlacementTag>();
-                        abstractItem.GetOrAddTag<APmmItemTag>();
+                    placement.GetOrAddTag<APmmPlacementTag>();
+                    APmmItemTag itemTag = item.GetOrAddTag<APmmItemTag>();
                         
-                        // only add an actual logical item if its for us. otherwise leave it as a dummy item
-                        if (aptag.Player == Archipelago.HollowKnight.Archipelago.Instance.session.ConnectionInfo.Slot)
-                        {
-                            item.item = LM.GetItem(abstractItem.name);
-                        }
-                        itemPlacements.Add(new ItemPlacement(item, location));
-                    }
-                    else
+                    // only add an actual logical item if its for us. otherwise leave it as a dummy item
+                    if (item is not ArchipelagoDummyItem)
                     {
-                        Vanilla.Add(new ItemPlacement(item, location));
+                        logicItem.item = LM.GetItem(item.name);
                     }
+
+                    itemTag.id = itemPlacements.Count;
+                    itemPlacements.Add(new ItemPlacement(logicItem, logicLocation));
+                }
+                else
+                {
+                    Vanilla.Add(new ItemPlacement(logicItem, logicLocation));
                 }
             }
-        }
-        
-        for (int i = 0; i < itemPlacements.Count; i++)
-        {
-            itemPlacements[i] = itemPlacements[i] with { Index = i };
         }
     }
 

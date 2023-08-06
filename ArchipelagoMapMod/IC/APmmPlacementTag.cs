@@ -1,4 +1,5 @@
 ﻿using ItemChanger;
+using Newtonsoft.Json;
 
 namespace ArchipelagoMapMod.IC;
 
@@ -6,11 +7,6 @@ public class APmmPlacementTag : Tag
 {
     public static event Action<VisitStateChangedEventArgs> OnRandoPlacementVisitStateChanged;
     public static event Action<AbstractPlacement, APmmPlacementTag> OnLoad;
-
-    /// <summary>
-    /// The ids of the item placements managed by this placement.
-    /// </summary>
-    public List<int> ids = new();
 
     public override void Load(object parent)
     {
