@@ -212,20 +212,6 @@ public static class HintDisplay
         }
     }
 
-    private static bool IsShop(string location)
-    {
-        if (string.IsNullOrEmpty(location))
-            return false;
-
-        string[] names =
-        {
-            LocationNames.Sly_Key, LocationNames.Sly, LocationNames.Iselda, LocationNames.Salubra,
-            LocationNames.Leg_Eater, LocationNames.Egg_Shop, LocationNames.Seer, LocationNames.Grubfather
-        };
-
-        return names.Any(location.StartsWith);
-    }
-
     private static string StripShopSuffix(string location)
     {
         if (string.IsNullOrEmpty(location))
@@ -264,11 +250,10 @@ public static class HintDisplay
         if (!Ref.Settings.Placements.ContainsKey(locationName)) return ColorResult.Red;
 
         bool geo = true;
-        if (APmmPinManager.Pins[locationName] is not RandomizedAPmmPin pin)
-        {
-            ArchipelagoMapMod.Instance.LogError($"[HINT-DISPLAY] tried to cast {locationName} ({APmmPinManager.Pins[locationName].GetType()})");
-            return ColorResult.Red;
-        }
+        
+        // hints can come though vor vanilla items, if that is the case then mark them as obtained so it does not display on the hint tracker
+        if (APmmPinManager.Pins[locationName] is not RandomizedAPmmPin pin) return ColorResult.Obtained;
+  
         
         if (pin.placementState is RandoPlacementState.UncheckedUnreachable or RandoPlacementState.PreviewedUnreachable)
             return ColorResult.Red;

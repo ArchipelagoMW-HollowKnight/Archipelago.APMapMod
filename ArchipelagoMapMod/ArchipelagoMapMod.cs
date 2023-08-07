@@ -148,7 +148,7 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
 
     public override void Initialize()
     {
-        LogDebug("Initializing");
+        LogDebug($"Initializing APMapMod {GetVersion()}");
 
         foreach (var dependency in dependencies)
             if (ModHooks.GetMod(dependency) is not Mod)

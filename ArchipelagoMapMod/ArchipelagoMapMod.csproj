@@ -8,7 +8,7 @@
         <Description>A Hollow Knight mod for Archipelago that adds many new features to the map.</Description>
         <Copyright>Copyright © KonoTyran 2023</Copyright>
         <Authors>KonoTyran</Authors>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <AssemblyVersion>2.0.0</AssemblyVersion>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <Deterministic>false</Deterministic>
         <ImplicitUsings>true</ImplicitUsings>

@@ -124,8 +124,7 @@ public class TrackerData
             foreach (AbstractItem placementItem in placement.Items)
             {
                 if (!placementItem.GetTag(out APmmItemTag tag)) continue;
-                if (!placementItem.WasEverObtained())
-                    continue;
+                if (!placementItem.WasEverObtained()) continue;
                 
                 ItemPlacement ctxItem = ctx.itemPlacements[tag.id];
                 AppendToDebug($"[Tracker-Data] Adding previously obtained item {ctxItem.Item.Name} to Obtained Items under index {tag.id}");
