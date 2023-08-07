@@ -264,7 +264,12 @@ public static class HintDisplay
         if (!Ref.Settings.Placements.ContainsKey(locationName)) return ColorResult.Red;
 
         bool geo = true;
-        RandomizedAPmmPin pin = (RandomizedAPmmPin) APmmPinManager.Pins[locationName];
+        if (APmmPinManager.Pins[locationName] is not RandomizedAPmmPin pin)
+        {
+            ArchipelagoMapMod.Instance.LogError($"[HINT-DISPLAY] tried to cast {locationName} ({APmmPinManager.Pins[locationName].GetType()})");
+            return ColorResult.Red;
+        }
+        
         if (pin.placementState is RandoPlacementState.UncheckedUnreachable or RandoPlacementState.PreviewedUnreachable)
             return ColorResult.Red;
 
