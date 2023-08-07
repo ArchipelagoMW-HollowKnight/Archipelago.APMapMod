@@ -38,9 +38,9 @@ public class APRandoContext : RandoContext
             foreach (AbstractItem item in placement.Items)
             {
                 //check if this is an AP item.
-                if (!item.HasTag<ArchipelagoItemTag>()) continue;
+                if (!item.GetTag(out ArchipelagoItemTag aptag)) continue;
                 
-                APItem logicItem = new(item.name);
+                
 
                 APLocation logicLocation = new(LM.GetLogicDef(placement.Name));
                     
@@ -48,11 +48,23 @@ public class APRandoContext : RandoContext
                 {
                     placement.GetOrAddTag<APmmPlacementTag>();
                     APmmItemTag itemTag = item.GetOrAddTag<APmmItemTag>();
-                        
-                    // only add an actual logical item if its for us. otherwise leave it as a dummy item
-                    if (item is not ArchipelagoDummyItem)
+
+                    APItem logicItem;
+                    
+                    // create new APItem and attach a logic item to it if its logically relevant
+                    if (aptag.IsItemForMe)
                     {
-                        logicItem.item = LM.GetItem(item.name);
+                        logicItem = new APItem(item.name)
+                        {
+                            item = LM.GetItem(item.name)
+                        };
+                        ArchipelagoMapMod.Instance.LogDebug($"[AP RC] Adding Randomized self-item {item.name} to logic context at {placement.Name}.");
+                    }
+                    else
+                    {
+                        // create an EmptyItem that has no logic terms attached to it.
+                        logicItem = new APItem(item.name + "_player_" + aptag.Player);
+                        ArchipelagoMapMod.Instance.LogDebug($"[AP RC] Adding Randomized other-item {item.name} to logic context as {logicItem.Name} at {placement.Name}.");
                     }
 
                     itemTag.id = itemPlacements.Count;
@@ -60,9 +72,14 @@ public class APRandoContext : RandoContext
                 }
                 else
                 {
-                    Vanilla.Add(new ItemPlacement(logicItem, logicLocation));
+                    
+                    Vanilla.Add(new ItemPlacement(new APItem(item.name), logicLocation));
                 }
             }
+        }
+        for (int i = 0; i < itemPlacements.Count; i++)
+        {
+            itemPlacements[i] = itemPlacements[i] with { Index = i };
         }
     }
 

@@ -124,11 +124,11 @@ public class TrackerData
             foreach (AbstractItem placementItem in placement.Items)
             {
                 if (!placementItem.GetTag(out APmmItemTag tag)) continue;
-                ItemPlacement ctxItem = ctx.itemPlacements[tag.id];
-                
                 if (!placementItem.WasEverObtained())
                     continue;
                 
+                ItemPlacement ctxItem = ctx.itemPlacements[tag.id];
+                AppendToDebug($"[Tracker-Data] Adding previously obtained item {ctxItem.Item.Name} to Obtained Items under index {tag.id}");
                 obtainedItems.Add(ctxItem.Index);
             }
         }
@@ -176,7 +176,7 @@ public class TrackerData
     private ItemPlacement AddRemoteItem(string itemName)
     {
         
-        AppendToDebug($"Adding Remote item {itemName} to Remote Placement");
+        
         APItem item = new(lm.GetItem(itemName));
         APLocation location = new(lm.GetLogicDef("Remote"));
         ItemPlacement itemPlacement = new(item, location)
@@ -184,7 +184,7 @@ public class TrackerData
             Index = ctx.itemPlacements.Count
         };
         ctx.itemPlacements.Add(itemPlacement);
-
+        AppendToDebug($"[Tracker-Data] Adding Remote item {itemName} to Remote Placement under index {itemPlacement.Index}");
         obtainedItems.Add(itemPlacement.Index);
         return itemPlacement;
     }

@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using ArchipelagoMapMod.Modes;
 using ArchipelagoMapMod.Pathfinder;
 using ArchipelagoMapMod.Pathfinder.Instructions;
@@ -119,9 +121,24 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
         return LS;
     }
 
+    /// <summary>
+    /// Mod version as reported to the modding API
+    /// </summary>
     public override string GetVersion()
     {
-        return "2.0.0-preview";
+        Version assemblyVersion = GetType().Assembly.GetName().Version;
+        string version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}";
+#if DEBUG
+        using SHA1 sha = SHA1.Create();
+        using FileStream str = File.OpenRead(GetType().Assembly.Location);
+        StringBuilder sb = new();
+        foreach (byte b in sha.ComputeHash(str).Take(4))
+        {
+            sb.AppendFormat("{0:x2}", b);
+        }
+        version += "-prerelease+" + sb;
+#endif
+        return version;
     }
 
     public override int LoadPriority()
