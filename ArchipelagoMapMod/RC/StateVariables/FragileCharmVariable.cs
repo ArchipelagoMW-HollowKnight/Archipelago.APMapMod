@@ -41,7 +41,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
             if (state.GetBool(CharmBool))
             {
                 state.SetBool(CharmBool, false);
-                state.Increment(UsedNotchesInt, -((APRandoContext)pm.ctx).notchCosts[CharmID - 1]);
+                state.Increment(UsedNotchesInt, -((APRandoContext)pm.ctx).NotchCosts[CharmID - 1]);
                 if (state.GetBool(OvercharmBool)) state.SetBool(OvercharmBool, false);
             }
             state.SetBool(AnticharmBool, true);

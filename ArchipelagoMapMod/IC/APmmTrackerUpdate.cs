@@ -11,7 +11,7 @@ public class APmmTrackerUpdate : ItemChanger.Modules.Module
         APmmItemTag.AfterRandoItemGive += AfterRandoItemGive;
         APmmPlacementTag.OnRandoPlacementVisitStateChanged += OnRandoPlacementVisitStateChanged;
         Events.OnTransitionOverride += OnTransitionOverride;
-        transitionLookup ??= TD.ctx.transitionPlacements.ToDictionary(p => p.Source.Name, p => p.Target.Name);
+        transitionLookup ??= TD.ctx.TransitionPlacements.ToDictionary(p => p.Source.Name, p => p.Target.Name);
     }
 
     public override void Unload()

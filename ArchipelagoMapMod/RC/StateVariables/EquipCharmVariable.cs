@@ -123,7 +123,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
 
         public virtual int GetNotchCost<T>(ProgressionManager pm, T state) where T : IState
         {
-            return ((APRandoContext)pm.ctx!).notchCosts[CharmID - 1];
+            return ((APRandoContext)pm.ctx!).NotchCosts[CharmID - 1];
         }
 
         public virtual bool HasCharmProgression(ProgressionManager pm) => pm.Has(CharmTerm);

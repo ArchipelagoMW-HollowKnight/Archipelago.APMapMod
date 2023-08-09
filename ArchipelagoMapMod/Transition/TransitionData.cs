@@ -51,8 +51,8 @@ internal class TransitionData : HookModule
             }
         }
 
-        if (APLogicSetup.Context.transitionPlacements is not null)
-            foreach ((var source, var target) in APLogicSetup.Context.transitionPlacements.Select(p =>
+        if (APLogicSetup.Context.TransitionPlacements is not null)
+            foreach ((var source, var target) in APLogicSetup.Context.TransitionPlacements.Select(p =>
                          (p.Source.TransitionDef, p.Target.TransitionDef)))
             {
                 _randomizedTransitions[source.Name] = new APmmTransitionDef(source);

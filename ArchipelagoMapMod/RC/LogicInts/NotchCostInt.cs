@@ -36,7 +36,7 @@ namespace ArchipelagoMapMod.RC.LogicInts
 
         public override int GetValue(object? sender, ProgressionManager pm)
         {
-            List<int>? notchCosts = (pm.ctx as APRandoContext)?.notchCosts;
+            List<int>? notchCosts = (pm.ctx as APRandoContext)?.NotchCosts;
             if (notchCosts != null && notchCosts.Count >= charmIDs[charmIDs.Length - 1])
             {
                 return charmIDs.Sum(i => notchCosts[i - 1]) - charmIDs.Max(i => notchCosts[i - 1]);

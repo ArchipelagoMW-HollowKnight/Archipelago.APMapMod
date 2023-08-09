@@ -102,9 +102,9 @@ public class TrackerData
             }
         })));
         AppendToDebug("Adding randomized entries");
-        mu.AddEntries(ctx.itemPlacements.Select((p, id) => new DelegateUpdateEntry(p.Location.logic, OnCanGetLocation(id))));
+        mu.AddEntries(ctx.ItemPlacements.Select((p, id) => new DelegateUpdateEntry(p.Location.logic, OnCanGetLocation(id))));
         AppendToDebug("Adding transitions");
-        mu.AddEntries(ctx.transitionPlacements.Select((p, id) => new DelegateUpdateEntry(p.Source, OnCanGetTransition(id))));
+        mu.AddEntries(ctx.TransitionPlacements.Select((p, id) => new DelegateUpdateEntry(p.Source, OnCanGetTransition(id))));
         AppendToDebug("running first update cycle");
         mu.StartUpdating(); // automatically handle tracking reachable unobtained locations/transitions and adding vanilla progression to pm
 
@@ -126,7 +126,7 @@ public class TrackerData
                 if (!placementItem.GetTag(out APmmItemTag tag)) continue;
                 if (!placementItem.WasEverObtained()) continue;
                 
-                ItemPlacement ctxItem = ctx.itemPlacements[tag.id];
+                ItemPlacement ctxItem = ctx.ItemPlacements[tag.id];
                 AppendToDebug($"[Tracker-Data] Adding previously obtained item {ctxItem.Item.Name} to Obtained Items under index {tag.id}");
                 obtainedItems.Add(ctxItem.Index);
             }
@@ -143,14 +143,14 @@ public class TrackerData
         
         foreach (int i in obtainedItems)
         {
-            if (i == -1 || ctx.itemPlacements.Count < i-1)
+            if (i == -1 || ctx.ItemPlacements.Count < i-1)
             {
                 ArchipelagoMapMod.Instance.LogError($"invalid Index {i} found in obtained items");
                 ArchipelagoMapMod.Instance.LogError($"obtained Items: {string.Join(", ", obtainedItems)}");
                 continue;
             }
 
-            (RandoItem item, RandoLocation loc) = ctx.itemPlacements[i];
+            (RandoItem item, RandoLocation loc) = ctx.ItemPlacements[i];
             AppendRandoItemToDebug(item, loc);
             pm.Add(item, loc);
         }
@@ -180,9 +180,9 @@ public class TrackerData
         APLocation location = new(lm.GetLogicDef("Remote"));
         ItemPlacement itemPlacement = new(item, location)
         {
-            Index = ctx.itemPlacements.Count
+            Index = ctx.ItemPlacements.Count
         };
-        ctx.itemPlacements.Add(itemPlacement);
+        ctx.ItemPlacements.Add(itemPlacement);
         AppendToDebug($"[Tracker-Data] Adding Remote item {itemName} to Remote Placement under index {itemPlacement.Index}");
         obtainedItems.Add(itemPlacement.Index);
         return itemPlacement;
@@ -225,7 +225,7 @@ public class TrackerData
     {
         return pm =>
         {
-            (RandoItem item, RandoLocation location) = ctx.itemPlacements[id];
+            (RandoItem item, RandoLocation location) = ctx.ItemPlacements[id];
             AppendRandoLocationToDebug(location);
             if (location is ILocationWaypoint ilw)
             {
@@ -242,7 +242,7 @@ public class TrackerData
     {
         return pm =>
         {
-            (RandoTransition target, RandoTransition source) = ctx.transitionPlacements[id];
+            (RandoTransition target, RandoTransition source) = ctx.TransitionPlacements[id];
             AppendReachableTransitionToDebug(source.lt);
             
             if (!pm.Has(source.lt.term))
@@ -260,7 +260,7 @@ public class TrackerData
 
     public void OnItemObtained(int id, string itemName, string placementName)
     {
-        (RandoItem ri, RandoLocation rl) = ctx.itemPlacements[id];
+        (RandoItem ri, RandoLocation rl) = ctx.ItemPlacements[id];
         obtainedItems.Add(id);
         if (rl.logic.CanGet(pm))
         {

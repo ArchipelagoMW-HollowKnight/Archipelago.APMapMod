@@ -14,7 +14,7 @@ namespace ArchipelagoMapMod.RC;
 
 public class APRandoContext : RandoContext
 {
-    public APRandoContext(LogicManager LM) : base(LM) { }
+    public APRandoContext(LogicManager lm) : base(lm) { }
 
     public APRandoContext(GenerationSettings gs, StartDef startDef) : base(RCData.GetNewLogicManager(gs))
     {
@@ -24,6 +24,13 @@ public class APRandoContext : RandoContext
 
         Vanilla = new List<GeneralizedPlacement>();
         
+        // Save Notch Costs from PD
+        for (int i = 0; i < CharmNotchCosts._vanillaCosts.Length; i++)
+        {
+            NotchCosts.Add(PlayerData.instance.GetInt($"charmCost_{i}"));
+        }
+        
+        // todo: update this with transitions from AP when given and dont add them to vanilla
         foreach (KeyValuePair<string, TransitionDef> transition in Data.Transitions)
         {
             if (transition.Value.VanillaTarget == null) continue;
@@ -32,7 +39,8 @@ public class APRandoContext : RandoContext
             Vanilla.Add(new GeneralizedPlacement(item, location));
         }
         
-        itemPlacements = new List<ItemPlacement>();
+        // Populate our item placements with info from IC
+        ItemPlacements = new List<ItemPlacement>();
         foreach (AbstractPlacement placement in Ref.Settings.Placements.Values)
         {
             foreach (AbstractItem item in placement.Items)
@@ -67,8 +75,8 @@ public class APRandoContext : RandoContext
                         ArchipelagoMapMod.Instance.LogDebug($"[AP RC] Adding Randomized other-item {item.name} to logic context as {logicItem.Name} at {placement.Name}.");
                     }
 
-                    itemTag.id = itemPlacements.Count;
-                    itemPlacements.Add(new ItemPlacement(logicItem, logicLocation));
+                    itemTag.id = ItemPlacements.Count;
+                    ItemPlacements.Add(new ItemPlacement(logicItem, logicLocation));
                 }
                 else
                 {
@@ -77,17 +85,17 @@ public class APRandoContext : RandoContext
                 }
             }
         }
-        for (int i = 0; i < itemPlacements.Count; i++)
+        for (int i = 0; i < ItemPlacements.Count; i++)
         {
-            itemPlacements[i] = itemPlacements[i] with { Index = i };
+            ItemPlacements[i] = ItemPlacements[i] with { Index = i };
         }
     }
 
     public APRandoContext(APRandoContext ctx) : base(ctx.LM)
     {
-        notchCosts = ctx.notchCosts.ToList();
-        itemPlacements = ctx.itemPlacements.ToList();
-        transitionPlacements = ctx.transitionPlacements.ToList();
+        NotchCosts = ctx.NotchCosts.ToList();
+        ItemPlacements = ctx.ItemPlacements.ToList();
+        TransitionPlacements = ctx.TransitionPlacements.ToList();
         StartDef = ctx.StartDef;
         InitialProgression = ctx.InitialProgression;
         Vanilla = ctx.Vanilla.ToList();
@@ -97,17 +105,17 @@ public class APRandoContext : RandoContext
     public GenerationSettings GenerationSettings { get; init; }
     public StartDef StartDef { get; init; }
 
-    public List<GeneralizedPlacement> Vanilla = new();
-    public List<ItemPlacement> itemPlacements = new();
+    public readonly List<GeneralizedPlacement> Vanilla = new();
+    public readonly List<ItemPlacement> ItemPlacements = new();
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-    public List<TransitionPlacement> transitionPlacements = new();
-    public List<int> notchCosts = new();
+    public List<TransitionPlacement> TransitionPlacements = new();
+    public readonly List<int> NotchCosts = new();
 
     public override IEnumerable<GeneralizedPlacement> EnumerateExistingPlacements()
     {
         foreach (GeneralizedPlacement p in Vanilla) yield return p;
-        foreach (ItemPlacement p in itemPlacements) yield return p;
-        foreach (TransitionPlacement p in transitionPlacements) yield return p;
+        foreach (ItemPlacement p in ItemPlacements) yield return p;
+        foreach (TransitionPlacement p in TransitionPlacements) yield return p;
     }
 
 }
