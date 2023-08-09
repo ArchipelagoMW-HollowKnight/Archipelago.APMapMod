@@ -209,6 +209,7 @@ public class TrackerData
         APmmTrackerUpdate.OnPreviewsCleared -= OnPreviewsCleared;
         APmmTrackerUpdate.OnFoundTransitionsCleared -= OnFoundTransitionsCleared;
         APmmTrackerUpdate.OnUnload -= UnhookTrackerUpdate;
+        AbstractItem.AfterGiveGlobal -= OnAfterGiveGlobal;
     }
     
     private void OnAfterGiveGlobal(ReadOnlyGiveEventArgs args)
@@ -320,6 +321,12 @@ public class TrackerData
         ArchipelagoMapMod.Instance.LogDebug(line);
         //LogManager.Append(line + Environment.NewLine, logFileName);
     }
+    
+    private void AppendToFine(string line)
+    {
+        ArchipelagoMapMod.Instance.LogFine(line);
+        //LogManager.Append(line + Environment.NewLine, logFileName);
+    }
 
     private void AppendWaypointToDebug(LogicWaypoint w)
     {
@@ -328,7 +335,7 @@ public class TrackerData
 
     private void AppendVanillaToDebug(GeneralizedPlacement v)
     {
-        AppendToDebug($"New reachable vanilla placement: {v.Item.Name} at {v.Location.Name}");
+        AppendToFine($"New reachable vanilla placement: {v.Item.Name} at {v.Location.Name}");
     }
 
     private void AppendRandoItemToDebug(RandoItem ri, RandoLocation rl)
@@ -358,12 +365,12 @@ public class TrackerData
 
     private void AppendImprovedStateToDebug(Term target, StateUnion value)
     {
-        AppendToDebug($"Improved {target.Name} state to {lm.StateManager.PrettyPrint(value)} via evaluation.");
+        AppendToFine($"Improved {target.Name} state to {lm.StateManager.PrettyPrint(value)} via evaluation.");
     }
 
     private void AppendTransmittedStateToDebug(Term target, StateUnion value)
     {
-        AppendToDebug($"Improved {target.Name} state to {lm.StateManager.PrettyPrint(value)} via transmission.");
+        AppendToFine($"Improved {target.Name} state to {lm.StateManager.PrettyPrint(value)} via transmission.");
     }
 
     public bool HasVisited(string transition) => visitedTransitions.ContainsKey(transition);

@@ -15,6 +15,7 @@ using MapChanger.Defs;
 using MapChanger.UI;
 using Modding;
 using UnityEngine;
+using Logger = Modding.Logger;
 
 namespace ArchipelagoMapMod;
 
@@ -146,9 +147,23 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
         return 10;
     }
 
+    
+    // if built with debug flag log all debug message to info
+    public new void LogDebug(string message)
+    {
+#if DEBUG
+        Logger.Log($"[Debug] {message}");
+#else
+        Logger.LogDebug(message);
+#endif
+        //LogManager.Append(line + Environment.NewLine, logFileName);
+    
+    }
+
     public override void Initialize()
     {
-        LogDebug($"Initializing APMapMod {GetVersion()}");
+        
+        Log($"Initializing APMapMod {GetVersion()}");
 
         foreach (var dependency in dependencies)
             if (ModHooks.GetMod(dependency) is not Mod)
@@ -170,7 +185,7 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
         Archipelago.HollowKnight.Archipelago.OnArchipelagoGameStarted += OnEnterGame;
         Archipelago.HollowKnight.Archipelago.OnArchipelagoGameEnded += OnQuitToMenu;
 
-        LogDebug("Initialization complete.");
+        Log("Initialization complete.");
     }
 
     private static void OnEnterGame()
