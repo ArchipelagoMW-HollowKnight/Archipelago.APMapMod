@@ -262,11 +262,9 @@ public class TrackerData
     {
         (RandoItem ri, RandoLocation rl) = ctx.ItemPlacements[id];
         obtainedItems.Add(id);
-        if (rl.logic.CanGet(pm))
-        {
-            AppendRandoItemToDebug(ri, rl);
-            pm.Add(ri, rl);
-        }
+        AppendRandoItemToDebug(ri, rl);
+        pm.Add(ri, rl);
+        
     }
 
     public void OnPlacementPreviewed(string placementName)
