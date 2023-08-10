@@ -27,8 +27,8 @@ public class APRandoContext : RandoContext
         // Save Notch Costs from PD
         for (int i = 0; i < CharmNotchCosts._vanillaCosts.Length; i++)
         {
-            int cost = PlayerData.instance.GetInt($"charmCost_{i}");
-            ArchipelagoMapMod.Instance.LogDebug($"adding charm {i} at cost {cost}");
+            int cost = PlayerData.instance.GetInt($"charmCost_{i+1}");
+            ArchipelagoMapMod.Instance.LogDebug($"adding charm ID {i+1} at cost {cost}");
             NotchCosts.Add(cost);
         }
         
