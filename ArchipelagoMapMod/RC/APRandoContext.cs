@@ -27,7 +27,9 @@ public class APRandoContext : RandoContext
         // Save Notch Costs from PD
         for (int i = 0; i < CharmNotchCosts._vanillaCosts.Length; i++)
         {
-            NotchCosts.Add(PlayerData.instance.GetInt($"charmCost_{i}"));
+            int cost = PlayerData.instance.GetInt($"charmCost_{i}");
+            ArchipelagoMapMod.Instance.LogDebug($"adding charm {i} at cost {cost}");
+            NotchCosts.Add(cost);
         }
         
         // todo: update this with transitions from AP when given and dont add them to vanilla

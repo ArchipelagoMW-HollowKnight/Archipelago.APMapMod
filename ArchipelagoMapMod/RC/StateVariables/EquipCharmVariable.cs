@@ -123,7 +123,17 @@ namespace ArchipelagoMapMod.RC.StateVariables
 
         public virtual int GetNotchCost<T>(ProgressionManager pm, T state) where T : IState
         {
-            return ((APRandoContext)pm.ctx!).NotchCosts[CharmID - 1];
+            try
+            {
+                return ((APRandoContext) pm.ctx!).NotchCosts[CharmID - 1];
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                List<int> costs = ((APRandoContext) pm.ctx!).NotchCosts ?? new List<int> { -1 };
+                ArchipelagoMapMod.Instance.LogError($"Unable to find cost for {CharmID} in {string.Join(", ", costs)} returning vanilla cost");
+                return CharmNotchCosts.GetVanillaCost(CharmID);
+            }
+            
         }
 
         public virtual bool HasCharmProgression(ProgressionManager pm) => pm.Has(CharmTerm);
