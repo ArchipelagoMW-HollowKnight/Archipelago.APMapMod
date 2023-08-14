@@ -17,7 +17,7 @@ public class APLogicSetup : HookModule
     {
         Data.Load();
         
-        ItemChangerMod.Modules.Add<APmmTrackerUpdate>();
+        ItemChangerMod.Modules.GetOrAdd<APmmTrackerUpdate>();
         
         //TODO: fix start location when AP provides the info.
         Context = new APRandoContext(new GenerationSettings(), Data.Starts["King's Pass"]);
