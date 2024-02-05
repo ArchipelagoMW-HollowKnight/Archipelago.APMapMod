@@ -5,6 +5,7 @@ using Archipelago.MultiClient.Net.Models;
 using ArchipelagoMapMod.Pins;
 using ItemChanger;
 using ItemChanger.Internal;
+using ItemChanger.Placements;
 using MagicUI.Core;
 using MagicUI.Elements;
 using MapChanger;
@@ -36,7 +37,7 @@ public static class HintDisplay
 
         _visible = true;
         _hintsShown = ArchipelagoMapMod.GS.GameplayHints;
-        
+
         if (_layout == null)
         {
             ArchipelagoMapMod.Instance.Log("Creating hint display");
@@ -62,7 +63,7 @@ public static class HintDisplay
                     HorizontalAlignment = HorizontalAlignment.Right,
                     VerticalAlignment = VerticalAlignment.Center,
                     Font = MagicUI.Core.UI.Perpetua,
-                    FontSize =  ArchipelagoMapMod.GS.HintFontSize,
+                    FontSize = ArchipelagoMapMod.GS.HintFontSize,
                 };
                 TextFormatter<Hint> f = new(_layout, null, FormatHint)
                 {
@@ -80,7 +81,7 @@ public static class HintDisplay
                 hintLayout.Children.Add(formatter);
             }
         }
-        
+
         SortHints();
         UpdateDisplay();
     }
@@ -91,7 +92,7 @@ public static class HintDisplay
         On.InvAnimateUpAndDown.AnimateDown -= CloseInv;
         On.UIManager.UIGoToPauseMenu -= OpenPause;
         On.UIManager.UIClosePauseMenu -= ClosePause;
-        
+
         _layout?.Destroy();
         _layout = null;
         _formatters = null;
@@ -130,43 +131,62 @@ public static class HintDisplay
         {
             // if same location return 0
             if (hint1.LocationId == hint2.LocationId)
+            {
                 return 0;
+            }
 
             ColorResult hint1Color = GetColor(hint1.LocationId);
             ColorResult hint2Color = GetColor(hint2.LocationId);
-            
+
             // if same color sort by location id
-            if( hint1Color == hint2Color)
+            if (hint1Color == hint2Color)
+            {
                 return hint1.LocationId >= hint2.LocationId ? -1 : 1;
-            
+            }
+
             // green first
             if (hint1Color == ColorResult.Green &&
                 hint2Color != ColorResult.Green)
+            {
                 return -1;
+            }
+
             if (hint1Color != ColorResult.Green &&
                 hint2Color == ColorResult.Green)
+            {
                 return 1;
+            }
 
             // yellow second
             if (hint1Color == ColorResult.Yellow &&
                 hint2Color != ColorResult.Yellow)
+            {
                 return -1;
+            }
+
             if (hint1Color != ColorResult.Yellow &&
                 hint2Color == ColorResult.Yellow)
+            {
                 return 1;
+            }
 
             // Red third
             if (hint1Color == ColorResult.Red &&
                 hint2Color != ColorResult.Red)
+            {
                 return -1;
+            }
+
             if (hint1Color != ColorResult.Red &&
                 hint2Color == ColorResult.Red)
+            {
                 return 1;
+            }
 
             // how did we get here?
             return 0;
         });
-        
+
         UpdateDisplay();
     }
 
@@ -179,27 +199,43 @@ public static class HintDisplay
     public static void UpdateDisplay()
     {
         if (!(Archipelago.HollowKnight.Archipelago.Instance?.ArchipelagoEnabled).GetValueOrDefault(false))
+        {
             return;
-        
+        }
+
         if (_layout == null || _formatters == null)
+        {
             return;
-        
+        }
+
         int shown = 0;
         foreach (Hint hint in HT.Hints)
         {
             if (hint.FindingPlayer != Session.ConnectionInfo.Slot)
+            {
                 continue;
+            }
+
             if (hint.Found)
+            {
                 continue;
-            if(!hint.ItemFlags.HasFlag(ItemFlags.Advancement))
+            }
+
+            if (!hint.ItemFlags.HasFlag(ItemFlags.Advancement))
+            {
                 continue;
+            }
 
             string locationString = Session.Locations.GetLocationNameFromId(hint.LocationId);
             if (GetColor(hint.LocationId) == ColorResult.Obtained)
+            {
                 return;
+            }
 
             if (ArchipelagoMapMod.LS.TrackerData.clearedLocations.Contains(locationString))
+            {
                 continue;
+            }
 
             int x = _formatters.Count - 1 - shown;
             _formatters[x].Data = hint;
@@ -208,7 +244,9 @@ public static class HintDisplay
             _formatters[x].Text.FontSize = ArchipelagoMapMod.GS.HintFontSize;
             shown++;
             if (shown >= MaxHints)
+            {
                 break;
+            }
         }
     }
 
@@ -247,37 +285,55 @@ public static class HintDisplay
     private static ColorResult GetColor(long locationID)
     {
         string locationName = StripShopSuffix(Session.Locations.GetLocationNameFromId(locationID));
-        if (!Ref.Settings.Placements.ContainsKey(locationName)) return ColorResult.Red;
+        if (!Ref.Settings.Placements.ContainsKey(locationName))
+        {
+            return ColorResult.Red;
+        }
 
         bool geo = true;
-        
-        // hints can come though vor vanilla items, if that is the case then mark them as obtained so it does not display on the hint tracker
-        if (APmmPinManager.Pins[locationName] is not RandomizedAPmmPin pin) return ColorResult.Obtained;
-  
-        
-        if (pin.placementState is RandoPlacementState.UncheckedUnreachable or RandoPlacementState.PreviewedUnreachable)
-            return ColorResult.Red;
 
-        foreach (AbstractItem item in Ref.Settings.Placements[locationName].Items.Where(item => item.GetTag<ArchipelagoItemTag>()?.Location == locationID))
+        // hints can come though vor vanilla items, if that is the case then mark them as obtained so it does not display on the hint tracker
+        if (APmmPinManager.Pins[locationName] is not RandomizedAPmmPin pin)
+        {
+            return ColorResult.Obtained;
+        }
+
+        if (pin.placementState is RandoPlacementState.UncheckedUnreachable or RandoPlacementState.PreviewedUnreachable)
+        {
+            return ColorResult.Red;
+        }
+
+        AbstractPlacement pmt = Ref.Settings.Placements[locationName];
+        foreach (AbstractItem item in pmt.Items.Where(item => item.GetTag<ArchipelagoItemTag>()?.Location == locationID))
         {
             if (item.WasEverObtained())
+            {
                 return ColorResult.Obtained;
-            
-            List<Cost> costs = GetCosts(item);
-            
+            }
+
+            List<Cost> costs = GetCosts(item, pmt);
+
             if (costs.Count == 0)
+            {
                 return ColorResult.Green;
-        
+            }
+
             foreach (Cost cost in costs)
             {
                 if (cost is GeoCost geoCost)
                 {
                     if (!geoCost.CanPay())
+                    {
                         geo = false;
+                    }
                 }
                 else
                 {
-                    if (cost.CanPay()) continue;
+                    if (cost.CanPay())
+                    {
+                        continue;
+                    }
+
                     return ColorResult.Red;
                 }
             }
@@ -286,36 +342,53 @@ public static class HintDisplay
         return geo ? ColorResult.Green : ColorResult.Yellow;
     }
 
-    private static List<Cost> GetCosts(TaggableObject item)
+    private static List<Cost> GetCosts(AbstractItem item, AbstractPlacement placement)
     {
         List<Cost> costs = new();
-        if (!item.GetTag(out CostTag costTag)) return costs;
-        
-        Cost cost = costTag.Cost;
-        if (cost is MultiCost multiCost)
+        if (placement is ISingleCostPlacement iscp)
         {
-            costs.AddRange(multiCost);
+            Cost cost = iscp.Cost;
+            if (cost is MultiCost multiCost)
+            {
+                costs.AddRange(multiCost);
+            }
+            else
+            {
+                costs.Add(cost);
+            }
         }
-        else
+        if (item.GetTag(out CostTag costTag))
         {
-            costs.Add(cost);
+            Cost cost = costTag.Cost;
+            if (cost is MultiCost multiCost)
+            {
+                costs.AddRange(multiCost);
+            }
+            else
+            {
+                costs.Add(cost);
+            }
         }
 
         return costs;
     }
 
     private static string FormatHint(Hint hint)
+    {
+        if (hint == null)
         {
-            if (hint == null) return "";
-            string color = GetColor(hint.LocationId) switch
-            {
-                ColorResult.Green => "green",
-                ColorResult.Yellow => "yellow",
-                ColorResult.Red => "red",
-                _ => "grey"
-            };
-            
-            return
-                $"<b>{Session.Players.GetPlayerAlias(hint.ReceivingPlayer)}</b>'s <b>[{Session.Items.GetItemName(hint.ItemId)}]</b> from <b><color={color}>[{Session.Locations.GetLocationNameFromId(hint.LocationId).Replace("_", " ")}]</color></b>";
+            return "";
         }
+
+        string color = GetColor(hint.LocationId) switch
+        {
+            ColorResult.Green => "green",
+            ColorResult.Yellow => "yellow",
+            ColorResult.Red => "red",
+            _ => "grey"
+        };
+
+        return
+            $"<b>{Session.Players.GetPlayerAlias(hint.ReceivingPlayer)}</b>'s <b>[{Session.Items.GetItemName(hint.ItemId)}]</b> from <b><color={color}>[{Session.Locations.GetLocationNameFromId(hint.LocationId).Replace("_", " ")}]</color></b>";
     }
+}
