@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
-using ArchipelagoMapMod.Modes;
+﻿using ArchipelagoMapMod.Modes;
 using ArchipelagoMapMod.Pathfinder;
 using ArchipelagoMapMod.Pathfinder.Instructions;
 using ArchipelagoMapMod.Pins;
@@ -14,6 +11,9 @@ using MapChanger;
 using MapChanger.Defs;
 using MapChanger.UI;
 using Modding;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using UnityEngine;
 using Logger = Modding.Logger;
 
@@ -166,11 +166,13 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
         Log($"Initializing APMapMod {GetVersion()}");
 
         foreach (var dependency in dependencies)
+        {
             if (ModHooks.GetMod(dependency) is not Mod)
             {
                 LogWarn($"Dependency not found for {GetType().Name}: {dependency}");
                 return;
             }
+        }
 
         Interop.FindInteropMods();
         APmmSearchData.LoadConditionalTerms();
@@ -194,9 +196,15 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
         MapChanger.Settings.AddModes(modes);
         Events.OnSetGameMap += OnSetGameMap;
 
-        if (Interop.HasBenchwarp()) BenchwarpInterop.Load();
+        if (Interop.HasBenchwarp())
+        {
+            BenchwarpInterop.Load();
+        }
 
-        foreach (var hookModule in hookModules) hookModule.OnEnterGame();
+        foreach (var hookModule in hookModules)
+        {
+            hookModule.OnEnterGame();
+        }
     }
 
     private static void OnSetGameMap(GameObject goMap)
@@ -215,12 +223,21 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
             // Construct Hint Display
             HintDisplay.Make();
 
-            foreach (var button in mainButtons) button.Make();
+            foreach (var button in mainButtons)
+            {
+                button.Make();
+            }
 
-            foreach (var ebp in extraButtonPanels) ebp.Make();
+            foreach (var ebp in extraButtonPanels)
+            {
+                ebp.Make();
+            }
 
             // Construct map UI
-            foreach (var uiLayer in mapUILayers) MapUILayerUpdater.Add(uiLayer);
+            foreach (var uiLayer in mapUILayers)
+            {
+                MapUILayerUpdater.Add(uiLayer);
+            }
         }
         catch (Exception e)
         {
@@ -232,8 +249,11 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
     {
         Events.OnSetGameMap -= OnSetGameMap;
 
-        foreach (var hookModule in hookModules) hookModule.OnQuitToMenu();
-        
+        foreach (var hookModule in hookModules)
+        {
+            hookModule.OnQuitToMenu();
+        }
+
         HintDisplay.Destroy();
     }
     

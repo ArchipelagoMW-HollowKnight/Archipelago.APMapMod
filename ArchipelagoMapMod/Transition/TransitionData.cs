@@ -1,6 +1,6 @@
-﻿using System.Collections.ObjectModel;
-using ArchipelagoMapMod.RC;
+﻿using ArchipelagoMapMod.RC;
 using MapChanger;
+using System.Collections.ObjectModel;
 using RD = ArchipelagoMapMod.RandomizerData.Data;
 namespace ArchipelagoMapMod.Transition;
 
@@ -52,6 +52,7 @@ internal class TransitionData : HookModule
         }
 
         if (APLogicSetup.Context.TransitionPlacements is not null)
+        {
             foreach ((var source, var target) in APLogicSetup.Context.TransitionPlacements.Select(p =>
                          (p.Source.TransitionDef, p.Target.TransitionDef)))
             {
@@ -59,6 +60,7 @@ internal class TransitionData : HookModule
                 _randomizedTransitions[target.Name] = new APmmTransitionDef(target);
                 _placements[source.Name] = target.Name;
             }
+        }
 
         Placements = new ReadOnlyDictionary<string, string>(_placements);
 
@@ -110,8 +112,15 @@ internal class TransitionData : HookModule
 
     public static APmmTransitionDef GetTransitionDef(string str)
     {
-        if (_vanillaTransitions.TryGetValue(str, out var def)) return def;
-        if (_randomizedTransitions.TryGetValue(str, out def)) return def;
+        if (_vanillaTransitions.TryGetValue(str, out var def))
+        {
+            return def;
+        }
+
+        if (_randomizedTransitions.TryGetValue(str, out def))
+        {
+            return def;
+        }
 
         return null;
     }
@@ -129,7 +138,10 @@ internal class TransitionData : HookModule
 
             foreach (var transition in uncheckedTransitions)
             {
-                if (GetTransitionDef(transition) is not APmmTransitionDef td) continue;
+                if (GetTransitionDef(transition) is not APmmTransitionDef td)
+                {
+                    continue;
+                }
 
                 text += "\n";
 
@@ -149,8 +161,10 @@ internal class TransitionData : HookModule
         
         // Display only one-way transitions in coupled rando
         if (APLogicSetup.Context.GenerationSettings.TransitionSettings.Coupled)
+        {
             visitedTransitionsTo = visitedTransitionsTo.Where(t => !visitedTransitions.ContainsKey(t.Value))
                 .ToDictionary(t => t.Key, t => t.Value);
+        }
 
         text += BuildTransitionStringList(visitedTransitionsTo, "Visited to", true, text != "");
 
@@ -178,9 +192,15 @@ internal class TransitionData : HookModule
     {
         var text = "";
 
-        if (!transitions.Any()) return text;
+        if (!transitions.Any())
+        {
+            return text;
+        }
 
-        if (addNewLines) text += "\n\n";
+        if (addNewLines)
+        {
+            text += "\n\n";
+        }
 
         text += $"{subtitle}:";
 
@@ -189,9 +209,13 @@ internal class TransitionData : HookModule
             text += "\n";
 
             if (to)
+            {
                 text += $"{kvp.Key.Name} -> {kvp.Value.DoorName}";
+            }
             else
+            {
                 text += $"{kvp.Key.DoorName} -> {kvp.Value.Name}";
+            }
         }
 
         return text;

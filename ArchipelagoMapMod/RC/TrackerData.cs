@@ -119,13 +119,22 @@ public class TrackerData
             }
 
             if (placement.Visited.HasFlag(VisitState.Previewed))
+            {
                 previewedLocations.Add(placement.Name);
-            
+            }
+
             foreach (AbstractItem placementItem in placement.Items)
             {
-                if (!placementItem.GetTag(out APmmItemTag tag)) continue;
-                if (!placementItem.WasEverObtained()) continue;
-                
+                if (!placementItem.GetTag(out APmmItemTag tag))
+                {
+                    continue;
+                }
+
+                if (!placementItem.WasEverObtained())
+                {
+                    continue;
+                }
+
                 ItemPlacement ctxItem = ctx.ItemPlacements[tag.id];
                 AppendToDebug($"[Tracker-Data] Adding previously obtained item {ctxItem.Item.Name} to Obtained Items under index {tag.id}");
                 obtainedItems.Add(ctxItem.Index);
@@ -174,8 +183,6 @@ public class TrackerData
 
     private ItemPlacement AddRemoteItem(string itemName)
     {
-        
-        
         APItem item = new(lm.GetItem(itemName));
         APLocation location = new(lm.GetLogicDef("Remote"));
         ItemPlacement itemPlacement = new(item, location)
@@ -214,8 +221,11 @@ public class TrackerData
     
     private void OnAfterGiveGlobal(ReadOnlyGiveEventArgs args)
     {
-        if (args.Placement is not RemotePlacement) return;
-        
+        if (args.Placement is not RemotePlacement)
+        {
+            return;
+        }
+
         ItemPlacement itemPlacement = AddRemoteItem(args.Item.name);
         pm.Add(itemPlacement.Item, itemPlacement.Location);
         APmmPinManager.UpdateRandoPins();
@@ -338,6 +348,14 @@ public class TrackerData
 
     private void AppendRandoItemToDebug(RandoItem ri, RandoLocation rl)
     {
+        try
+        {
+            string s = rl.Name;
+        }
+        catch (NullReferenceException)
+        {
+            
+        }
         AppendToDebug($"Adding randomized item obtained from {rl.Name} to progression: {ri.Name}");
     }
 

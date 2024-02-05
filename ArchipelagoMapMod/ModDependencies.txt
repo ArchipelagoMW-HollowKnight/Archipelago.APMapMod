@@ -1,7 +1,8 @@
-﻿Archipelago from https://nightly.link/ArchipelagoMW-HollowKnight/Archipelago.HollowKnight/workflows/build-release/main/Archipelago.zip
+Archipelago from https://nightly.link/ArchipelagoMW-HollowKnight/Archipelago.HollowKnight/workflows/build-release/main/Archipelago.zip
 RandomizerCore
 RCPathfinder
 MapChanger
 ConnectionMetadataInjector
 BenchRando
 Satchel
+RandomizerCore.Json

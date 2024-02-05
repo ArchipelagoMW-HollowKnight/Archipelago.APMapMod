@@ -1,11 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using ArchipelagoMapMod.RandomizerData;
+using ArchipelagoMapMod.RC;
 using ArchipelagoMapMod.Transition;
+using RandomizerCore.Json;
 using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
-using ArchipelagoMapMod.RandomizerData;
-using ArchipelagoMapMod.RC;
 using RCPathfinder;
 using RCPathfinder.Actions;
+using System.Collections.ObjectModel;
 using JsonUtil = MapChanger.JsonUtil;
 using SN = ItemChanger.SceneNames;
 
@@ -44,16 +45,24 @@ internal class APmmSearchData : SearchData
     public APmmSearchData(ProgressionManager reference) : base(reference)
     {
         if (Actions.Where(a => a.Name is "Room_Town_Stag_Station[left1]").FirstOrDefault() is AbstractAction action)
+        {
             DirthmouthStagTransition = action;
+        }
 
         if (LocalPM.ctx?.InitialProgression is ProgressionInitializer pi && pi.StartStateTerm is Term startTerm)
+        {
             StartTerm = PositionLookup[startTerm.Name];
+        }
 
         HashSet<Term> benchwarpTerms = new();
 
         foreach (var kvp in BenchwarpInterop.BenchKeys)
+        {
             if (PositionLookup.TryGetValue(kvp.Key, out var benchTerm))
+            {
                 benchwarpTerms.Add(benchTerm);
+            }
+        }
 
         BenchwarpTerms = new ReadOnlyCollection<Term>(benchwarpTerms.ToArray());
 
@@ -63,6 +72,7 @@ internal class APmmSearchData : SearchData
         Dictionary<string, HashSet<Term>> transitionsByScene = new();
 
         foreach (var position in Positions)
+        {
             if (TransitionData.TryGetScene(position.Name, out var scene))
             {
                 if (transitionsByScene.TryGetValue(scene, out var transitions))
@@ -73,6 +83,7 @@ internal class APmmSearchData : SearchData
 
                 transitionsByScene[scene] = new HashSet<Term> {position};
             }
+        }
 
         transitionsByScene[SN.Room_Tram] = new HashSet<Term> {PositionLookup["Lower_Tram"]};
         transitionsByScene[SN.Room_Tram_RG] = new HashSet<Term> {PositionLookup["Upper_Tram"]};
@@ -104,37 +115,57 @@ internal class APmmSearchData : SearchData
         var pm = base.CreateLocalPM();
 
         LogicManagerBuilder lmb = new(pm.lm);
+        ILogicFormat fmt = new JsonLogicFormat();
 
         if (pm.ctx?.InitialProgression is not ProgressionInitializer pi || pi.StartStateTerm is not Term startTerm)
+        {
             throw new NullReferenceException();
+        }
 
         // Inject new terms
-        lmb.DeserializeJson(LogicManagerBuilder.JsonType.Transitions,
-            ArchipelagoMapMod.Assembly.GetManifestResourceStream(
-                "ArchipelagoMapMod.Resources.Pathfinder.Logic.transitions.json"));
-        lmb.DeserializeJson(LogicManagerBuilder.JsonType.Waypoints,
-            ArchipelagoMapMod.Assembly.GetManifestResourceStream(
-                "ArchipelagoMapMod.Resources.Pathfinder.Logic.waypoints.json"));
+        using Stream transitions = ArchipelagoMapMod.Assembly.GetManifestResourceStream(
+                "ArchipelagoMapMod.Resources.Pathfinder.Logic.transitions.json");
+        using Stream waypoints = ArchipelagoMapMod.Assembly.GetManifestResourceStream(
+                "ArchipelagoMapMod.Resources.Pathfinder.Logic.waypoints.json");
+        lmb.DeserializeFile(LogicFileType.Transitions, fmt, transitions);
+        lmb.DeserializeFile(LogicFileType.Waypoints, fmt, waypoints);
 
         // Do rest of edits
         foreach (var rld in JsonUtil.DeserializeFromAssembly<RawLogicDef[]>(ArchipelagoMapMod.Assembly,
                      "ArchipelagoMapMod.Resources.Pathfinder.Logic.edits.json"))
+        {
             if (lmb.IsTerm(rld.name))
+            {
                 lmb.DoLogicEdit(rld);
+            }
+        }
+
         foreach (var rsd in JsonUtil.DeserializeFromAssembly<RawSubstDef[]>(ArchipelagoMapMod.Assembly,
                      "ArchipelagoMapMod.Resources.Pathfinder.Logic.substitutions.json"))
+        {
             if (lmb.IsTerm(rsd.name))
+            {
                 lmb.DoSubst(rsd);
+            }
+        }
 
         // Remove Start_State from existing logic
         foreach (var term in lmb.Terms)
+        {
             if (lmb.LogicLookup.ContainsKey(term.Name))
+            {
                 lmb.DoSubst(new RawSubstDef(term.Name, startTerm.Name, "FALSE"));
+            }
+        }
 
         // Link Start_State with start terms
         foreach (var term in pi.StartStateLinkedTerms)
+        {
             if (lmb.IsTerm(term.Name))
+            {
                 lmb.DoLogicEdit(new RawLogicDef(term.Name, $"ORIG | {startTerm.Name}"));
+            }
+        }
 
         return new ProgressionManager(new LogicManager(lmb), pm.ctx);
     }
@@ -144,12 +175,18 @@ internal class APmmSearchData : SearchData
         var actions = base.CreateActions();
 
         foreach (var action in actions)
+        {
             if (action is StateLogicAction)
+            {
                 action.Cost = 0f;
+            }
+        }
 
         // Add extra transitions
         foreach (var (location, item) in TransitionData.ExtraVanillaTransitions)
+        {
             actions.Add(new PlacementAction(PositionLookup[location], PositionLookup[item]));
+        }
 
         return actions;
     }
@@ -165,18 +202,32 @@ internal class APmmSearchData : SearchData
 
         foreach (var kvp in actionLookup)
         {
-            if (!TransitionData.TryGetScene(kvp.Key.Name, out var scene)) continue;
+            if (!TransitionData.TryGetScene(kvp.Key.Name, out var scene))
+            {
+                continue;
+            }
 
             foreach (var action in kvp.Value)
             {
-                if (action is not StateLogicAction) continue;
+                if (action is not StateLogicAction)
+                {
+                    continue;
+                }
 
                 string newScene;
                 if (extraRooms.Contains(action.Destination.Name) || Data.IsRoom(action.Destination.Name))
+                {
                     newScene = action.Destination.Name;
-                else if (!TransitionData.TryGetScene(action.Destination.Name, out newScene)) continue;
+                }
+                else if (!TransitionData.TryGetScene(action.Destination.Name, out newScene))
+                {
+                    continue;
+                }
 
-                if (scene != newScene) actionLookupCopy[kvp.Key].Remove(action);
+                if (scene != newScene)
+                {
+                    actionLookupCopy[kvp.Key].Remove(action);
+                }
             }
         }
 
@@ -194,7 +245,9 @@ internal class APmmSearchData : SearchData
             .ToList();
 
         if (node.Position.Name is "Can_Stag" && !actions.Contains(DirthmouthStagTransition))
+        {
             actions.Add(DirthmouthStagTransition);
+        }
 
         return actions;
     }
@@ -210,47 +263,79 @@ internal class APmmSearchData : SearchData
                      .Where(kvp => APLogicSetup.Context.LM.GetTerm(kvp.Key) is not null
                                    && APLogicSetup.Context.LM.GetTerm(kvp.Value) is Term valueTerm
                                    && valueTerm.Type is not TermType.State))
+        {
             if (ArchipelagoMapMod.LS.TrackerData.pm.Get(kvp.Key) > 0)
+            {
                 LocalPM.Set(kvp.Value, 1);
+            }
+        }
 
         foreach (var (term, pdBool) in pdBoolTerms)
         {
-            if (LocalPM.lm.GetTerm(term) is null) continue;
+            if (LocalPM.lm.GetTerm(term) is null)
+            {
+                continue;
+            }
+
             LocalPM.Set(term, pd.GetBool(pdBool) ? 1 : 0);
         }
 
         if (LocalPM.lm.GetTerm("Opened_Shaman_Pillar") is Term shamanPillar)
+        {
             LocalPM.Set(shamanPillar,
                 pd.GetBool(nameof(PlayerData.shamanPillar)) || pd.GetBool(nameof(PlayerData.crossroadsInfected))
                     ? 1
                     : 0);
+        }
 
         foreach (var pbd in SceneData.instance.persistentBoolItems)
+        {
             switch (pbd.sceneName)
             {
                 case SN.Waterways_02:
                     if (pbd.id is "Quake Floor (1)")
+                    {
                         LocalPM.Set("Broke_Waterways_Bench_Ceiling", pbd.activated ? 1 : 0);
+                    }
+
                     break;
                 case SN.Ruins1_31:
                     if (pbd.id is "Breakable Wall Ruin Lift")
+                    {
                         LocalPM.Set("City_Toll_Wall_Broken", pbd.activated ? 1 : 0);
-                    if (pbd.id is "Ruins Lever") LocalPM.Set("Lever-Shade_Soul", pbd.activated ? 1 : 0);
+                    }
+
+                    if (pbd.id is "Ruins Lever")
+                    {
+                        LocalPM.Set("Lever-Shade_Soul", pbd.activated ? 1 : 0);
+                    }
+
                     break;
                 case SN.RestingGrounds_10:
-                    if (pbd.id is "Collapser Small (5)") LocalPM.Set("Broke_Catacombs_Ceiling", pbd.activated ? 1 : 0);
+                    if (pbd.id is "Collapser Small (5)")
+                    {
+                        LocalPM.Set("Broke_Catacombs_Ceiling", pbd.activated ? 1 : 0);
+                    }
+
                     break;
                 case SN.Crossroads_10:
-                    if (pbd.id is "Battle Scene") LocalPM.Set("Defeated_False_Knight", pbd.activated ? 1 : 0);
+                    if (pbd.id is "Battle Scene")
+                    {
+                        LocalPM.Set("Defeated_False_Knight", pbd.activated ? 1 : 0);
+                    }
+
                     break;
             }
+        }
 
         foreach (var pid in SceneData.instance.persistentIntItems)
+        {
             if (pid.sceneName is SN.Ruins1_31 && pid.id is "Ruins Lift")
             {
                 LocalPM.Set("City_Toll_Elevator_Up", pid.value % 2 is 1 ? 1 : 0);
                 LocalPM.Set("City_Toll_Elevator_Down", pid.value % 2 is 0 ? 1 : 0);
             }
+        }
 
         UpdateCurrentState();
     }
@@ -306,11 +391,19 @@ internal class APmmSearchData : SearchData
     internal StartPosition[] GetPrunedStartTerms(string scene)
     {
         if (scene is SN.Room_Tram)
+        {
             return new StartPosition[] {new("Lower_Tram", APmmPathfinder.SD.PositionLookup["Lower_Tram"], 0f)};
-        if (scene is SN.Room_Tram_RG)
-            return new StartPosition[] {new("Upper_Tram", APmmPathfinder.SD.PositionLookup["Upper_Tram"], 0f)};
+        }
 
-        if (!TransitionTermsByScene.TryGetValue(scene, out var transitions)) return new StartPosition[] { };
+        if (scene is SN.Room_Tram_RG)
+        {
+            return new StartPosition[] {new("Upper_Tram", APmmPathfinder.SD.PositionLookup["Upper_Tram"], 0f)};
+        }
+
+        if (!TransitionTermsByScene.TryGetValue(scene, out var transitions))
+        {
+            return new StartPosition[] { };
+        }
 
         List<Term> inLogicTransitions = new(transitions.Where(t =>
             (ArchipelagoMapMod.LS.TrackerData.pm.lm.GetTerm(t.Name) is not null && ArchipelagoMapMod.LS.TrackerData.pm.Get(t.Name) > 0)
@@ -357,15 +450,19 @@ internal class APmmSearchData : SearchData
         if (scene is SN.Room_Town_Stag_Station
             && !inLogicTransitions.Any(t => t.Name is "Room_Town_Stag_Station[left1]")
             && ReferencePM.Get("Can_Stag") > 0)
+        {
             prunedTransitions.Add(new StartPosition("Can_Stag", PositionLookup["Can_Stag"], 0f));
-
+        }
 
         return prunedTransitions.ToArray();
     }
 
     internal Term[] GetTransitionTerms(string scene)
     {
-        if (!TransitionTermsByScene.TryGetValue(scene, out var transitions)) return new Term[] { };
+        if (!TransitionTermsByScene.TryGetValue(scene, out var transitions))
+        {
+            return new Term[] { };
+        }
 
         return transitions.ToArray();
     }
