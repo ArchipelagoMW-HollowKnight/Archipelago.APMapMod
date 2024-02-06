@@ -3,7 +3,7 @@ using RandomizerCore.Logic.StateLogic;
 
 namespace ArchipelagoMapMod.RC.StateVariables
 {
-    #nullable enable
+#nullable enable
     public class ShriekPogoVariable : StateModifierWrapper<CastSpellVariable>
     {
         public override string Name { get; }
@@ -23,7 +23,8 @@ namespace ArchipelagoMapMod.RC.StateVariables
 
         public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
         {
-            if (term.StartsWith(Prefix))
+            if (VariableResolver.TryMatchPrefix(term, Prefix, out _)
+                || VariableResolver.TryMatchPrefix(term, Prefix + 'S', out _)) // typo $SHRIEKPOGOS used in logic in an old version
             {
                 variable = new ShriekPogoVariable(term, lm);
                 return true;
@@ -44,11 +45,18 @@ namespace ArchipelagoMapMod.RC.StateVariables
                 if (InnerVariable.SpellCasts.Any(i => i > 1) && (!noLeftStall || !noRightStall))
                 {
                     stalledCasts = (CastSpellVariable)lm.GetVariableStrict(
-                        CastSpellVariable.Prefix + 
+                        CastSpellVariable.Prefix +
                         '[' + string.Join(",", InnerParameters.SelectMany(p => int.TryParse(p, out int i) ? Enumerable.Repeat("1", i) : Enumerable.Repeat(p, 1))) + ']'
                         );
-                    if (!noLeftStall) leftDash = lm.GetTermStrict("LEFTDASH");
-                    if (!noRightStall) rightDash = lm.GetTermStrict("RIGHTDASH");
+                    if (!noLeftStall)
+                    {
+                        leftDash = lm.GetTermStrict("LEFTDASH");
+                    }
+
+                    if (!noRightStall)
+                    {
+                        rightDash = lm.GetTermStrict("RIGHTDASH");
+                    }
                 }
                 if (InnerVariable.SpellCasts.Sum() > 3)
                 {
@@ -82,16 +90,41 @@ namespace ArchipelagoMapMod.RC.StateVariables
         {
             yield return shriekPogoSkips;
             yield return scream;
-            foreach (Term t in InnerVariable.GetTerms()) yield return t;
-            if (difficultSkips is not null) yield return difficultSkips;
-            if (stalledCasts is not null) foreach (Term t in stalledCasts.GetTerms()) yield return t;
-            if (leftDash is not null) yield return leftDash;
-            if (rightDash is not null) yield return rightDash;
+            foreach (Term t in InnerVariable.GetTerms())
+            {
+                yield return t;
+            }
+
+            if (difficultSkips is not null)
+            {
+                yield return difficultSkips;
+            }
+
+            if (stalledCasts is not null)
+            {
+                foreach (Term t in stalledCasts.GetTerms())
+                {
+                    yield return t;
+                }
+            }
+
+            if (leftDash is not null)
+            {
+                yield return leftDash;
+            }
+
+            if (rightDash is not null)
+            {
+                yield return rightDash;
+            }
         }
 
         public override IEnumerable<LazyStateBuilder> ModifyState(object? sender, ProgressionManager pm, LazyStateBuilder state)
         {
-            if (!pm.Has(shriekPogoSkips) || !pm.Has(scream, 2) || !pm.Has(wings) || difficultSkips is not null && !pm.Has(difficultSkips)) return Enumerable.Empty<LazyStateBuilder>();
+            if (!pm.Has(shriekPogoSkips) || !pm.Has(scream, 2) || !pm.Has(wings) || difficultSkips is not null && !pm.Has(difficultSkips))
+            {
+                return Enumerable.Empty<LazyStateBuilder>();
+            }
 
             if (stalledCasts is not null && (leftDash is not null && pm.Has(leftDash) || rightDash is not null && pm.Has(rightDash)))
             {

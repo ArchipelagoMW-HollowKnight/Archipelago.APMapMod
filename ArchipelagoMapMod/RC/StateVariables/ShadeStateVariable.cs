@@ -25,10 +25,11 @@ namespace ArchipelagoMapMod.RC.StateVariables
         protected readonly StateInt SoulLimiter;
         protected readonly FragileCharmVariable FragileHeartEquip;
         protected readonly EquipCharmVariable VoidHeartEquip;
+        protected readonly EquipCharmVariable JoniEquip;
         protected readonly int RequiredShadeHealth;
         public const string Prefix = "$SHADESKIP";
-        
-        public ShadeStateVariable(string name, LogicManager lm, bool canDreamgate, int requiredShadeHealth)
+
+        public ShadeStateVariable(string name, LogicManager lm, int requiredShadeHealth)
         {
             Name = name;
             RequiredShadeHealth = requiredShadeHealth;
@@ -47,6 +48,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
 
                 FragileHeartEquip = (FragileCharmVariable)lm.GetVariableStrict(EquipCharmVariable.GetName("Fragile_Heart"));
                 VoidHeartEquip = (EquipCharmVariable)lm.GetVariableStrict(EquipCharmVariable.GetName("Kingsoul")); // we have to check against either Kingsoul or Void Heart equipped to ensure monotonicity
+                JoniEquip = (EquipCharmVariable)lm.GetVariableStrict(EquipCharmVariable.GetName("Joni's_Blessing"));
             }
             catch (Exception e)
             {
@@ -58,11 +60,16 @@ namespace ArchipelagoMapMod.RC.StateVariables
         {
             if (VariableResolver.TryMatchPrefix(term, Prefix, out string[]? parameters))
             {
-                bool canDreamgate = !parameters.Contains("noDG");
                 int requiredShadeHealth = 1;
-                for (int i = 0; i < parameters.Length; i++) if (parameters[i].EndsWith("HITS")) requiredShadeHealth = int.Parse(parameters[i].Substring(0, parameters[i].Length - 4));
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    if (parameters[i].EndsWith("HITS"))
+                    {
+                        requiredShadeHealth = int.Parse(parameters[i].Substring(0, parameters[i].Length - 4));
+                    }
+                }
 
-                variable = new ShadeStateVariable(term, lm, canDreamgate, requiredShadeHealth);
+                variable = new ShadeStateVariable(term, lm, requiredShadeHealth);
                 return true;
             }
             variable = null;
@@ -72,7 +79,10 @@ namespace ArchipelagoMapMod.RC.StateVariables
         public override IEnumerable<Term> GetTerms()
         {
             yield return Shadeskips;
-            if (RequiredShadeHealth > 1) yield return MaskShards;
+            if (RequiredShadeHealth > 1)
+            {
+                yield return MaskShards;
+            }
         }
 
         public override IEnumerable<LazyStateBuilder> ModifyState(object? sender, ProgressionManager pm, LazyStateBuilder state)
@@ -119,6 +129,13 @@ namespace ArchipelagoMapMod.RC.StateVariables
             }
             else
             {
+                if (JoniEquip.IsEquipped(state))
+                {
+                    return false;
+                }
+
+                JoniEquip.SetUnequippable(ref state);
+
                 int hp = (pm.Get(MaskShards) / 4) / 2;
                 if (hp >= RequiredShadeHealth || RequiredShadeHealth == hp + 1 && FragileHeartEquip.CanEquip(pm, state) != EquipCharmVariable.EquipResult.None)
                 {
@@ -138,7 +155,10 @@ namespace ArchipelagoMapMod.RC.StateVariables
         protected virtual void PostAdjustSoul(ProgressionManager pm, ref LazyStateBuilder state)
         {
             int spentSoul = state.GetInt(SpentSoul);
-            if (spentSoul >= 33) return;
+            if (spentSoul >= 33)
+            {
+                return;
+            }
 
             int debit = 33 - spentSoul;
             int currentReserve = (pm.Get(VesselFragments) / 3) * 33 - state.GetInt(SpentReserveSoul);
