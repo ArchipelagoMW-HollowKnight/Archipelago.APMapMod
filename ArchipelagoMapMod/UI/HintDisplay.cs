@@ -352,7 +352,7 @@ public static class HintDisplay
             {
                 costs.AddRange(multiCost);
             }
-            else
+            else if (cost != null)
             {
                 costs.Add(cost);
             }
