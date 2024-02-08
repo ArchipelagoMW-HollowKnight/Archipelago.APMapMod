@@ -79,3 +79,4 @@ jobs:
             SHA256: ${{ steps.details.outputs.archiveHash }}
           files: |
             artifacts/ArchipelagoMapMod/Archipelago Map Mod.zip
+      
