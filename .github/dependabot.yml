@@ -1,4 +1,5 @@
 version: 2
+
 updates:
   - directory: /
     package-ecosystem: nuget
