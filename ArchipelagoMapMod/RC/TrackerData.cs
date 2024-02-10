@@ -166,7 +166,6 @@ public class TrackerData
 
         foreach (KeyValuePair<string, string> kvp in visitedTransitions)
         {
-
             LogicTransition tt = lm.GetTransitionStrict(kvp.Value);
             LogicTransition st = lm.GetTransitionStrict(kvp.Key);
 
@@ -183,8 +182,8 @@ public class TrackerData
 
     private ItemPlacement AddRemoteItem(string itemName)
     {
-        APItem item = new(lm.GetItem(itemName));
-        APLocation location = new(lm.GetLogicDef("Remote"));
+        APItem item = new(lm.GetItemStrict(itemName));
+        APLocation location = new(lm.GetLogicDefStrict("Remote"));
         ItemPlacement itemPlacement = new(item, location)
         {
             Index = ctx.ItemPlacements.Count
@@ -221,14 +220,22 @@ public class TrackerData
     
     private void OnAfterGiveGlobal(ReadOnlyGiveEventArgs args)
     {
-        if (args.Placement is not RemotePlacement)
+        try
         {
-            return;
-        }
+            if (args.Placement is not RemotePlacement)
+            {
+                return;
+            }
 
-        ItemPlacement itemPlacement = AddRemoteItem(args.Item.name);
-        pm.Add(itemPlacement.Item, itemPlacement.Location);
-        APmmPinManager.UpdateRandoPins();
+            ItemPlacement itemPlacement = AddRemoteItem(args.Orig.name);
+            pm.Add(itemPlacement.Item, itemPlacement.Location);
+            APmmPinManager.UpdateRandoPins();
+        }
+        catch (Exception ex)
+        {
+            ArchipelagoMapMod.Instance.LogError("Unexpected exception during TrackerData AfterGive. Logic may not have updated.");
+            ArchipelagoMapMod.Instance.LogError(ex);
+        }
     }
 
     private Action<ProgressionManager> OnCanGetLocation(int id)
@@ -348,14 +355,6 @@ public class TrackerData
 
     private void AppendRandoItemToDebug(RandoItem ri, RandoLocation rl)
     {
-        try
-        {
-            string s = rl.Name;
-        }
-        catch (NullReferenceException)
-        {
-            
-        }
         AppendToDebug($"Adding randomized item obtained from {rl.Name} to progression: {ri.Name}");
     }
 
