@@ -74,8 +74,8 @@ jobs:
           draft: false
           generate_release_notes: true
           fail_on_unmatched_files: true
-          body: |
+          body: |-
             SHA256: ${{ steps.details.outputs.archiveHash }}
-          files: |
+          files: |-
             artifacts/ArchipelagoMapMod/Archipelago Map Mod.zip
       
