@@ -3,10 +3,10 @@
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ main ]
-    tags: [ v*.*.* ]
+    branches: [ "main" ]
+    tags: [ "v*.*.*" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
 permissions:
   contents: write
@@ -26,7 +26,7 @@ jobs:
           dependencyFilePath: ArchipelagoMapMod/ModDependencies.txt
           
       - name: extractAP
-        run: |
+        run: |-
           $ap = "./API/Mods/Archipelago/Archipelago.zip"
           if (Test-Path -Path $ap) {
             Expand-Archive $ap ./API/Mods/Archipelago -force
@@ -34,7 +34,6 @@ jobs:
           } else {
             Write-Output "No double Zip Found"
           }
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
 
