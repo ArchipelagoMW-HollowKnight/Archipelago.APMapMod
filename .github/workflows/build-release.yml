@@ -26,7 +26,7 @@ jobs:
           dependencyFilePath: ArchipelagoMapMod/ModDependencies.txt
           
       - name: extractAP
-        run: |-
+        run: |
           $ap = "./API/Mods/Archipelago/Archipelago.zip"
           if (Test-Path -Path $ap) {
             Expand-Archive $ap ./API/Mods/Archipelago -force
