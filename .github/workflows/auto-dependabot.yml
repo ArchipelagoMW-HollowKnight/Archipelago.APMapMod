@@ -1,4 +1,4 @@
-﻿name: Dependabot Auto-merge
+name: Dependabot Auto-merge
 on: pull_request
 
 permissions:
@@ -26,3 +26,4 @@ jobs:
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
