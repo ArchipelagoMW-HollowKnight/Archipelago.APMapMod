@@ -56,9 +56,9 @@ namespace ArchipelagoMapMod.RC
             }
         }
 
-        public List<TermValue> Setters = new();
-        public List<TermValue> Increments = new();
-        public List<Term> StartStateLinkedTerms = new();
+        public List<TermValue> Setters = [];
+        public List<TermValue> Increments = [];
+        public List<Term> StartStateLinkedTerms = [];
         public Term? StartStateTerm;
 
         public string Name => "Progression Initializer";

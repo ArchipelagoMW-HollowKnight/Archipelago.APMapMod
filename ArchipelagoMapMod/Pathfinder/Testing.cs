@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
-using ArchipelagoMapMod.Transition;
+﻿using ArchipelagoMapMod.Transition;
 using RandomizerCore.Logic;
 using RCPathfinder;
+using System.Diagnostics;
 
 namespace ArchipelagoMapMod.Pathfinder;
 
@@ -35,7 +35,7 @@ internal static class Testing
                 sd.LocalPM.SetState(kvp.Key, sd.CurrentState);
 
                 ArchipelagoMapMod.Instance?.LogDebug(
-                    $"    {action.DebugName}, {action.Cost}: {action.TryDo(sd.LocalPM, kvp.Key, sd.CurrentState, out var _, out var _)}");
+                    $"    {action.DebugString}, {action.Cost}: {action.TryDo(sd.LocalPM, kvp.Key, sd.CurrentState, out var _)}");
 
                 sd.LocalPM.SetState(kvp.Key, null);
             }
@@ -50,14 +50,15 @@ internal static class Testing
 
         sd.UpdateProgression();
 
-        SearchParams sp = new
-        (
-            null,
-            APmmPathfinder.SD.CurrentState,
-            null,
-            1000f,
-            TerminationConditionType.Any
-        );
+        SearchParams sp = new SearchParams
+        {
+            StartPositions = null,
+            StartState = APmmPathfinder.SD.CurrentState,
+            Destinations = null,
+            MaxCost = 1000f,
+            MaxTime = float.PositiveInfinity,
+            TerminationCondition = TerminationConditionType.Any,
+        };
 
         ArchipelagoMapMod.Instance?.LogDebug("Starting SingleStartDestinationTest:");
 
@@ -84,7 +85,9 @@ internal static class Testing
             if (DoTest(sd, sp, ss))
             {
                 foreach (var instruction in InstructionData.GetInstructions(ss.NewResultNodes[0]))
+                {
                     ArchipelagoMapMod.Instance?.LogDebug($"    {instruction.ArrowedText}");
+                }
 
                 successes++;
             }
@@ -115,14 +118,15 @@ internal static class Testing
 
         sd.UpdateProgression();
 
-        SearchParams sp = new
-        (
-            null,
-            APmmPathfinder.SD.CurrentState,
-            null,
-            1000f,
-            TerminationConditionType.Any
-        );
+        SearchParams sp = new SearchParams
+        {
+            StartPositions = null,
+            StartState = APmmPathfinder.SD.CurrentState,
+            Destinations = null,
+            MaxCost = 100f,
+            MaxTime = float.PositiveInfinity,
+            TerminationCondition = TerminationConditionType.Any,
+        };
 
         ArchipelagoMapMod.Instance?.LogDebug("Starting SceneToSceneTest:");
 
@@ -133,7 +137,7 @@ internal static class Testing
 
         for (var i = 0; i < testCount; i++)
         {
-            HashSet<Route> routes = new();
+            HashSet<Route> routes = [];
 
             var startScene = TransitionTracker.InLogicScenes.ElementAt(rng.Next(TransitionTracker.InLogicScenes.Count));
             var destScene = TransitionTracker.InLogicScenes.ElementAt(rng.Next(TransitionTracker.InLogicScenes.Count));
@@ -176,7 +180,9 @@ internal static class Testing
                 {
                     routes.Add(route);
                     foreach (var instruction in route.RemainingInstructions)
+                    {
                         ArchipelagoMapMod.Instance?.LogDebug($"    {instruction.ArrowedText}");
+                    }
                 }
             }
 
@@ -200,33 +206,44 @@ internal static class Testing
     /// </summary>
     private static Term[] GetPrunedTransitions(APmmSearchData sd, string scene)
     {
-        if (!sd.TransitionTermsByScene.TryGetValue(scene, out var transitions)) return new Term[] { };
+        if (!sd.TransitionTermsByScene.TryGetValue(scene, out var transitions))
+        {
+            return new Term[] { };
+        }
 
-        SearchParams sp = new
-        (
-            transitions.Select(t => new StartPosition(t.Name, t, 0f)).ToArray(),
-            sd.CurrentState,
-            transitions.ToArray(),
-            1f,
-            TerminationConditionType.None
-        );
+        SearchParams sp = new SearchParams
+        {
+            StartPositions = transitions.Select(t => new StartPosition(t.Name, t, 0f)).ToArray(),
+            StartState = sd.CurrentState,
+            Destinations = transitions.ToArray(),
+            MaxCost = 1f,
+            MaxTime = float.PositiveInfinity,
+            TerminationCondition = TerminationConditionType.Any
+        };
 
         SearchState ss = new(sp);
 
         Algorithms.DijkstraSearch(sd, sp, ss);
 
         List<Node> nodes =
-            new(ss.ResultNodes.Where(n => n.Depth > 0 && n.StartPosition != n.Actions.Last().Destination));
+            new(ss.ResultNodes.Where(n => n.Depth > 0 && n.StartPosition.Term != n.Actions.Last().Destination));
 
         HashSet<Term> prunedTransitions = new(transitions);
 
         foreach (var transition in transitions)
         {
-            if (!prunedTransitions.Contains(transition)) continue;
+            if (!prunedTransitions.Contains(transition))
+            {
+                continue;
+            }
 
             foreach (var transition2 in new List<Term>(prunedTransitions))
-                if (nodes.Any(n => n.StartPosition == transition && n.Actions.Last().Destination == transition2))
+            {
+                if (nodes.Any(n => n.StartPosition.Term == transition && n.Actions.Last().Destination == transition2))
+                {
                     prunedTransitions.Remove(transition2);
+                }
+            }
         }
 
         return prunedTransitions.ToArray();
@@ -241,9 +258,13 @@ internal static class Testing
         }
 
         if (search.QueueNodes.Count > 0)
+        {
             ArchipelagoMapMod.Instance?.LogDebug("  Search terminated after reaching max cost.");
+        }
         else
+        {
             ArchipelagoMapMod.Instance?.LogDebug("  Search exhausted with no route found.");
+        }
 
         return false;
     }

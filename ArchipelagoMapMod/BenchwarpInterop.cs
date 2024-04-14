@@ -15,14 +15,14 @@ internal class BenchwarpInterop
     internal const string BENCH_EXTRA_SUFFIX = "_Extra";
     internal const string BENCH_WARP_START = "Start_Warp";
 
-    internal static Dictionary<APmmBenchKey, string> BenchNames { get; private set; } = new();
-    internal static Dictionary<string, APmmBenchKey> BenchKeys { get; private set; } = new();
+    internal static Dictionary<APmmBenchKey, string> BenchNames { get; private set; } = [];
+    internal static Dictionary<string, APmmBenchKey> BenchKeys { get; private set; } = [];
     internal static APmmBenchKey StartKey { get; private set; }
 
     internal static void Load()
     {
-        BenchNames = new Dictionary<APmmBenchKey, string>();
-        BenchKeys = new Dictionary<string, APmmBenchKey>();
+        BenchNames = [];
+        BenchKeys = [];
 
         if (Interop.HasBenchRando() && BenchRandoInterop.BenchRandoEnabled())
         {

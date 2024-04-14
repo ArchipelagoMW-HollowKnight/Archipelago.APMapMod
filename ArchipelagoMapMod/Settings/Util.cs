@@ -9,7 +9,7 @@ namespace ArchipelagoMapMod.Settings
 
         static Util()
         {
-            TypeSortedFields = new Dictionary<Type, Dictionary<string, FieldInfo>>();
+            TypeSortedFields = [];
             Cache(typeof(GenerationSettings));
             Cache(typeof(PoolSettings));
             Cache(typeof(SkipSettings));

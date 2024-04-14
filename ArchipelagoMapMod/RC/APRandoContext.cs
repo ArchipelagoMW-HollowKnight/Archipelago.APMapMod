@@ -22,7 +22,7 @@ public class APRandoContext : RandoContext
         this.GenerationSettings = gs;
         this.StartDef = startDef;
 
-        Vanilla = new List<GeneralizedPlacement>();
+        Vanilla = [];
         
         // Save Notch Costs from PD
         for (int i = 0; i < CharmNotchCosts._vanillaCosts.Length; i++)
@@ -42,7 +42,7 @@ public class APRandoContext : RandoContext
         }
         
         // Populate our item placements with info from IC
-        ItemPlacements = new List<ItemPlacement>();
+        ItemPlacements = [];
         foreach (AbstractPlacement placement in Ref.Settings.Placements.Values)
         {
             foreach (AbstractItem item in placement.Items)
@@ -107,11 +107,11 @@ public class APRandoContext : RandoContext
     public GenerationSettings GenerationSettings { get; init; }
     public StartDef StartDef { get; init; }
 
-    public readonly List<GeneralizedPlacement> Vanilla = new();
-    public readonly List<ItemPlacement> ItemPlacements = new();
+    public readonly List<GeneralizedPlacement> Vanilla = [];
+    public readonly List<ItemPlacement> ItemPlacements = [];
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-    public List<TransitionPlacement> TransitionPlacements = new();
-    public readonly List<int> NotchCosts = new();
+    public List<TransitionPlacement> TransitionPlacements = [];
+    public readonly List<int> NotchCosts = [];
 
     public override IEnumerable<GeneralizedPlacement> EnumerateExistingPlacements()
     {

@@ -75,7 +75,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
         {
             if (VariableResolver.TryMatchPrefix(term, Prefix, out string[]? parameters))
             {
-                List<int> spellCasts = new();
+                List<int> spellCasts = [];
                 bool canDreamgate = true;
                 NearbySoul beforeSoul = NearbySoul.NONE;
                 NearbySoul afterSoul = NearbySoul.NONE;

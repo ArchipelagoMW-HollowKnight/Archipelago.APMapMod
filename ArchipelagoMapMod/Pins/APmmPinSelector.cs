@@ -23,7 +23,7 @@ internal class APmmPinSelector : Selector
     private Coroutine animateHighlightedRooms;
     internal static APmmPinSelector Instance { get; private set; }
 
-    internal static HashSet<ISelectable> HighlightedRooms { get; private set; } = new();
+    internal static HashSet<ISelectable> HighlightedRooms { get; private set; } = [];
 
     internal static bool ShowHint { get; private set; }
 
@@ -77,7 +77,7 @@ internal class APmmPinSelector : Selector
             if (Objects.TryGetValue(pin.name, out var selectables))
                 selectables.Add(pin);
             else
-                Objects[pin.name] = new List<ISelectable> {pin};
+                Objects[pin.name] = [pin];
     }
 
     public override void OnMainUpdate(bool active)

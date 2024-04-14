@@ -43,19 +43,25 @@ internal class RouteManager : HookModule
             StartScene = Utils.CurrentScene();
             FinalScene = scene;
 
-            _sp = new SearchParams(
-                APmmPathfinder.SD.GetPrunedStartTerms(StartScene),
-                APmmPathfinder.SD.CurrentState,
-                APmmPathfinder.SD.GetTransitionTerms(FinalScene),
-                1000f,
-                TerminationConditionType.Any
-            );
+            _sp = new SearchParams
+            {
+                StartPositions = APmmPathfinder.SD.GetPrunedStartTerms(StartScene),
+                StartState = APmmPathfinder.SD.CurrentState,
+                Destinations = APmmPathfinder.SD.GetTransitionTerms(FinalScene),
+                MaxCost = 1000f,
+                MaxTime = float.PositiveInfinity,
+                TerminationCondition = TerminationConditionType.Any
+            };
 
             if (Interop.HasBenchwarp() && ArchipelagoMapMod.GS.PathfinderBenchwarp)
+            {
                 _sp.StartPositions = _sp.StartPositions.Concat(GetBenchStartWarps()).ToArray();
+            }
 
             if (TryGetDreamGateStart(out var dreamGateStart))
+            {
                 _sp.StartPositions = _sp.StartPositions.Append(dreamGateStart).ToArray();
+            }
 
             if (!_sp.StartPositions.Any() || !_sp.Destinations.Any())
             {
@@ -64,7 +70,7 @@ internal class RouteManager : HookModule
             }
 
             _ss = new SearchState(_sp);
-            _routes = new HashSet<Route>();
+            _routes = [];
         }
 
         Reevaluated = false;
@@ -78,7 +84,10 @@ internal class RouteManager : HookModule
 
             if (!route.RemainingInstructions.Any()
                 || route.RemainingInstructions.First().Text == route.RemainingInstructions.Last().TargetTransition
-                || _routes.Contains(route)) continue;
+                || _routes.Contains(route))
+            {
+                continue;
+            }
 
             _routes.Add(route);
             CurrentRoute = route;
@@ -99,25 +108,35 @@ internal class RouteManager : HookModule
         StartScene = transition.SceneName;
         var destination = CurrentRoute.Destination;
 
-        _sp = new SearchParams(
-            null,
-            APmmPathfinder.SD.CurrentState,
-            new[] {destination},
-            1000f,
-            TerminationConditionType.Any
-        );
+        _sp = new SearchParams
+        {
+            StartPositions = null,
+            StartState = APmmPathfinder.SD.CurrentState,
+            Destinations = new[] { destination },
+            MaxCost = 1000f,
+            MaxTime = float.PositiveInfinity,
+            TerminationCondition = TerminationConditionType.Any,
+        };
 
         if (TransitionData.GetTransitionDef(transition.ToString()) is APmmTransitionDef td
             && APmmPathfinder.SD.PositionLookup.TryGetValue(td.Name, out var start))
+        {
             _sp.StartPositions = new StartPosition[] {new(start.Name, start, 0f)};
+        }
         else
+        {
             _sp.StartPositions = APmmPathfinder.SD.GetPrunedStartTerms(StartScene);
+        }
 
         if (Interop.HasBenchwarp() && ArchipelagoMapMod.GS.PathfinderBenchwarp)
+        {
             _sp.StartPositions = _sp.StartPositions.Concat(GetBenchStartWarps(true)).ToArray();
+        }
 
         if (TryGetDreamGateStart(out var dreamGateStart, transition))
+        {
             _sp.StartPositions = _sp.StartPositions.Append(dreamGateStart).ToArray();
+        }
 
         if (!_sp.StartPositions.Any() || !_sp.Destinations.Any())
         {
@@ -155,11 +174,17 @@ internal class RouteManager : HookModule
     {
         //ArchipelagoMapMod.Instance.LogDebug($"Last transition: {lastTransition}");
 
-        if (CurrentRoute is null) return;
+        if (CurrentRoute is null)
+        {
+            return;
+        }
 
         var instruction = CurrentRoute.RemainingInstructions.First();
 
-        if (instruction.IsInProgress(lastTransition)) return;
+        if (instruction.IsInProgress(lastTransition))
+        {
+            return;
+        }
 
         if (instruction.IsFinished(lastTransition))
         {
@@ -241,11 +266,16 @@ internal class RouteManager : HookModule
             .Where(APmmPathfinder.SD.PositionLookup.ContainsKey)
             .Select(b => new StartPosition("benchStart", APmmPathfinder.SD.PositionLookup[b], 1f)).ToList();
 
-        if (removeLastWarp) benchStarts.RemoveAll(b => b.Term.Name == lastWarp);
+        if (removeLastWarp)
+        {
+            benchStarts.RemoveAll(b => b.Term.Name == lastWarp);
+        }
 
         if (APmmPathfinder.SD.StartTerm is not null &&
             (!removeLastWarp || lastWarp != BenchwarpInterop.BENCH_WARP_START))
+        {
             benchStarts.Add(new StartPosition("benchStart", APmmPathfinder.SD.StartTerm, 1f));
+        }
 
         return benchStarts;
     }

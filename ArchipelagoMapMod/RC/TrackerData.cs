@@ -22,27 +22,27 @@ public class TrackerData
     /// The CTX indices of the items that have been obtained.
     /// </summary>
     [JsonIgnore]
-    public HashSet<int> obtainedItems = new();
+    public HashSet<int> obtainedItems = [];
     /// <summary>
     /// A set which tracks the placements which have been previewed, by the Name property of the corresponding RandoLocation.
     /// </summary>
-    public HashSet<string> previewedLocations = new();
+    public HashSet<string> previewedLocations = [];
     /// <summary>
     /// A dictionary which tracks the transitions that have been visited. Keys are sources and values are their targets.
     /// </summary>
-    public Dictionary<string, string> visitedTransitions = new();
+    public Dictionary<string, string> visitedTransitions = [];
     /// <summary>
     /// A set which tracks the placements which have all items obtained, by the Name property of the corresponding RandoLocation.
     /// </summary>
-    public HashSet<string> clearedLocations = new();
+    public HashSet<string> clearedLocations = [];
     /// <summary>
     /// A set which tracks the placements which are reachable in logic and have items remaining and have not been previewed, by the Name property of the corresponding RandoLocation.
     /// </summary>
-    public HashSet<string> uncheckedReachableLocations = new();
+    public HashSet<string> uncheckedReachableLocations = [];
     /// <summary>
     /// A set which tracks the transitions which are reachable in logic and have not been visited.
     /// </summary>
-    public HashSet<string> uncheckedReachableTransitions = new();
+    public HashSet<string> uncheckedReachableTransitions = [];
     
     /// <summary>
     /// The ProgressionManager for the current state, with the information available to the player.

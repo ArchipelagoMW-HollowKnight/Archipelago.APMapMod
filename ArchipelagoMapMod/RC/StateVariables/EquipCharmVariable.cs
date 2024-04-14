@@ -129,7 +129,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
             }
             catch (IndexOutOfRangeException)
             {
-                List<int> costs = ((APRandoContext) pm.ctx!).NotchCosts ?? new List<int> { -1 };
+                List<int> costs = ((APRandoContext) pm.ctx!).NotchCosts ?? [-1];
                 ArchipelagoMapMod.Instance.LogError($"Unable to find cost for {CharmID} in {string.Join(", ", costs)} returning vanilla cost");
                 return CharmNotchCosts.GetVanillaCost(CharmID);
             }

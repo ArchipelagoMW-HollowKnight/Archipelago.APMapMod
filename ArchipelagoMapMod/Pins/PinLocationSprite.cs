@@ -10,7 +10,7 @@ namespace ArchipelagoMapMod.Pins;
 /// </summary>
 internal class PinLocationSprite : ISprite
 {
-    private readonly Dictionary<PinStyle, Sprite> values = new();
+    private readonly Dictionary<PinStyle, Sprite> values = [];
 
     /// <summary>
     ///     Sets the sprite based on a placement's PoolGroup.

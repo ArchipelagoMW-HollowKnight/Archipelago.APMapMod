@@ -24,9 +24,9 @@ internal class TransitionData : HookModule
 
     public override void OnEnterGame()
     {
-        _vanillaTransitions = new Dictionary<string, APmmTransitionDef>();
-        _randomizedTransitions = new Dictionary<string, APmmTransitionDef>();
-        _placements = new Dictionary<string, string>();
+        _vanillaTransitions = [];
+        _randomizedTransitions = [];
+        _placements = [];
 
         // Add transition placements
         foreach ((var location, var item) in APLogicSetup.Context.Vanilla.Select(p => (p.Location.Name, p.Item.Name))

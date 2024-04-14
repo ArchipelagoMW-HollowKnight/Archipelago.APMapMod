@@ -77,7 +77,7 @@ internal class APmmColors : HookModule
         APmmColorSetting.Room_Selected
     };
 
-    private static Dictionary<APmmColorSetting, Vector4> customColors = new();
+    private static Dictionary<APmmColorSetting, Vector4> customColors = [];
 
     private static readonly Dictionary<APmmColorSetting, Vector4> defaultColors = new()
     {
@@ -141,7 +141,7 @@ internal class APmmColors : HookModule
 
     public override void OnQuitToMenu()
     {
-        customColors = new Dictionary<APmmColorSetting, Vector4>();
+        customColors = [];
     }
 
     internal static Vector4 GetColor(APmmColorSetting aPmmColor)

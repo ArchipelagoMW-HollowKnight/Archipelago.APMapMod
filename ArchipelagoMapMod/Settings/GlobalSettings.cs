@@ -25,7 +25,7 @@ public class GlobalSettings
     public bool ShowClearedPins;
     public bool ShowMapMarkers;
     public NextAreaSetting ShowNextAreas = NextAreaSetting.Full;
-    public bool ShowPersistentPins;
+    public bool ShowPersistentPins = true;
     public bool ShowReticle = true;
     public bool ShowRouteCompass = true;
     public OffRouteBehaviour WhenOffRoute = OffRouteBehaviour.Reevaluate;

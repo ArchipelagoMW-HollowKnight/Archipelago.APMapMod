@@ -27,7 +27,7 @@ internal abstract class RoomSelector : Selector
             if (Objects.TryGetValue(sceneName, out var selectables))
                 selectables.Add((ISelectable) room);
             else
-                Objects[sceneName] = new List<ISelectable> {(ISelectable) room};
+                Objects[sceneName] = [(ISelectable) room];
         }
     }
 

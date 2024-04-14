@@ -1,7 +1,8 @@
 ﻿using ArchipelagoMapMod.Modes;
 using ArchipelagoMapMod.Pathfinder;
 using MapChanger;
-using RandoMapMod.UI;
+using MapChanger.Defs;
+using MapChanger.MonoBehaviours;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
@@ -35,35 +36,39 @@ internal class RouteCompass : HookModule
 
         Destroy();
 
-        if (Knight == null || GameManager.instance.IsNonGameplayScene()) return;
+        if (Knight == null || GameManager.instance.IsNonGameplayScene())
+        {
+            return;
+        }
 
         Make();
+        var arrow = new EmbeddedSprite("GUI.Arrow").Value;
 
         goCompass.SetActive(false);
 
         if (RouteManager.CurrentRoute is not null &&
             RouteManager.CurrentRoute.RemainingInstructions.First().TryGetCompassGO(out var go))
         {
-            Compass.TrackedObjects = new List<GameObject> {go};
+            Compass.Locations = new Dictionary<string, CompassLocation>
+            {
+                ["arrow"] = new TransitionCompassLocation(go, arrow, APmmColors.GetColor(APmmColorSetting.UI_Compass))
+            };
             goCompass.SetActive(true);
         }
     }
 
     private static void Make()
     {
-        var arrow = new EmbeddedSprite("GUI.Arrow").Value;
-
         goCompass = DirectionalCompass.Create
         (
-            "Route Compass", // name
-            Knight, // parent entity
-            arrow, // sprite
-            APmmColors.GetColor(APmmColorSetting.UI_Compass), // color
-            1.5f, // radius
-            2.0f, // scale
-            IsCompassEnabled, // bool condition
-            false, // lerp
-            0.5f // lerp duration
+            name: "Route Compass",
+            getEntity: () => Knight,
+            radius: 1.5f,
+            scale: 2.0f,
+            condition: IsCompassEnabled,
+            rotateSprite: true,
+            lerp: false,
+            lerpDuration: 0.5f
         );
     }
 

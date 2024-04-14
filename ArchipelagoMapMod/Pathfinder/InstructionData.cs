@@ -1,9 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using ArchipelagoMapMod.Pathfinder.Instructions;
-using ArchipelagoMapMod.Transition;
+﻿using ArchipelagoMapMod.Pathfinder.Instructions;
 using ArchipelagoMapMod.RandomizerData;
+using ArchipelagoMapMod.Transition;
 using RCPathfinder;
 using RCPathfinder.Actions;
+using System.Collections.ObjectModel;
 using JsonUtil = MapChanger.JsonUtil;
 
 namespace ArchipelagoMapMod.Pathfinder;
@@ -12,22 +12,26 @@ internal class InstructionData
 {
     internal static InstructionData Instance;
 
-    private static readonly HashSet<string> extraRooms = new()
-    {
+    private static readonly HashSet<string> extraRooms =
+    [
         "Room_Final_Boss_Atrium",
         "GG_Atrium",
         "GG_Workshop"
-    };
+    ];
 
     internal InstructionData(APmmSearchData sd)
     {
         Instance = this;
 
-        Dictionary<string, TransitionInstruction> transitionInstructions = new();
+        Dictionary<string, TransitionInstruction> transitionInstructions = [];
 
         foreach (var action in sd.Actions)
+        {
             if (action.IsOrIsSubclassInstanceOf<PlacementAction>())
+            {
                 transitionInstructions[action.Name] = new TransitionInstruction(action.Name, action.Destination.Name);
+            }
+        }
 
         Instructions = new ReadOnlyCollection<Instruction>(transitionInstructions.Values.ToArray());
         TransitionInstructions = new ReadOnlyDictionary<string, TransitionInstruction>(transitionInstructions);
@@ -63,9 +67,12 @@ internal class InstructionData
         var waypointInstructions = JsonUtil.DeserializeFromAssembly<WaypointInstruction[]>(ArchipelagoMapMod.Assembly,
             "ArchipelagoMapMod.Resources.Pathfinder.Data.waypointInstructions.json");
 
-        Dictionary<(string, string), WaypointInstruction> wiLookup = new();
+        Dictionary<(string, string), WaypointInstruction> wiLookup = [];
 
-        foreach (var wi in waypointInstructions) wiLookup[(wi.Waypoint, wi.TargetScene)] = wi;
+        foreach (var wi in waypointInstructions)
+        {
+            wiLookup[(wi.Waypoint, wi.TargetScene)] = wi;
+        }
 
         WaypointInstructions =
             new ReadOnlyDictionary<(string waypoint, string targetScene), WaypointInstruction>(wiLookup);
@@ -73,9 +80,9 @@ internal class InstructionData
 
     internal static List<Instruction> GetInstructions(Node node)
     {
-        List<Instruction> instructions = new();
+        List<Instruction> instructions = [];
 
-        var position = node.StartPosition.Name;
+        var position = node.StartPosition.Term.Name;
         TransitionData.TryGetScene(position, out var scene);
 
         if (Interop.HasBenchwarp())
@@ -93,7 +100,10 @@ internal class InstructionData
             }
         }
 
-        if (node.Key is "dreamGate") instructions.Add(Instance.DreamgateInstruction);
+        if (node.StartPosition.Key is "dreamGate")
+        {
+            instructions.Add(Instance.DreamgateInstruction);
+        }
 
         foreach (var action in node.Actions)
         {
@@ -114,7 +124,10 @@ internal class InstructionData
     private static bool TryGetInstruction(string position, string scene, AbstractAction action,
         out Instruction instruction)
     {
-        if (Instance is null) throw new NullReferenceException(nameof(Instance));
+        if (Instance is null)
+        {
+            throw new NullReferenceException(nameof(Instance));
+        }
 
         if (action.IsOrIsSubclassInstanceOf<PlacementAction>())
         {
@@ -139,11 +152,13 @@ internal class InstructionData
             }
 
             if (scene != newScene)
+            {
                 if (WaypointInstructions.TryGetValue((position, newScene), out var wi))
                 {
                     instruction = wi;
                     return true;
                 }
+            }
             //// Fallback handling for when the position is a transition and its target is in the newScene - assume going through the transition
             //else if (TransitionData.Placements.TryGetValue(action.Name, out string target)
             //    && TransitionData.GetTransitionDef(target) is apmmTransitionDef targetTd

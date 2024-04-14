@@ -11,7 +11,7 @@ namespace ArchipelagoMapMod.Pins;
 internal sealed class BenchPin : APmmPin
 {
     private static readonly ISprite benchSprite = new PinLocationSprite("Benches");
-    internal override HashSet<string> ItemPoolGroups => new() {"Benches"};
+    internal override HashSet<string> ItemPoolGroups => ["Benches"];
 
     internal string BenchName { get; private set; }
 
@@ -64,7 +64,7 @@ internal sealed class BenchPin : APmmPin
         return true;
     }
 
-    private protected override void UpdatePinSprite()
+    private protected override void UpdatePinSprites()
     {
         Sprite = benchSprite.Value;
     }

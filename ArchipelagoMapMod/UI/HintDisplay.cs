@@ -33,7 +33,7 @@ public static class HintDisplay
         On.InvAnimateUpAndDown.AnimateDown += CloseInv;
         On.UIManager.UIGoToPauseMenu += OpenPause;
         On.UIManager.UIClosePauseMenu += ClosePause;
-        Archipelago.HollowKnight.HintTracker.OnArchipelagoHintUpdate += SortHints;
+        HT.OnArchipelagoHintUpdate += SortHints;
 
         _visible = true;
         _hintsShown = ArchipelagoMapMod.GS.GameplayHints;
@@ -42,7 +42,7 @@ public static class HintDisplay
         {
             ArchipelagoMapMod.Instance.Log("Creating hint display");
             _layout = new LayoutRoot(true, "Hint Display");
-            _formatters = new List<TextFormatter<Hint>>();
+            _formatters = [];
             //_layout.RenderDebugLayoutBounds = true;
             _layout.VisibilityCondition = () => !(States.WorldMapOpen || States.QuickMapOpen) && _visible;
             _layout.Interactive = false;
@@ -344,7 +344,7 @@ public static class HintDisplay
 
     private static List<Cost> GetCosts(AbstractItem item, AbstractPlacement placement)
     {
-        List<Cost> costs = new();
+        List<Cost> costs = [];
         if (placement is ISingleCostPlacement iscp)
         {
             Cost cost = iscp.Cost;

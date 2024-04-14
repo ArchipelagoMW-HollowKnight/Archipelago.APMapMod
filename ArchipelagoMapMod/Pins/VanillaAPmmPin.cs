@@ -17,7 +17,7 @@ internal sealed class VanillaAPmmPin : APmmPin
 
     private ISprite locationSprite;
 
-    internal override HashSet<string> ItemPoolGroups => new() {LocationPoolGroup};
+    internal override HashSet<string> ItemPoolGroups => [LocationPoolGroup];
 
     internal void Initialize(GeneralizedPlacement placement)
     {
@@ -55,7 +55,7 @@ internal sealed class VanillaAPmmPin : APmmPin
         return !Tracker.HasClearedLocation(name) || ArchipelagoMapMod.GS.ShowClearedPins;
     }
 
-    private protected override void UpdatePinSprite()
+    private protected override void UpdatePinSprites()
     {
         Sprite = locationSprite.Value;
     }

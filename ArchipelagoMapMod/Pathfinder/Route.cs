@@ -20,7 +20,7 @@ internal class Route
     }
 
     internal Node Node { get; }
-    internal Term Start => Node.StartPosition;
+    internal Term Start => Node.StartPosition.Term;
     internal Term Destination { get; }
     internal List<Instruction> RemainingInstructions { get; }
     internal Instruction FirstInstruction { get; }
@@ -37,18 +37,25 @@ internal class Route
         // Make hint based on waypoints that need to unlocked somewhere outside the room
         if (RemainingInstructions.Any(i => i.Text is "Town[door_sly]")
             && !PlayerData.instance.GetBool(nameof(PlayerData.slyRescued)))
+        {
             return "You need to rescue Sly first.";
+        }
 
         if (RemainingInstructions.Any(i => i.Text is "Town[door_bretta]")
             && !PlayerData.instance.GetBool(nameof(PlayerData.brettaRescued)))
+        {
             return "You need to rescue Bretta first.";
+        }
 
         return default;
     }
 
     public override bool Equals(object obj)
     {
-        if (obj is not Route route) return false;
+        if (obj is not Route route)
+        {
+            return false;
+        }
 
         return RemainingInstructions.SequenceEqual(route.RemainingInstructions);
     }
@@ -56,7 +63,11 @@ internal class Route
     public override int GetHashCode()
     {
         var res = 0x2D2816FE;
-        foreach (var i in RemainingInstructions) res = res * 31 + (i == null ? 0 : i.GetHashCode());
+        foreach (var i in RemainingInstructions)
+        {
+            res = res * 31 + (i == null ? 0 : i.GetHashCode());
+        }
+
         return res;
     }
 }

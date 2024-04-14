@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Archipelago.HollowKnight.IC;
+﻿using Archipelago.HollowKnight.IC;
 using ArchipelagoMapMod.Rooms;
 using ArchipelagoMapMod.Settings;
 using ConnectionMetadataInjector;
@@ -7,6 +6,7 @@ using ItemChanger;
 using MapChanger;
 using MapChanger.Defs;
 using MapChanger.MonoBehaviours;
+using System.Collections;
 using UnityEngine;
 using Finder = ItemChanger.Finder;
 using RPS = ArchipelagoMapMod.Pins.RandoPlacementState;
@@ -44,13 +44,16 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
         {
             yield return new WaitForSecondsRealtime(UpdateWaitSeconds);
             itemIndex = (itemIndex + 1) % remainingItems.Count();
-            UpdatePinSprite();
+            UpdatePinSprites();
         }
     }
 
     private void StartPeriodicUpdate()
     {
-        if (periodicUpdate is null) periodicUpdate = StartCoroutine(PeriodicUpdate());
+        if (periodicUpdate is null)
+        {
+            periodicUpdate = StartCoroutine(PeriodicUpdate());
+        }
     }
 
     private void StopPeriodicUpdate()
@@ -74,22 +77,32 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
 
         LocationPoolGroup = SD.Of(placement).Get(InjectedProps.LocationPoolGroup);
         if (SD.Of(placement).Get(InteropProperties.LocationPinSpriteKey) is string locationKey)
+        {
             locationSprite = new PinLocationSprite(locationKey);
+        }
         else
+        {
             locationSprite = SD.Of(placement).Get(InteropProperties.LocationPinSprite);
+        }
+
         locationSpriteScale =
             GetPinSpriteScale(locationSprite, SD.Of(placement).Get(InteropProperties.LocationPinSpriteSize));
 
-        itemPoolGroups = new Dictionary<AbstractItem, string>();
-        itemSprites = new Dictionary<AbstractItem, (ISprite, float)>();
+        itemPoolGroups = [];
+        itemSprites = [];
         foreach (var item in placement.Items)
         {
             itemPoolGroups[item] = SD.Of(item).Get(InjectedProps.ItemPoolGroup);
             ISprite sprite;
             if (SD.Of(item).Get(InteropProperties.ItemPinSpriteKey) is string itemKey)
+            {
                 sprite = new PinItemSprite(itemKey);
+            }
             else
+            {
                 sprite = SD.Of(item).Get(InteropProperties.ItemPinSprite);
+            }
+
             itemSprites[item] = (sprite,
                 GetPinSpriteScale(sprite, SD.Of(item).Get(InteropProperties.ItemPinSpriteSize)));
         }
@@ -98,13 +111,19 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
 
         if (HighlightScenes is not null)
         {
-            HighlightRooms = new HashSet<ISelectable>();
+            HighlightRooms = [];
 
             foreach (var scene in HighlightScenes)
             {
-                if (!TransitionRoomSelector.Instance.Objects.TryGetValue(scene, out var rooms)) continue;
+                if (!TransitionRoomSelector.Instance.Objects.TryGetValue(scene, out var rooms))
+                {
+                    continue;
+                }
 
-                foreach (var room in rooms) HighlightRooms.Add(room);
+                foreach (var room in rooms)
+                {
+                    HighlightRooms.Add(room);
+                }
             }
         }
 
@@ -144,16 +163,24 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
     private float GetPinSpriteScale(ISprite sprite, (int, int)? interopSize)
     {
         if (interopSize is (int width, int height))
+        {
             return SpriteManager.DEFAULT_PIN_SPRITE_SIZE / ((width + height) / 2f);
+        }
 
         if (sprite is PinLocationSprite or PinItemSprite || sprite.Value is null)
+        {
             return 1f;
+        }
+
         return SpriteManager.DEFAULT_PIN_SPRITE_SIZE / ((sprite.Value.rect.width + sprite.Value.rect.height) / 2f);
     }
 
     private protected override bool ActiveBySettings()
     {
-        if (Interop.HasBenchwarp() && ArchipelagoMapMod.GS.ShowBenchwarpPins && IsVisitedBench()) return true;
+        if (Interop.HasBenchwarp() && ArchipelagoMapMod.GS.ShowBenchwarpPins && IsVisitedBench())
+        {
+            return true;
+        }
 
         if (ArchipelagoMapMod.LS.GroupBy == GroupBySetting.Item)
         {
@@ -162,7 +189,10 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
                 var poolState = ArchipelagoMapMod.LS.GetPoolGroupSetting(poolGroup);
 
                 if (poolState == PoolState.On ||
-                    (poolState == PoolState.Mixed && ArchipelagoMapMod.LS.RandomizedOn)) return true;
+                    (poolState == PoolState.Mixed && ArchipelagoMapMod.LS.RandomizedOn))
+                {
+                    return true;
+                }
             }
 
             return false;
@@ -177,7 +207,10 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
 
     private protected override bool ActiveByProgress()
     {
-        if (Interop.HasBenchwarp() && ArchipelagoMapMod.GS.ShowBenchwarpPins && IsVisitedBench()) return true;
+        if (Interop.HasBenchwarp() && ArchipelagoMapMod.GS.ShowBenchwarpPins && IsVisitedBench())
+        {
+            return true;
+        }
 
         return (placementState is not RPS.Cleared &&
                 (placementState is not RPS.ClearedPersistent || ArchipelagoMapMod.GS.ShowPersistentPins))
@@ -194,24 +227,32 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
                          && (ArchipelagoMapMod.LS.SpoilerOn
                              || (placementState is RPS.PreviewedUnreachable or RPS.PreviewedReachable &&
                                  placement.CanPreview())
-                             || placementState is RPS.ClearedPersistent
-                             || placement.Items.Any(item => (item.GetTag<ArchipelagoItemTag>()?.Hinted).GetValueOrDefault(false)));
+                             || placementState is RPS.ClearedPersistent);
 
         StopPeriodicUpdate();
 
-        if (showItemSprite && active) StartPeriodicUpdate();
+        if (showItemSprite && active)
+        {
+            StartPeriodicUpdate();
+        }
 
         base.OnMainUpdate(active);
     }
 
-    private protected override void UpdatePinSprite()
+    private protected override void UpdatePinSprites()
     {
+        string pinShape = placementState switch
+        {
+            RPS.PreviewedReachable or RPS.PreviewedUnreachable => "Diamond",
+            RPS.ClearedPersistent => "Hexagon",
+            _ => "Circle"
+        };
+        BackgroundSprite = PinSpriteManager.GetSprite($"Background{pinShape}", false);
+        BorderSprite = PinSpriteManager.GetSprite($"Border{pinShape}", false);
+
         if (showItemSprite
             && itemSprites.TryGetValue(remainingItems.ElementAt(itemIndex),
-                out (ISprite itemSprite, float scale) spriteInfo)
-            && ((remainingItems.ElementAt(itemIndex).GetTag<ArchipelagoItemTag>()?.Hinted).GetValueOrDefault(false)
-                || placementState is RandoPlacementState.PreviewedUnreachable
-                    or RandoPlacementState.PreviewedReachable))
+                out (ISprite itemSprite, float scale) spriteInfo))
         {
             Sprite = spriteInfo.itemSprite.Value;
             Sr.transform.localScale = new Vector3(spriteInfo.scale, spriteInfo.scale, 1f);
@@ -229,10 +270,14 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
         var size = pinSizes[ArchipelagoMapMod.GS.PinSize];
 
         if (Selected)
+        {
             size *= SELECTED_MULTIPLIER;
+        }
         else if (ArchipelagoMapMod.GS.ReachablePins
                  && placementState is RPS.UncheckedUnreachable or RPS.ClearedPersistent or RPS.Cleared)
+        {
             size *= UNREACHABLE_SIZE_MULTIPLIER;
+        }
 
         Size = size;
     }
@@ -262,15 +307,16 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
             RPS.ClearedPersistent => APmmColors.GetColor(APmmColorSetting.Pin_Persistent),
             _ => APmmColors.GetColor(APmmColorSetting.Pin_Normal)
         };
-        
-        if(placement.Items.Any(item => (item.GetTag<ArchipelagoItemTag>()?.Hinted).GetValueOrDefault(false)))
-            color = APmmColors.GetColor(APmmColorSetting.Pin_Previewed);
 
         if (placementState is RPS.UncheckedUnreachable or RPS.PreviewedUnreachable)
+        {
             BorderColor = new Vector4(color.x * UNREACHABLE_COLOR_MULTIPLIER, color.y * UNREACHABLE_COLOR_MULTIPLIER,
                 color.z * UNREACHABLE_COLOR_MULTIPLIER, color.w);
+        }
         else
+        {
             BorderColor = color;
+        }
     }
 
     internal void UpdatePlacementState()
@@ -278,17 +324,26 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
         if (ArchipelagoMapMod.LS.TrackerData.clearedLocations.Contains(name))
         {
             if (placement.IsPersistent() && LocationPoolGroup is not "Benches")
+            {
                 placementState = RPS.ClearedPersistent;
+            }
             else
+            {
                 placementState = RPS.Cleared;
+            }
         }
         // Does not guarantee the item sprites should show (for a cost-only or a "none" preview)
-        else if (ArchipelagoMapMod.LS.TrackerData.previewedLocations.Contains(name))
+        else if (ArchipelagoMapMod.LS.TrackerData.previewedLocations.Contains(name)
+            || placement.Items.Any(item => (item.GetTag<ArchipelagoItemTag>()?.Hinted).GetValueOrDefault(false)))
         {
             if (Logic is not null && Logic.CanGet(ArchipelagoMapMod.LS.TrackerData.pm))
+            {
                 placementState = RPS.PreviewedReachable;
+            }
             else
+            {
                 placementState = RPS.PreviewedUnreachable;
+            }
         }
         else if (ArchipelagoMapMod.LS.TrackerData.uncheckedReachableLocations.Contains(name))
         {
@@ -305,11 +360,17 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
     private void UpdateRemainingItems()
     {
         if (placementState is RPS.Cleared)
+        {
             remainingItems = placement.Items;
+        }
         else if (ArchipelagoMapMod.GS.ShowPersistentPins)
+        {
             remainingItems = placement.Items.Where(item => !item.WasEverObtained() || item.IsPersistent());
+        }
         else
+        {
             remainingItems = placement.Items.Where(item => !item.WasEverObtained());
+        }
     }
 
     internal override string GetSelectionText()
@@ -320,7 +381,10 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
         {
             text += $"\n\nRooms:";
 
-            foreach (var scene in HighlightScenes) text += $" {scene},";
+            foreach (var scene in HighlightScenes)
+            {
+                text += $" {scene},";
+            }
 
             text = text.Substring(0, text.Length - 1);
         }
@@ -342,18 +406,25 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
         if (Interop.HasBenchwarp() && LocationPoolGroup is "Benches")
         {
             if (BenchwarpInterop.IsVisitedBench(name))
+            {
                 text += ", can warp";
+            }
             else
+            {
                 text += ", cannot warp";
+            }
         }
 
         text += $"\n\nLogic: {Logic?.InfixSource ?? "not found"}";
 
-        if ((placementState is RPS.PreviewedUnreachable or RPS.PreviewedReachable || placement.Items.Any(item => (item.GetTag<ArchipelagoItemTag>()?.Hinted).GetValueOrDefault(false))) && placement.TryGetPreviewText(out List<string> previewText))
+        if ((placementState is RPS.PreviewedUnreachable or RPS.PreviewedReachable) && placement.TryGetPreviewText(out List<string> previewText))
         {
             text += $"\n\nPreviewed item(s):\n";
 
-            foreach (string preview in previewText) text += $"  {ToCleanPreviewText(preview)}\n";
+            foreach (string preview in previewText)
+            {
+                text += $"  {ToCleanPreviewText(preview)}\n";
+            }
 
             text = text.Substring(0, text.Length - 1);
         }
@@ -364,7 +435,10 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
         {
             text += $"\n\nObtained item(s):";
 
-            foreach (var item in obtainedItems) text += $" {item.GetPreviewName()},";
+            foreach (var item in obtainedItems)
+            {
+                text += $" {item.GetPreviewName()},";
+            }
 
             text = text.Substring(0, text.Length - 1);
         }
@@ -377,7 +451,10 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
         {
             text += $"\n\nSpoiler item(s):";
 
-            foreach (var item in spoilerItems) text += $" {item.GetPreviewName()},";
+            foreach (var item in spoilerItems)
+            {
+                text += $" {item.GetPreviewName()},";
+            }
 
             text = text.Substring(0, text.Length - 1);
         }

@@ -39,7 +39,7 @@ internal static class PlacementExtensions
 
     internal static bool TryGetPreviewText(this AbstractPlacement placement, out List<string> text)
     {
-        text = new List<string>();
+        text = [];
 
         if (placement.GetTag<MultiPreviewRecordTag>() is MultiPreviewRecordTag mprt
             && mprt.previewTexts is not null)

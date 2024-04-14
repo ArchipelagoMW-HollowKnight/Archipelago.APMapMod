@@ -76,8 +76,8 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
         new QuickMapTransitions()
     };
 
-    private static readonly List<HookModule> hookModules = new()
-    {
+    private static readonly List<HookModule> hookModules =
+    [
         new APmmColors(),
         new APLogicSetup(),
         new TransitionData(),
@@ -87,7 +87,7 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
         new DreamgateTracker(),
         new RouteManager(),
         new RouteCompass()
-    };
+    ];
 
     internal static ArchipelagoMapMod Instance;
 
@@ -214,6 +214,7 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
             // Make rooms and pins
             APmmRoomManager.Make(goMap);
             APmmPinManager.Make(goMap);
+            APmmPinManager.SubscribeHints();
 
             LS.Initialize();
 
@@ -255,6 +256,7 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
         }
 
         HintDisplay.Destroy();
+        APmmPinManager.UnsubscribeHints();
     }
     
     public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggleDelegates)

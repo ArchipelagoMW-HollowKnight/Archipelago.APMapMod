@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace ArchipelagoMapMod.Pins;
 
-internal abstract class APmmPin : BorderedPin, ISelectable
+internal abstract class APmmPin : BorderedBackgroundPin, ISelectable
 {
     private const float SMALL_SCALE = 0.56f;
     private const float MEDIUM_SCALE = 0.67f;
@@ -80,24 +80,31 @@ internal abstract class APmmPin : BorderedPin, ISelectable
             }
         );
 
-        if (ArchipelagoMapMod.LS.TrackerData.lm.LogicLookup.TryGetValue(name, out var logic)) Logic = logic;
+        if (ArchipelagoMapMod.LS.TrackerData.lm.LogicLookup.TryGetValue(name, out var logic))
+        {
+            Logic = logic;
+        }
 
         BorderSprite = new EmbeddedSprite("Pins.Border").Value;
+        BackgroundSprite = new EmbeddedSprite("Pins.BackgroundCircle").Value;
         BorderPlacement = BorderPlacement.InFront;
     }
 
     public override void OnMainUpdate(bool active)
     {
-        if (!active) return;
+        if (!active)
+        {
+            return;
+        }
 
-        UpdatePinSprite();
+        UpdatePinSprites();
         UpdatePinSize();
         UpdatePinColor();
         UpdateBorderColor();
         UpdateHintText();
     }
 
-    private protected abstract void UpdatePinSprite();
+    private protected abstract void UpdatePinSprites();
 
     private protected abstract void UpdatePinSize();
 
@@ -107,13 +114,20 @@ internal abstract class APmmPin : BorderedPin, ISelectable
 
     private void UpdateHintText()
     {
-        if (hints is null || !hints.Any()) return;
+        if (hints is null || !hints.Any())
+        {
+            return;
+        }
 
         var text = "\n";
 
         foreach (var hint in hints)
+        {
             if (hint.CanGet(ArchipelagoMapMod.LS.TrackerData.pm))
+            {
                 text += $"\n{hint.Name}";
+            }
+        }
 
         HintText = text is not "\n" ? text : null;
     }

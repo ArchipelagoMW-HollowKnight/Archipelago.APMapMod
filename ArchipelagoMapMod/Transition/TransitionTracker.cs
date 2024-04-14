@@ -32,9 +32,9 @@ internal class TransitionTracker : HookModule
     };
 
     internal static HashSet<string> InLogicExtraTransitions { get; private set; }
-    internal static HashSet<string> InLogicScenes { get; private set; } = new();
-    internal static HashSet<string> VisitedAdjacentScenes { get; private set; } = new();
-    internal static HashSet<string> UncheckedReachableScenes { get; private set; } = new();
+    internal static HashSet<string> InLogicScenes { get; private set; } = [];
+    internal static HashSet<string> VisitedAdjacentScenes { get; private set; } = [];
+    internal static HashSet<string> UncheckedReachableScenes { get; private set; } = [];
 
     public override void OnEnterGame()
     {
@@ -61,42 +61,63 @@ internal class TransitionTracker : HookModule
     internal static void Update()
     {
         //ArchipelagoMapMod.Instance.LogDebug("Update TransitionTracker");
-        InLogicExtraTransitions = new HashSet<string>();
-        InLogicScenes = new HashSet<string>();
-        UncheckedReachableScenes = new HashSet<string>();
+        InLogicExtraTransitions = [];
+        InLogicScenes = [];
+        UncheckedReachableScenes = [];
 
         var pm = ArchipelagoMapMod.LS.TrackerData.pm;
 
         // Get in-logic extra transitions from waypoints
         foreach ((var waypoint, var transition) in waypointTransitionPairs)
+        {
             if (pm.lm.Terms.IsTerm(waypoint) && pm.Get(waypoint) > 0)
+            {
                 InLogicExtraTransitions.Add(transition);
+            }
+        }
 
         // Get in-logic scenes from transitions
         foreach (var transition in TransitionData.Transitions)
+        {
             if ((pm.lm.Terms.IsTerm(transition.Name) && pm.Get(transition.Name) > 0) ||
                 InLogicExtraTransitions.Contains(transition.Name))
+            {
                 InLogicScenes.Add(transition.SceneName);
+            }
+        }
 
         // Get more in-logic scenes from waypoints
         foreach ((var waypoint, var scene) in waypointScenePairs)
+        {
             if (pm.lm.Terms.IsTerm(waypoint) && pm.Get(waypoint) > 0)
+            {
                 InLogicScenes.Add(scene);
+            }
+        }
 
         VisitedAdjacentScenes = GetVisitedAdjacentScenes();
 
         // Get scenes where there are unchecked reachable transitions
         foreach (var transition in ArchipelagoMapMod.LS.TrackerData.uncheckedReachableTransitions)
+        {
             if (TransitionData.GetTransitionDef(transition) is APmmTransitionDef td)
+            {
                 UncheckedReachableScenes.Add(td.SceneName);
+            }
+        }
     }
 
     internal static bool GetRoomActive(string scene)
     {
         if (MapChanger.Settings.CurrentMode() is TransitionNormalMode)
+        {
             return Tracker.HasVisitedScene(scene) || InLogicScenes.Contains(scene);
+        }
 
-        if (MapChanger.Settings.CurrentMode() is TransitionVisitedOnlyMode) return Tracker.HasVisitedScene(scene);
+        if (MapChanger.Settings.CurrentMode() is TransitionVisitedOnlyMode)
+        {
+            return Tracker.HasVisitedScene(scene);
+        }
 
         return true;
     }
@@ -105,13 +126,25 @@ internal class TransitionTracker : HookModule
     {
         var color = APmmColors.GetColor(APmmColorSetting.Room_Out_of_logic);
 
-        if (InLogicScenes.Contains(scene)) color = APmmColors.GetColor(APmmColorSetting.Room_Normal);
+        if (InLogicScenes.Contains(scene))
+        {
+            color = APmmColors.GetColor(APmmColorSetting.Room_Normal);
+        }
 
-        if (VisitedAdjacentScenes.Contains(scene)) color = APmmColors.GetColor(APmmColorSetting.Room_Adjacent);
+        if (VisitedAdjacentScenes.Contains(scene))
+        {
+            color = APmmColors.GetColor(APmmColorSetting.Room_Adjacent);
+        }
 
-        if (scene == Utils.CurrentScene()) color = APmmColors.GetColor(APmmColorSetting.Room_Current);
+        if (scene == Utils.CurrentScene())
+        {
+            color = APmmColors.GetColor(APmmColorSetting.Room_Current);
+        }
 
-        if (UncheckedReachableScenes.Contains(scene)) color.w = 1f;
+        if (UncheckedReachableScenes.Contains(scene))
+        {
+            color.w = 1f;
+        }
 
         return color;
     }
@@ -120,41 +153,62 @@ internal class TransitionTracker : HookModule
     {
         var scene = Utils.CurrentScene();
 
-        if (scene is "Room_Tram") return new HashSet<string> {"Abyss_03", "Abyss_03_b", "Abyss_03_c"};
-        if (scene is "Room_Tram_RG") return new HashSet<string> {"Crossroads_46", "Crossroads_46b"};
+        if (scene is "Room_Tram")
+        {
+            return ["Abyss_03", "Abyss_03_b", "Abyss_03_c"];
+        }
+
+        if (scene is "Room_Tram_RG")
+        {
+            return ["Crossroads_46", "Crossroads_46b"];
+        }
 
         var starts = APmmPathfinder.SD.GetPrunedStartTerms(scene);
 
-        if (!starts.Any()) return new HashSet<string>();
+        if (!starts.Any())
+        {
+            return [];
+        }
 
-        SearchParams sp = new
-        (
-            starts,
-            APmmPathfinder.SD.CurrentState,
-            new Term[] { },
-            0.5f,
-            TerminationConditionType.None
-        );
+        SearchParams sp = new SearchParams
+        {
+            StartPositions = starts,
+            StartState = APmmPathfinder.SD.CurrentState,
+            Destinations = new Term[0],
+            MaxCost = 0.5f,
+            MaxTime = float.PositiveInfinity,
+            TerminationCondition = TerminationConditionType.None,
+        };
 
         SearchState ss = new(sp);
         Algorithms.DijkstraSearch(APmmPathfinder.SD, sp, ss);
 
-        HashSet<string> scenes = new();
+        HashSet<string> scenes = [];
 
         foreach (var (_, node) in ss.QueueNodes)
+        {
             //ArchipelagoMapMod.Instance.LogDebug(item.Item2.PrintActions());
             if (InstructionData.GetInstructions(node).FirstOrDefault() is Instruction i)
             {
                 //ArchipelagoMapMod.Instance.LogDebug(i.ArrowedText);
                 if (i is TramInstruction ti)
                 {
-                    if (ti.Waypoint is "Lower_Tram") scenes.Add("Room_Tram");
-                    if (ti.Waypoint is "Upper_Tram") scenes.Add("Room_Tram_RG");
+                    if (ti.Waypoint is "Lower_Tram")
+                    {
+                        scenes.Add("Room_Tram");
+                    }
+
+                    if (ti.Waypoint is "Upper_Tram")
+                    {
+                        scenes.Add("Room_Tram_RG");
+                    }
+
                     continue;
                 }
 
                 scenes.Add(i.TargetScene);
             }
+        }
 
         return scenes;
     }

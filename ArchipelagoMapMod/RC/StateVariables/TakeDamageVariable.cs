@@ -324,7 +324,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
                 yield break;
             }
 
-            List<int> steps = new();
+            List<int> steps = [];
             if (CanAdd(LifebloodHeart) && !(Hiveblood.IsEquipped(state) && state.GetBool(HasTakenDamage)))
             {
                 steps.Add(0);

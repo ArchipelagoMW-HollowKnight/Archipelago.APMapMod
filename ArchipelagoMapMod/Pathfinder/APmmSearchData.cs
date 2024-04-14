@@ -24,12 +24,12 @@ internal class APmmSearchData : SearchData
 
     private static Dictionary<string, string> conditionalTerms;
 
-    private static readonly HashSet<string> extraRooms = new()
-    {
+    private static readonly HashSet<string> extraRooms =
+    [
         SN.Room_Final_Boss_Atrium,
         SN.GG_Atrium,
         SN.GG_Workshop
-    };
+    ];
 
     private static readonly (string term, string pdBool)[] pdBoolTerms =
     {
@@ -54,7 +54,7 @@ internal class APmmSearchData : SearchData
             StartTerm = PositionLookup[startTerm.Name];
         }
 
-        HashSet<Term> benchwarpTerms = new();
+        HashSet<Term> benchwarpTerms = [];
 
         foreach (var kvp in BenchwarpInterop.BenchKeys)
         {
@@ -69,7 +69,7 @@ internal class APmmSearchData : SearchData
         // To remove transitions that are blocked by infection from being included in the pathfinder
         VanillaInfectedTransitions = infectionTransitions.All(TransitionData.IsVanillaTransition);
 
-        Dictionary<string, HashSet<Term>> transitionsByScene = new();
+        Dictionary<string, HashSet<Term>> transitionsByScene = [];
 
         foreach (var position in Positions)
         {
@@ -81,12 +81,12 @@ internal class APmmSearchData : SearchData
                     continue;
                 }
 
-                transitionsByScene[scene] = new HashSet<Term> {position};
+                transitionsByScene[scene] = [position];
             }
         }
 
-        transitionsByScene[SN.Room_Tram] = new HashSet<Term> {PositionLookup["Lower_Tram"]};
-        transitionsByScene[SN.Room_Tram_RG] = new HashSet<Term> {PositionLookup["Upper_Tram"]};
+        transitionsByScene[SN.Room_Tram] = [PositionLookup["Lower_Tram"]];
+        transitionsByScene[SN.Room_Tram_RG] = [PositionLookup["Upper_Tram"]];
 
         TransitionTermsByScene = new ReadOnlyDictionary<string, ReadOnlyCollection<Term>>(
             transitionsByScene.ToDictionary(kvp => kvp.Key, kvp => new ReadOnlyCollection<Term>(kvp.Value.ToArray())));
@@ -110,14 +110,13 @@ internal class APmmSearchData : SearchData
             "ArchipelagoMapMod.Resources.Pathfinder.Data.conditionalTerms.json");
     }
 
-    protected override ProgressionManager CreateLocalPM()
+    protected override LogicManagerBuilder CreateLocalLM(LogicManagerBuilder parent)
     {
-        var pm = base.CreateLocalPM();
+        LogicManagerBuilder lmb = base.CreateLocalLM(parent);
 
-        LogicManagerBuilder lmb = new(pm.lm);
         ILogicFormat fmt = new JsonLogicFormat();
 
-        if (pm.ctx?.InitialProgression is not ProgressionInitializer pi || pi.StartStateTerm is not Term startTerm)
+        if (ReferencePM.ctx?.InitialProgression is not ProgressionInitializer pi || pi.StartStateTerm is not Term startTerm)
         {
             throw new NullReferenceException();
         }
@@ -167,7 +166,7 @@ internal class APmmSearchData : SearchData
             }
         }
 
-        return new ProgressionManager(new LogicManager(lmb), pm.ctx);
+        return lmb;
     }
 
     protected override List<AbstractAction> CreateActions()
@@ -244,7 +243,7 @@ internal class APmmSearchData : SearchData
                                                        || (a is not PlacementAction && ReferencePM.Has(a.Destination)))
             .ToList();
 
-        if (node.Position.Name is "Can_Stag" && !actions.Contains(DirthmouthStagTransition))
+        if (node.CurrentPosition.Name is "Can_Stag" && !actions.Contains(DirthmouthStagTransition))
         {
             actions.Add(DirthmouthStagTransition);
         }
@@ -409,31 +408,32 @@ internal class APmmSearchData : SearchData
             (ArchipelagoMapMod.LS.TrackerData.pm.lm.GetTerm(t.Name) is not null && ArchipelagoMapMod.LS.TrackerData.pm.Get(t.Name) > 0)
             || TransitionTracker.InLogicExtraTransitions.Contains(t.Name)));
 
-        SearchParams sp = new
-        (
-            transitions.Select(t => new StartPosition(t.Name, t, 0f)).ToArray(),
-            APmmPathfinder.SD.CurrentState,
-            transitions.ToArray(),
-            1f,
-            TerminationConditionType.None
-        );
+        SearchParams sp = new SearchParams
+        {
+            StartPositions = transitions.Select(t => new StartPosition(t.Name, t, 0f)).ToArray(),
+            StartState = APmmPathfinder.SD.CurrentState,
+            Destinations = transitions.ToArray(),
+            MaxCost = 1f,
+            MaxTime = float.PositiveInfinity,
+            TerminationCondition = TerminationConditionType.None,
+        };
 
         SearchState ss = new(sp);
 
         Algorithms.DijkstraSearch(APmmPathfinder.SD, sp, ss);
 
         List<Node> nodes =
-            new(ss.ResultNodes.Where(n => n.Depth > 0 && n.StartPosition != n.Actions.Last().Destination));
+            new(ss.ResultNodes.Where(n => n.Depth > 0 && n.StartPosition.Term != n.Actions.Last().Destination));
 
-        List<StartPosition> prunedTransitions = new();
+        List<StartPosition> prunedTransitions = [];
 
         foreach (var transition in inLogicTransitions)
         {
             //ArchipelagoMapMod.Instance.LogDebug(transition.Name);
 
             if (prunedTransitions.Where(t =>
-                        nodes.Any(n => n.StartPosition == transition && n.Actions.Last().Destination == t.Term)
-                        && nodes.Any(n => n.StartPosition == t.Term && n.Actions.Last().Destination == transition))
+                        nodes.Any(n => n.StartPosition.Term == transition && n.Actions.Last().Destination == t.Term)
+                        && nodes.Any(n => n.StartPosition.Term == t.Term && n.Actions.Last().Destination == transition))
                     .FirstOrDefault() is StartPosition accessibleTransition)
             {
                 //ArchipelagoMapMod.Instance.LogDebug($"Accessible from {accessibleTransition.Term}");

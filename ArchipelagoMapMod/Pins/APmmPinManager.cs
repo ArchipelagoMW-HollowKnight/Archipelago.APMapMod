@@ -1,6 +1,7 @@
-﻿using System.Net.NetworkInformation;
-using Archipelago.HollowKnight.IC;
+﻿using Archipelago.HollowKnight;
+using ArchipelagoMapMod.IC;
 using ArchipelagoMapMod.Modes;
+using ArchipelagoMapMod.RC;
 using ConnectionMetadataInjector;
 using ConnectionMetadataInjector.Util;
 using GlobalEnums;
@@ -12,8 +13,6 @@ using MapChanger.MonoBehaviours;
 using Newtonsoft.Json;
 using RandomizerCore;
 using RandomizerCore.Logic;
-using ArchipelagoMapMod.IC;
-using ArchipelagoMapMod.RC;
 using UnityEngine;
 using Events = MapChanger.Events;
 using RD = ArchipelagoMapMod.RandomizerData;
@@ -34,8 +33,8 @@ internal class APmmPinManager : HookModule
     internal static Dictionary<string, RawLogicDef[]> LocationHints;
 
     internal static MapObject MoPins { get; private set; }
-    internal static Dictionary<string, APmmPin> Pins { get; private set; } = new();
-    internal static List<APmmPin> GridPins { get; private set; } = new();
+    internal static Dictionary<string, APmmPin> Pins { get; private set; } = [];
+    internal static List<APmmPin> GridPins { get; private set; } = [];
 
     internal static List<string> AllPoolGroups { get; private set; }
     internal static HashSet<string> RandoLocationPoolGroups { get; private set; }
@@ -68,8 +67,8 @@ internal class APmmPinManager : HookModule
 
     internal static void Make(GameObject goMap)
     {
-        Pins = new Dictionary<string, APmmPin>();
-        GridPins = new List<APmmPin>();
+        Pins = [];
+        GridPins = [];
 
         MoPins = Utils.MakeMonoBehaviour<MapObject>(goMap, "ArchipelagoMapMod Pins");
         MoPins.Initialize();
@@ -79,17 +78,27 @@ internal class APmmPinManager : HookModule
 
         foreach (var placement in Ref.Settings.Placements.Values.Where(placement => placement.Items.Any(item => item.HasTag<APmmItemTag>())))
         {
-            if (SupplementalMetadata.Of(placement).Get(InteropProperties.DoNotMakePin)) continue;
-                MakeRandoPin(placement);
+            if (SupplementalMetadata.Of(placement).Get(InteropProperties.DoNotMakePin))
+            {
+                continue;
+            }
+
+            MakeRandoPin(placement);
         }
     
         foreach (var placement in APLogicSetup.Context.Vanilla.Where(placement =>
                      RD.Data.IsLocation(placement.Location.Name) && !Pins.ContainsKey(placement.Location.Name)))
+        {
             MakeVanillaPin(placement);
-        
+        }
+
         if (Interop.HasBenchwarp())
+        {
             foreach (var kvp in BenchwarpInterop.BenchNames.Where(kvp => !Pins.ContainsKey(kvp.Value)))
+            {
                 MakeBenchPin(kvp.Value, kvp.Key.SceneName);
+            }
+        }
 
         // If you are planning to place pins into the grid on the world map, please refer to the following ordering hierarchy.
         GridPins = GridPins.OrderBy(pin => pin.ModSource).ThenBy(pin => pin.LocationPoolGroup)
@@ -101,6 +110,16 @@ internal class APmmPinManager : HookModule
 
         var pinSelector = Utils.MakeMonoBehaviour<APmmPinSelector>(null, "ArchipelagoMapMod Pin Selector");
         pinSelector.Initialize(Pins.Values);
+    }
+
+    internal static void SubscribeHints()
+    {
+        HintTracker.OnArchipelagoHintUpdate += UpdateRandoPins;
+    }
+
+    internal static void UnsubscribeHints()
+    {
+        HintTracker.OnArchipelagoHintUpdate -= UpdateRandoPins;
     }
 
     private static void MakeRandoPin(AbstractPlacement placement)
@@ -154,14 +173,21 @@ internal class APmmPinManager : HookModule
 
     internal static void Update()
     {
-        foreach (var pin in Pins.Values) pin.MainUpdate();
+        foreach (var pin in Pins.Values)
+        {
+            pin.MainUpdate();
+        }
     }
 
     internal static void UpdateRandoPins()
     {
         foreach (var pin in Pins.Values)
+        {
             if (pin is RandomizedAPmmPin randoPin)
+            {
                 randoPin.UpdatePlacementState();
+            }
+        }
     }
 
     /// <summary>
@@ -171,9 +197,11 @@ internal class APmmPinManager : HookModule
     private static void ArrangeWorldMapPinGrid(GameMap gameMap)
     {
         for (var i = 0; i < GridPins.Count; i++)
+        {
             GridPins[i].MapPosition = new AbsMapPosition((
                 WORLD_MAP_GRID_BASE_OFFSET_X + i % WORLD_MAP_GRID_ROW_COUNT * WORLD_MAP_GRID_SPACING,
                 WORLD_MAP_GRID_BASE_OFFSET_Y - i / WORLD_MAP_GRID_ROW_COUNT * WORLD_MAP_GRID_SPACING));
+        }
     }
 
     /// <summary>
@@ -182,7 +210,10 @@ internal class APmmPinManager : HookModule
     /// </summary>
     private static void ArrangeQuickMapPinGrid(GameMap gameMap, MapZone mapZone)
     {
-        if (!quickMapGridDefs.TryGetValue(mapZone, out var qmgd)) return;
+        if (!quickMapGridDefs.TryGetValue(mapZone, out var qmgd))
+        {
+            return;
+        }
 
         var currentScene = Utils.CurrentScene();
 
@@ -228,11 +259,11 @@ internal class APmmPinManager : HookModule
     /// </summary>
     private static void InitializePoolGroups()
     {
-        AllPoolGroups = new List<string>();
-        RandoLocationPoolGroups = new HashSet<string>();
-        RandoItemPoolGroups = new HashSet<string>();
-        VanillaLocationPoolGroups = new HashSet<string>();
-        VanillaItemPoolGroups = new HashSet<string>();
+        AllPoolGroups = [];
+        RandoLocationPoolGroups = [];
+        RandoItemPoolGroups = [];
+        VanillaLocationPoolGroups = [];
+        VanillaItemPoolGroups = [];
 
         foreach (var pin in Pins.Values)
         {
@@ -256,13 +287,18 @@ internal class APmmPinManager : HookModule
                                          || RandoItemPoolGroups.Contains(poolGroup)
                                          || VanillaLocationPoolGroups.Contains(poolGroup)
                                          || VanillaItemPoolGroups.Contains(poolGroup)))
+        {
             AllPoolGroups.Add(poolGroup);
+        }
+
         foreach (var poolGroup in RandoLocationPoolGroups
                      .Union(RandoItemPoolGroups)
                      .Union(VanillaLocationPoolGroups)
                      .Union(VanillaItemPoolGroups)
                      .Where(poolGroup => !AllPoolGroups.Contains(poolGroup)))
+        {
             AllPoolGroups.Add(poolGroup);
+        }
     }
 
     private record QuickMapGridDef
