@@ -293,7 +293,7 @@ public static class HintDisplay
         bool geo = true;
 
         // hints can come though vor vanilla items, if that is the case then mark them as obtained so it does not display on the hint tracker
-        if (APmmPinManager.Pins[locationName] is not RandomizedAPmmPin pin)
+        if (!APmmPinManager.Pins.TryGetValue(locationName, out APmmPin generalPin) || generalPin is not RandomizedAPmmPin pin)
         {
             return ColorResult.Obtained;
         }
