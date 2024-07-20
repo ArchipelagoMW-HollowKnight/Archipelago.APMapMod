@@ -1,6 +1,7 @@
 ﻿using Archipelago.HollowKnight.IC;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.Models;
 using ArchipelagoMapMod.Pins;
 using ItemChanger;
@@ -285,14 +286,14 @@ public static class HintDisplay
     private static ColorResult GetColor(long locationID)
     {
         string locationName = StripShopSuffix(Session.Locations.GetLocationNameFromId(locationID));
-        if (!Ref.Settings.Placements.ContainsKey(locationName))
+        if (locationName == null || !Ref.Settings.Placements.ContainsKey(locationName))
         {
             return ColorResult.Red;
         }
 
         bool geo = true;
 
-        // hints can come though vor vanilla items, if that is the case then mark them as obtained so it does not display on the hint tracker
+        // hints can come though for vanilla items, if that is the case then mark them as obtained so it does not display on the hint tracker
         if (!APmmPinManager.Pins.TryGetValue(locationName, out APmmPin generalPin) || generalPin is not RandomizedAPmmPin pin)
         {
             return ColorResult.Obtained;
@@ -388,7 +389,9 @@ public static class HintDisplay
             _ => "grey"
         };
 
+        PlayerInfo receivingPlayer = Session.Players.GetPlayerInfo(hint.ReceivingPlayer);
+
         return
-            $"<b>{Session.Players.GetPlayerAlias(hint.ReceivingPlayer)}</b>'s <b>[{Session.Items.GetItemName(hint.ItemId)}]</b> from <b><color={color}>[{Session.Locations.GetLocationNameFromId(hint.LocationId).Replace("_", " ")}]</color></b>";
+            $"<b>{receivingPlayer.Alias}</b>'s <b>[{Session.Items.GetItemName(hint.ItemId, receivingPlayer.Game)}]</b> from <b><color={color}>[{Session.Locations.GetLocationNameFromId(hint.LocationId).Replace("_", " ")}]</color></b>";
     }
 }

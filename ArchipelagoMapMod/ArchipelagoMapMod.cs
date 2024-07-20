@@ -220,9 +220,17 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
 
             // Construct pause menu
             title.Make();
-            
+
             // Construct Hint Display
-            HintDisplay.Make();
+            try
+            {
+                HintDisplay.Make();
+            }
+            catch (Exception ex)
+            {
+                Instance.LogError("Hint display threw up again, saving the day!");
+                Instance.LogError(ex);
+            }
 
             foreach (var button in mainButtons)
             {
