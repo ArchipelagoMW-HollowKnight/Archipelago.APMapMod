@@ -4,13 +4,13 @@ namespace ArchipelagoMapMod.Settings
 {
     public class NoveltySettings
     {
-        public bool RandomizeSwim = AP.Instance.SlotOptions.RandomizeSwim;
-        public bool RandomizeElevatorPass = AP.Instance.SlotOptions.RandomizeElevatorPass;
-        public bool RandomizeNail = AP.Instance.SlotOptions.RandomizeNail;
-        public bool RandomizeFocus = AP.Instance.SlotOptions.RandomizeFocus;
-        public bool SplitClaw = AP.Instance.SlotOptions.SplitMantisClaw;
-        public bool SplitCloak = AP.Instance.SlotOptions.SplitMothwingCloak;
-        public bool SplitSuperdash = AP.Instance.SlotOptions.SplitCrystalHeart;
-        public bool EggShop = AP.Instance.SlotOptions.EggShopSlots > 0;
+        public bool RandomizeSwim = AP.Instance.SlotData.Options.RandomizeSwim;
+        public bool RandomizeElevatorPass = AP.Instance.SlotData.Options.RandomizeElevatorPass;
+        public bool RandomizeNail = AP.Instance.SlotData.Options.RandomizeNail;
+        public bool RandomizeFocus = AP.Instance.SlotData.Options.RandomizeFocus;
+        public bool SplitClaw = AP.Instance.SlotData.Options.SplitMantisClaw;
+        public bool SplitCloak = AP.Instance.SlotData.Options.SplitMothwingCloak;
+        public bool SplitSuperdash = AP.Instance.SlotData.Options.SplitCrystalHeart;
+        public bool EggShop = AP.Instance.SlotData.Options.EggShopSlots > 0;
     }
 }
