@@ -1,6 +1,4 @@
-﻿using AP = Archipelago.HollowKnight.Archipelago;
-
-namespace ArchipelagoMapMod.Settings;
+﻿namespace ArchipelagoMapMod.Settings;
 
 public class MiscSettings
 {

@@ -1,4 +1,5 @@
-﻿using ArchipelagoMapMod.Modes;
+﻿using Archipelago.HollowKnight;
+using ArchipelagoMapMod.Modes;
 using ArchipelagoMapMod.Pathfinder;
 using ArchipelagoMapMod.Pathfinder.Instructions;
 using ArchipelagoMapMod.Pins;
@@ -184,8 +185,8 @@ public class ArchipelagoMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSett
             JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(Assembly,
                 "ArchipelagoMapMod.Resources.locations.json"));
 
-        Archipelago.HollowKnight.Archipelago.OnArchipelagoGameStarted += OnEnterGame;
-        Archipelago.HollowKnight.Archipelago.OnArchipelagoGameEnded += OnQuitToMenu;
+        ArchipelagoMod.OnArchipelagoGameStarted += OnEnterGame;
+        ArchipelagoMod.OnArchipelagoGameEnded += OnQuitToMenu;
 
         Log("Initialization complete.");
     }

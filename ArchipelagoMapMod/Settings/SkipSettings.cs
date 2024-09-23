@@ -1,5 +1,5 @@
 ﻿namespace ArchipelagoMapMod.Settings;
-using AP = Archipelago.HollowKnight.Archipelago;
+using AP = Archipelago.HollowKnight.ArchipelagoMod;
 
 public class SkipSettings
 {

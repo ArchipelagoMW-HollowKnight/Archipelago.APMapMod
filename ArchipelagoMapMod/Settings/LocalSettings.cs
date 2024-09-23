@@ -1,6 +1,6 @@
-﻿using ArchipelagoMapMod.Pins;
+﻿using Archipelago.HollowKnight;
+using ArchipelagoMapMod.Pins;
 using ArchipelagoMapMod.RC;
-using Newtonsoft.Json;
 
 namespace ArchipelagoMapMod.Settings;
 
@@ -21,7 +21,10 @@ public class LocalSettings
 
     internal void Initialize()
     {
-        if (InitializedPreviously) return;
+        if (InitializedPreviously)
+        {
+            return;
+        }
 
         PoolSettings = APmmPinManager.AllPoolGroups.ToDictionary(poolGroup => poolGroup, poolGroup => PoolState.On);
         ResetPoolSettings();
@@ -37,7 +40,10 @@ public class LocalSettings
 
     internal void ToggleSpoilers()
     {
-        SpoilerOn = !SpoilerOn;
+        if (!ArchipelagoMod.Instance.SlotData.DisableLocalSpoilerLogs)
+        {
+            SpoilerOn = !SpoilerOn;
+        }
     }
 
     internal void ToggleRandomized()
@@ -54,18 +60,28 @@ public class LocalSettings
 
     internal PoolState GetPoolGroupSetting(string poolGroup)
     {
-        if (PoolSettings.ContainsKey(poolGroup)) return PoolSettings[poolGroup];
+        if (PoolSettings.ContainsKey(poolGroup))
+        {
+            return PoolSettings[poolGroup];
+        }
+
         return PoolState.Off;
     }
 
     internal void SetPoolGroupSetting(string poolGroup, PoolState state)
     {
-        if (PoolSettings.ContainsKey(poolGroup)) PoolSettings[poolGroup] = state;
+        if (PoolSettings.ContainsKey(poolGroup))
+        {
+            PoolSettings[poolGroup] = state;
+        }
     }
 
     internal void TogglePoolGroupSetting(string poolGroup)
     {
-        if (!PoolSettings.ContainsKey(poolGroup)) return;
+        if (!PoolSettings.ContainsKey(poolGroup))
+        {
+            return;
+        }
 
         PoolSettings[poolGroup] = PoolSettings[poolGroup] switch
         {
@@ -85,7 +101,9 @@ public class LocalSettings
     private void ResetPoolSettings()
     {
         foreach (var poolGroup in APmmPinManager.AllPoolGroups)
+        {
             SetPoolGroupSetting(poolGroup, GetResetPoolState(poolGroup));
+        }
 
         PoolState GetResetPoolState(string poolGroup)
         {
@@ -104,8 +122,15 @@ public class LocalSettings
             }
 
             if (IsRando && IsVanilla && ArchipelagoMapMod.LS.RandomizedOn != ArchipelagoMapMod.LS.VanillaOn)
+            {
                 return PoolState.Mixed;
-            if ((IsRando && RandomizedOn) || (IsVanilla && VanillaOn)) return PoolState.On;
+            }
+
+            if ((IsRando && RandomizedOn) || (IsVanilla && VanillaOn))
+            {
+                return PoolState.On;
+            }
+
             return PoolState.Off;
         }
     }

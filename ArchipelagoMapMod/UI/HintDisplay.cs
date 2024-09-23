@@ -1,4 +1,5 @@
-﻿using Archipelago.HollowKnight.IC;
+﻿using Archipelago.HollowKnight;
+using Archipelago.HollowKnight.IC;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Helpers;
@@ -20,7 +21,7 @@ public static class HintDisplay
     private static LayoutRoot _layout;
     private static List<TextFormatter<Hint>> _formatters;
 
-    private static ArchipelagoSession Session => Archipelago.HollowKnight.Archipelago.Instance.session;
+    private static ArchipelagoSession Session => ArchipelagoMod.Instance.session;
 
     private static bool _visible = true;
     private const int MaxHints = 20;
@@ -199,7 +200,7 @@ public static class HintDisplay
 
     public static void UpdateDisplay()
     {
-        if (!(Archipelago.HollowKnight.Archipelago.Instance?.ArchipelagoEnabled).GetValueOrDefault(false))
+        if (!(ArchipelagoMod.Instance?.ArchipelagoEnabled).GetValueOrDefault(false))
         {
             return;
         }
