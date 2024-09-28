@@ -1,4 +1,5 @@
-﻿using MapChanger.UI;
+﻿using Archipelago.HollowKnight;
+using MapChanger.UI;
 
 namespace ArchipelagoMapMod.UI;
 
@@ -29,7 +30,7 @@ internal class SpoilersButton : MainButton
 
         Button.BorderColor = APmmColors.GetColor(APmmColorSetting.UI_Borders);
 
-        if (ArchipelagoMapMod.LS.SpoilerOn)
+        if (ArchipelagoMapMod.LS.SpoilerOn && !ArchipelagoMod.Instance.SlotData.DisableLocalSpoilerLogs)
         {
             Button.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_On);
             Button.Content = "Spoilers:\non";

@@ -1,4 +1,5 @@
-﻿using ArchipelagoMapMod.Modes;
+﻿using Archipelago.HollowKnight;
+using ArchipelagoMapMod.Modes;
 using ArchipelagoMapMod.Settings;
 using MapChanger.UI;
 
@@ -33,11 +34,14 @@ internal sealed class apmmBottomRowText : BottomRowText
 
     private void UpdateSpoilers()
     {
-        if (!MapTexts.TryGetValue("Spoilers", out var textObj)) return;
+        if (!MapTexts.TryGetValue("Spoilers", out var textObj))
+        {
+            return;
+        }
 
         var text = "Spoilers (ctrl-1): ";
 
-        if (ArchipelagoMapMod.LS.SpoilerOn)
+        if (ArchipelagoMapMod.LS.SpoilerOn && !ArchipelagoMod.Instance.SlotData.DisableLocalSpoilerLogs)
         {
             textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_On);
             text += "on";
@@ -53,7 +57,10 @@ internal sealed class apmmBottomRowText : BottomRowText
 
     private void UpdateRandomized()
     {
-        if (!MapTexts.TryGetValue("Randomized", out var textObj)) return;
+        if (!MapTexts.TryGetValue("Randomized", out var textObj))
+        {
+            return;
+        }
 
         var text = "Randomized (ctrl-2): ";
 
@@ -69,14 +76,19 @@ internal sealed class apmmBottomRowText : BottomRowText
         }
 
         if (RandomizedButton.IsRandomizedCustom())
+        {
             textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Custom);
+        }
 
         textObj.Text = text;
     }
 
     private void UpdateVanilla()
     {
-        if (!MapTexts.TryGetValue("Vanilla", out var textObj)) return;
+        if (!MapTexts.TryGetValue("Vanilla", out var textObj))
+        {
+            return;
+        }
 
         var text = "Vanilla (ctrl-3): ";
 
@@ -91,14 +103,20 @@ internal sealed class apmmBottomRowText : BottomRowText
             text += "off";
         }
 
-        if (VanillaButton.IsVanillaCustom()) textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Custom);
+        if (VanillaButton.IsVanillaCustom())
+        {
+            textObj.ContentColor = APmmColors.GetColor(APmmColorSetting.UI_Custom);
+        }
 
         textObj.Text = text;
     }
 
     private void UpdateStyle()
     {
-        if (!MapTexts.TryGetValue("Style", out var textObj)) return;
+        if (!MapTexts.TryGetValue("Style", out var textObj))
+        {
+            return;
+        }
 
         var text = "Style (ctrl-4): ";
 
@@ -127,7 +145,10 @@ internal sealed class apmmBottomRowText : BottomRowText
 
     private void UpdateSize()
     {
-        if (!MapTexts.TryGetValue("Size", out var textObj)) return;
+        if (!MapTexts.TryGetValue("Size", out var textObj))
+        {
+            return;
+        }
 
         var text = "Size (ctrl-5): ";
 

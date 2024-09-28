@@ -1,4 +1,5 @@
-﻿using Archipelago.HollowKnight.IC;
+﻿using Archipelago.HollowKnight;
+using Archipelago.HollowKnight.IC;
 using ArchipelagoMapMod.Rooms;
 using ArchipelagoMapMod.Settings;
 using ConnectionMetadataInjector;
@@ -224,7 +225,7 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
         UpdateRemainingItems();
 
         showItemSprite = remainingItems.Any()
-                         && (ArchipelagoMapMod.LS.SpoilerOn
+                         && ((ArchipelagoMapMod.LS.SpoilerOn && !ArchipelagoMod.Instance.SlotData.DisableLocalSpoilerLogs)
                              || (placementState is RPS.PreviewedUnreachable or RPS.PreviewedReachable &&
                                  placement.CanPreview())
                              || placementState is RPS.ClearedPersistent);
@@ -445,7 +446,7 @@ internal sealed class RandomizedAPmmPin : APmmPin, IPeriodicUpdater
 
         var spoilerItems = placement.Items.Where(item => !item.WasEverObtained());
 
-        if (spoilerItems.Any() && ArchipelagoMapMod.LS.SpoilerOn
+        if (spoilerItems.Any() && ArchipelagoMapMod.LS.SpoilerOn && !ArchipelagoMod.Instance.SlotData.DisableLocalSpoilerLogs
                                && !(placementState is RPS.PreviewedUnreachable or RPS.PreviewedReachable &&
                                     placement.CanPreview()))
         {
