@@ -7,7 +7,7 @@
     <Description>A Hollow Knight mod for Archipelago that adds many new features to the map.</Description>
     <Copyright>Copyright © KonoTyran 2023</Copyright>
     <Authors>KonoTyran</Authors>
-    <Version>2.3.0</Version>
+    <Version>2.3.1</Version>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <Deterministic>false</Deterministic>
     <ImplicitUsings>true</ImplicitUsings>
@@ -76,6 +76,12 @@
     <EmbeddedResource Include="Resources\Data\*.json" />
     <EmbeddedResource Include="Resources\Logic\*.json" />
     <EmbeddedResource Include="Resources\Sprites\Pins\*.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Archipelago.MultiClient.Net.Analyzers" Version="1.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Archipelago.MultiClient.Net">

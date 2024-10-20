@@ -23,12 +23,18 @@ internal class PinItemSprite : ISprite
         {
             if (item.GetTag(out ArchipelagoItemTag apTag))
             {
-                if (apTag.Flags == ItemFlags.Advancement)
+                if (apTag.Flags.HasFlag(ItemFlags.Advancement))
+                {
                     Value = PinSprite.APProgression.Value;
-                else if (apTag.Flags == ItemFlags.NeverExclude)
+                }
+                else if (apTag.Flags.HasFlag(ItemFlags.NeverExclude))
+                {
                     Value = PinSprite.APUseful.Value;
+                }
                 else if (apTag.Flags == ItemFlags.None)
+                {
                     Value = PinSprite.APTrash.Value;
+                }
             }
             else
             {
