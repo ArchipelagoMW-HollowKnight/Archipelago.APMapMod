@@ -1,6 +1,5 @@
 ﻿using Archipelago.HollowKnight.IC;
 using ArchipelagoMapMod.IC;
-using ArchipelagoMapMod.Pins;
 using ItemChanger;
 using ItemChanger.Internal;
 using Newtonsoft.Json;
@@ -197,13 +196,11 @@ public class TrackerData
     private void HookTrackerUpdate()
     {
         APmmTrackerUpdate.OnItemObtained += OnItemObtained;
+        APmmTrackerUpdate.OnRemoteItemObtained += OnRemoteItemObtained;
         APmmTrackerUpdate.OnPlacementPreviewed += OnPlacementPreviewed;
         APmmTrackerUpdate.OnPlacementCleared += OnPlacementCleared;
         APmmTrackerUpdate.OnTransitionVisited += OnTransitionVisited;
-        APmmTrackerUpdate.OnPreviewsCleared += OnPreviewsCleared;
-        APmmTrackerUpdate.OnFoundTransitionsCleared += OnFoundTransitionsCleared;
         APmmTrackerUpdate.OnUnload += UnhookTrackerUpdate;
-        AbstractItem.AfterGiveGlobal += OnAfterGiveGlobal;
     }
 
     public void UnhookTrackerUpdate()
@@ -212,30 +209,7 @@ public class TrackerData
         APmmTrackerUpdate.OnPlacementPreviewed -= OnPlacementPreviewed;
         APmmTrackerUpdate.OnPlacementCleared -= OnPlacementCleared;
         APmmTrackerUpdate.OnTransitionVisited -= OnTransitionVisited;
-        APmmTrackerUpdate.OnPreviewsCleared -= OnPreviewsCleared;
-        APmmTrackerUpdate.OnFoundTransitionsCleared -= OnFoundTransitionsCleared;
         APmmTrackerUpdate.OnUnload -= UnhookTrackerUpdate;
-        AbstractItem.AfterGiveGlobal -= OnAfterGiveGlobal;
-    }
-    
-    private void OnAfterGiveGlobal(ReadOnlyGiveEventArgs args)
-    {
-        try
-        {
-            if (args.Placement is not RemotePlacement)
-            {
-                return;
-            }
-
-            ItemPlacement itemPlacement = AddRemoteItem(args.Orig.name);
-            pm.Add(itemPlacement.Item, itemPlacement.Location);
-            APmmPinManager.UpdateRandoPins();
-        }
-        catch (Exception ex)
-        {
-            ArchipelagoMapMod.Instance.LogError("Unexpected exception during TrackerData AfterGive. Logic may not have updated.");
-            ArchipelagoMapMod.Instance.LogError(ex);
-        }
     }
 
     private Action<ProgressionManager> OnCanGetLocation(int id)
@@ -281,7 +255,20 @@ public class TrackerData
         obtainedItems.Add(id);
         AppendRandoItemToDebug(ri, rl);
         pm.Add(ri, rl);
-        
+    }
+
+    public void OnRemoteItemObtained(string itemName)
+    {
+        try
+        {
+            ItemPlacement itemPlacement = AddRemoteItem(itemName);
+            pm.Add(itemPlacement.Item, itemPlacement.Location);
+        }
+        catch (Exception ex)
+        {
+            ArchipelagoMapMod.Instance.LogError("Unexpected exception during TrackerData AfterGive. Logic may not have updated.");
+            ArchipelagoMapMod.Instance.LogError(ex);
+        }
     }
 
     public void OnPlacementPreviewed(string placementName)
@@ -315,20 +302,6 @@ public class TrackerData
             AppendTransitionTargetToDebug(tt, st);
             pm.Add(tt, st);
         }
-    }
-
-    public void OnPreviewsCleared()
-    {
-        previewedLocations.Clear();
-        Reset();
-    }
-
-    public void OnFoundTransitionsCleared()
-    {
-        visitedTransitions.Clear();
-        uncheckedReachableTransitions.Clear();
-        uncheckedReachableLocations.Clear();
-        Reset();
     }
 
     private void AppendToDebug(string line)

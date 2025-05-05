@@ -4,5 +4,9 @@ RCPathfinder
 MapChanger
 ConnectionMetadataInjector
 BenchRando
-Satchel
 RandomizerCore.Json
+Benchwarp
+ItemChanger
+MagicUI
+MenuChanger
+RandoMapCore

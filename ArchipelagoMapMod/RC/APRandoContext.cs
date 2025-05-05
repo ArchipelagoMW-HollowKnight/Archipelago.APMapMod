@@ -49,8 +49,6 @@ public class APRandoContext : RandoContext
             {
                 //check if this is an AP item.
                 if (!item.GetTag(out ArchipelagoItemTag aptag)) continue;
-                
-                
 
                 APLocation logicLocation = new(LM.GetLogicDef(placement.Name));
                     

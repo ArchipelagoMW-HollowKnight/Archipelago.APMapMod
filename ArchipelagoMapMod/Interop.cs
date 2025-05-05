@@ -7,7 +7,6 @@ internal static class Interop
     private static readonly Dictionary<string, Assembly> interopMods = new()
     {
         {"BenchRando", null},
-        {"Benchwarp", null}
     };
 
     internal static void FindInteropMods()
@@ -20,10 +19,5 @@ internal static class Interop
     internal static bool HasBenchRando()
     {
         return interopMods["BenchRando"] is not null;
-    }
-
-    internal static bool HasBenchwarp()
-    {
-        return interopMods["Benchwarp"] is not null;
     }
 }
