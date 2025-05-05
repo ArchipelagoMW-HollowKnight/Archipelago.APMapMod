@@ -23,6 +23,27 @@ public class APRandoContext : RandoContext
         this.StartDef = startDef;
 
         Vanilla = [];
+        foreach (PoolDef pool in Data.Pools)
+        {
+            if (pool.IsVanilla(gs))
+            {
+                // grimmchild gets the first 6 flames free so don't add them
+                if (pool.Name == PoolNames.Flame && gs.PoolSettings.Charms)
+                {
+                    foreach (VanillaDef def in pool.Vanilla.Skip(6))
+                    {
+                        Vanilla.Add(MakeVanillaItemPlacement(def));
+                    }
+                }
+                else
+                {
+                    foreach (VanillaDef def in pool.Vanilla)
+                    {
+                        Vanilla.Add(MakeVanillaItemPlacement(def));
+                    }
+                }
+            }
+        }
         
         // Save Notch Costs from PD
         for (int i = 0; i < CharmNotchCosts._vanillaCosts.Length; i++)
@@ -80,7 +101,6 @@ public class APRandoContext : RandoContext
                 }
                 else
                 {
-                    
                     Vanilla.Add(new ItemPlacement(new APItem(item.name), logicLocation));
                 }
             }
@@ -118,4 +138,24 @@ public class APRandoContext : RandoContext
         foreach (TransitionPlacement p in TransitionPlacements) yield return p;
     }
 
+
+    private GeneralizedPlacement MakeVanillaItemPlacement(VanillaDef def)
+    {
+        LogicItem item = LM.GetItemStrict(def.Item);
+        RandoLocation loc = new() { logic = LM.GetLogicDefStrict(def.Location) };
+
+        if (def.Costs is null && Data.TryGetCost(def.Location, out CostDef baseCost))
+        {
+            loc.AddCost(baseCost.ToLogicCost(LM));
+        }
+        if (def.Costs is not null)
+        {
+            foreach (CostDef cost in def.Costs)
+            {
+                loc.AddCost(cost.ToLogicCost(LM));
+            }
+        }
+
+        return loc.costs == null ? new GeneralizedPlacement(item, loc.logic) : new GeneralizedPlacement(item, loc);
+    }
 }
