@@ -13,7 +13,6 @@ public class APmmTrackerUpdate : ItemChanger.Modules.Module
         APmmPlacementTag.OnRandoPlacementVisitStateChanged += OnRandoPlacementVisitStateChanged;
         AbstractItem.AfterGiveGlobal += AfterRemoteItemGive;
         Events.OnTransitionOverride += OnTransitionOverride;
-        transitionLookup ??= TD.ctx.TransitionPlacements.ToDictionary(p => p.Source.Name, p => p.Target.Name);
     }
 
     public override void Unload()
@@ -76,6 +75,7 @@ public class APmmTrackerUpdate : ItemChanger.Modules.Module
 
     private void OnTransitionFound(string sourceName)
     {
+        transitionLookup ??= TD.ctx.TransitionPlacements.ToDictionary(p => p.Source.Name, p => p.Target.Name);
         if (transitionLookup.TryGetValue(sourceName, out string targetName) && !TD.HasVisited(sourceName))
         {
             OnTransitionVisited?.Invoke(sourceName, targetName);
