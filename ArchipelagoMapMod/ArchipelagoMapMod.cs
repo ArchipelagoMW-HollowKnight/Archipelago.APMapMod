@@ -71,9 +71,6 @@ public class ArchipelagoMapMod : Mod
         }
 
         Interop.FindInteropMods();
-        Finder.InjectLocations(
-            JsonUtil.DeserializeFromAssembly<Dictionary<string, MapLocationDef>>(Assembly,
-                "ArchipelagoMapMod.Resources.locations.json"));
 
         ArchipelagoMod.OnArchipelagoGameStarted += OnEnterGame;
         ArchipelagoMod.OnArchipelagoGameEnded += OnQuitToMenu;
