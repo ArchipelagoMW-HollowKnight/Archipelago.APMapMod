@@ -1,4 +1,5 @@
-﻿using Archipelago.HollowKnight.IC;
+﻿using Archipelago.HollowKnight;
+using Archipelago.HollowKnight.IC;
 using ArchipelagoMapMod.IC;
 using ArchipelagoMapMod.RandomizerData;
 using ArchipelagoMapMod.Settings;
@@ -44,11 +45,10 @@ public class APRandoContext : RandoContext
                 }
             }
         }
-        
-        // Save Notch Costs from PD
-        for (int i = 0; i < CharmNotchCosts._vanillaCosts.Length; i++)
+
+        for (int i = 0; i < ArchipelagoMod.Instance.SlotData.NotchCosts.Count; i++)
         {
-            int cost = PlayerData.instance.GetInt($"charmCost_{i+1}");
+            int cost = ArchipelagoMod.Instance.SlotData.NotchCosts[i];
             ArchipelagoMapMod.Instance.LogDebug($"adding charm ID {i+1} at cost {cost}");
             NotchCosts.Add(cost);
         }
