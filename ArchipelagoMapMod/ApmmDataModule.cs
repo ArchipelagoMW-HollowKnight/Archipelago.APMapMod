@@ -158,11 +158,13 @@ public class ApmmDataModule : RmcDataModule
 
         ItemChangerMod.Modules.GetOrAdd<APmmTrackerUpdate>();
         APmmTrackerUpdate.OnFinishedUpdate += PlacementTracker.OnUpdate;
+        HintTracker.OnArchipelagoHintUpdate += PlacementTracker.OnUpdate;
     }
 
     public override void OnQuitToMenu()
     {
         APmmTrackerUpdate.OnFinishedUpdate -= PlacementTracker.OnUpdate;
+        HintTracker.OnArchipelagoHintUpdate -= PlacementTracker.OnUpdate;
 
         TrackerData.UnhookTrackerUpdate();
         TrackerData = null;
