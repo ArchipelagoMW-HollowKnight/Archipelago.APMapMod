@@ -99,10 +99,6 @@ public class APRandoContext : RandoContext
                     itemTag.id = ItemPlacements.Count;
                     ItemPlacements.Add(new ItemPlacement(logicItem, logicLocation));
                 }
-                else
-                {
-                    Vanilla.Add(new ItemPlacement(new APItem(item.name), logicLocation));
-                }
             }
         }
         for (int i = 0; i < ItemPlacements.Count; i++)
