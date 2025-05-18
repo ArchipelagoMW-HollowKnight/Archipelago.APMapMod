@@ -90,8 +90,6 @@ public class ApmmDataModule : RmcDataModule
         return Data.GetRoomDef(scene)?.MapArea;
     }
 
-    public override string Localize(string text) => text;
-
     public override void OnEnterGame()
     {
         Data.Load();
