@@ -28,10 +28,6 @@ namespace ArchipelagoMapMod.RandomizerData
         public static ReadOnlyDictionary<string, RoomDef> Rooms { get; private set; }
         private static Dictionary<string, RoomDef> _rooms;
 
-        // Starts
-        public static ReadOnlyDictionary<string, StartDef> Starts { get; private set; }
-        private static Dictionary<string, StartDef> _starts;
-
         // Logic Settings
         public static ReadOnlyDictionary<string, string> LogicSettings { get; private set; }
         private static Dictionary<string, string> _logicSettings; // name in logic --> settings path
@@ -160,26 +156,6 @@ namespace ArchipelagoMapMod.RandomizerData
 
         #endregion
 
-        #region Start Methods
-
-        public static bool IsStart(string str)
-        {
-            return _starts.ContainsKey(str);
-        }
-
-        public static StartDef GetStartDef(string str)
-        {
-            if (_starts.TryGetValue(str, out StartDef def)) return def;
-            return null;
-        }
-
-        public static IEnumerable<string> GetStartNames()
-        {
-            return _starts.Keys;
-        }
-
-        #endregion
-
         #region Logic Settings Methods
 
         public static bool IsLogicSetting(string str)
@@ -230,9 +206,6 @@ namespace ArchipelagoMapMod.RandomizerData
 
             _pools = __pools.ToDictionary(def => def.Name);
             PoolLookup = new(_pools);
-
-            _starts = JsonUtil.Deserialize<Dictionary<string, StartDef>>($"{ArchipelagoMapMod.MOD}.Resources.Data.starts.json");
-            Starts = new(_starts);
 
             _transitions = JsonUtil.Deserialize<Dictionary<string, TransitionDef>>($"{ArchipelagoMapMod.MOD}.Resources.Data.transitions.json");
             Transitions = new(_transitions);

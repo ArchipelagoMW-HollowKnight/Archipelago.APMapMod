@@ -1,5 +1,4 @@
 ﻿using Archipelago.HollowKnight;
-using Archipelago.HollowKnight.IC;
 using ArchipelagoMapMod.IC;
 using ArchipelagoMapMod.RandomizerData;
 using ArchipelagoMapMod.RC;
@@ -11,12 +10,7 @@ using RandoMapCore.Data;
 using RandomizerCore;
 using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace ArchipelagoMapMod;
 public class ApmmDataModule : RmcDataModule
@@ -103,10 +97,7 @@ public class ApmmDataModule : RmcDataModule
         Data.Load();
 
         //TODO: fix start location when AP provides the info.
-        context = new APRandoContext(new GenerationSettings()
-        {
-            StartLocation = "King's Pass"
-        }, Data.Starts["King's Pass"]);
+        context = new APRandoContext(new GenerationSettings());
         TrackerData = new TrackerData();
         TrackerData.Setup(context);
 

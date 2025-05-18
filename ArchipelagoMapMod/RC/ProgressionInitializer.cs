@@ -1,12 +1,13 @@
 ﻿
-using RandomizerCore;
-using RandomizerCore.Logic;
+using Archipelago.HollowKnight.IC.RM;
 using ArchipelagoMapMod.RandomizerData;
 using ArchipelagoMapMod.Settings;
+using RandomizerCore;
+using RandomizerCore.Logic;
 
 namespace ArchipelagoMapMod.RC
 {
-    #nullable enable
+#nullable enable
     public class ProgressionInitializer : ILogicItem
     {
         /// <summary>
@@ -30,10 +31,14 @@ namespace ArchipelagoMapMod.RC
                 _ => "ROOMRANDO",
             }), 1));
 
-            foreach (TermValue tv in startDef.GetStartLocationProgression(lm))
+            TermValue startTermValue = new(lm.GetTermStrict(startDef.Transition), 1);
+            if (startTermValue.Term.Type == TermType.State)
             {
-                if (tv.Term.Type == TermType.State) StartStateLinkedTerms.Add(tv.Term);
-                else Setters.Add(tv);
+                StartStateLinkedTerms.Add(startTermValue.Term);
+            }
+            else
+            {
+                Setters.Add(startTermValue);
             }
 
             Setters.Add(new TermValue(lm.GetTermStrict("GRUBS"), -gs.CostSettings.GrubTolerance));

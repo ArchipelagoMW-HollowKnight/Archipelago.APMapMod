@@ -3,13 +3,12 @@ using Archipelago.HollowKnight.IC;
 using ArchipelagoMapMod.IC;
 using ArchipelagoMapMod.RandomizerData;
 using ArchipelagoMapMod.Settings;
-using ConnectionMetadataInjector;
 using ItemChanger;
 using ItemChanger.Internal;
 using Newtonsoft.Json;
 using RandomizerCore;
 using RandomizerCore.Logic;
-using StartDef = ArchipelagoMapMod.RandomizerData.StartDef;
+using StartDef = Archipelago.HollowKnight.IC.RM.StartDef;
 
 namespace ArchipelagoMapMod.RC;
 
@@ -17,11 +16,11 @@ public class APRandoContext : RandoContext
 {
     public APRandoContext(LogicManager lm) : base(lm) { }
 
-    public APRandoContext(GenerationSettings gs, StartDef startDef) : base(RCData.GetNewLogicManager(gs))
+    public APRandoContext(GenerationSettings gs) : base(RCData.GetNewLogicManager(gs))
     {
-        base.InitialProgression = new ProgressionInitializer(LM, gs, startDef);
+        base.InitialProgression = new ProgressionInitializer(LM, gs, gs.StartDef);
         this.GenerationSettings = gs;
-        this.StartDef = startDef;
+        this.StartDef = gs.StartDef;
 
         Vanilla = [];
         // if unshuffled locations were added, the server will send all vanilla placements as randomized instead
@@ -53,10 +52,10 @@ public class APRandoContext : RandoContext
         for (int i = 0; i < ArchipelagoMod.Instance.SlotData.NotchCosts.Count; i++)
         {
             int cost = ArchipelagoMod.Instance.SlotData.NotchCosts[i];
-            ArchipelagoMapMod.Instance.LogDebug($"adding charm ID {i+1} at cost {cost}");
+            ArchipelagoMapMod.Instance.LogDebug($"adding charm ID {i + 1} at cost {cost}");
             NotchCosts.Add(cost);
         }
-        
+
         // todo: update this with transitions from AP when given and dont add them to vanilla
         foreach (KeyValuePair<string, TransitionDef> transition in Data.Transitions)
         {
@@ -65,7 +64,7 @@ public class APRandoContext : RandoContext
             LogicTransition item = LM.GetTransition(transition.Value.VanillaTarget);
             Vanilla.Add(new GeneralizedPlacement(item, location));
         }
-        
+
         // Populate our item placements with info from IC
         ItemPlacements = [];
         foreach (AbstractPlacement placement in Ref.Settings.Placements.Values)
@@ -81,7 +80,7 @@ public class APRandoContext : RandoContext
                 APmmItemTag itemTag = item.GetOrAddTag<APmmItemTag>();
 
                 APItem logicItem;
-                    
+
                 // create new APItem and attach a logic item to it if its logically relevant
                 if (aptag.IsItemForMe)
                 {
