@@ -1,6 +1,6 @@
 ﻿namespace ArchipelagoMapMod.RandomizerData
 {
-    #nullable enable
+#nullable enable
     public record VanillaDef(string Item, string Location, CostDef[]? Costs = null)
     {
         public virtual bool Equals(VanillaDef other)

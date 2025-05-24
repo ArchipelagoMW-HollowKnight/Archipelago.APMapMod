@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace ArchipelagoMapMod.Settings
 {

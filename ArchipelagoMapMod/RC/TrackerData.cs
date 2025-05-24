@@ -42,7 +42,7 @@ public class TrackerData
     /// A set which tracks the transitions which are reachable in logic and have not been visited.
     /// </summary>
     public HashSet<string> uncheckedReachableTransitions = [];
-    
+
     /// <summary>
     /// The ProgressionManager for the current state, with the information available to the player.
     /// </summary>
@@ -50,7 +50,7 @@ public class TrackerData
     [JsonIgnore] public LogicManager lm;
     [JsonIgnore] public APRandoContext ctx;
     private MainUpdater mu;
-    
+
     public void Setup(APRandoContext ctx)
     {
         this.ctx = ctx;
@@ -85,7 +85,7 @@ public class TrackerData
                 AppendImprovedStateToDebug(su.term, su.value);
             }
         };
-        
+
         AppendToDebug("Adding waypoints");
         mu.AddWaypoints(lm.Waypoints);
         AppendToDebug("Adding transitions");
@@ -108,7 +108,7 @@ public class TrackerData
         mu.StartUpdating(); // automatically handle tracking reachable unobtained locations/transitions and adding vanilla progression to pm
 
         AppendToDebug($"Finished logic setup, marking previously obtained items.");
-        
+
         foreach (AbstractPlacement placement in Ref.Settings.Placements.Values)
         {
             if (placement.AllObtained())
@@ -139,7 +139,7 @@ public class TrackerData
                 obtainedItems.Add(ctxItem.Index);
             }
         }
-        
+
         // AP puts all remote item in a placement called `Remote_Items`
         if (Ref.Settings.Placements.TryGetValue(RemotePlacement.SINGLETON_NAME, out AbstractPlacement pmt))
         {
@@ -148,10 +148,10 @@ public class TrackerData
                 AddRemoteItem(remoteItem.name);
             }
         }
-        
+
         foreach (int i in obtainedItems)
         {
-            if (i == -1 || ctx.ItemPlacements.Count < i-1)
+            if (i == -1 || ctx.ItemPlacements.Count < i - 1)
             {
                 ArchipelagoMapMod.Instance.LogError($"invalid Index {i} found in obtained items");
                 ArchipelagoMapMod.Instance.LogError($"obtained Items: {string.Join(", ", obtainedItems)}");
@@ -235,7 +235,7 @@ public class TrackerData
         {
             (RandoTransition target, RandoTransition source) = ctx.TransitionPlacements[id];
             AppendReachableTransitionToDebug(source.lt);
-            
+
             if (!pm.Has(source.lt.term))
             {
                 AppendProgressionTransitionToDebug(source.lt);
@@ -309,7 +309,7 @@ public class TrackerData
         ArchipelagoMapMod.Instance.LogDebug(line);
         //LogManager.Append(line + Environment.NewLine, logFileName);
     }
-    
+
     private void AppendToFine(string line)
     {
         ArchipelagoMapMod.Instance.LogFine(line);

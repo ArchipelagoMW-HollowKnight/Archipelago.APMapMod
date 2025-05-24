@@ -20,7 +20,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
             NONE,
             ITEMSOUL,
             MAPAREASOUL,
-            AREASOUL, 
+            AREASOUL,
             ROOMSOUL,
         }
 

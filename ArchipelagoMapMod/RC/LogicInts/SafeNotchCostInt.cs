@@ -5,7 +5,7 @@ namespace ArchipelagoMapMod.RC.LogicInts
     /// <summary>
     /// LogicInt which returns 1 less than the number of notches needed to equip the charm without overcharming.
     /// </summary>
-    #nullable enable
+#nullable enable
     [Obsolete("Use EquipCharmVariable")]
     public class SafeNotchCostInt : LogicInt
     {

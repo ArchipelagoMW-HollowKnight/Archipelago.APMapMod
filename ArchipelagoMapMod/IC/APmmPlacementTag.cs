@@ -1,5 +1,4 @@
 ﻿using ItemChanger;
-using Newtonsoft.Json;
 
 namespace ArchipelagoMapMod.IC;
 

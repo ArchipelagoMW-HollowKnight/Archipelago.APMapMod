@@ -279,7 +279,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
             LifebloodHeart.SetUnequippable(ref state);
             LifebloodCore.SetUnequippable(ref state);
             yield return current;
-            
+
             current = new(state);
             if (LifebloodHeart.TryEquip(null, pm, ref current))
             {
@@ -304,7 +304,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
                 {
                     LifebloodCore.SetUnequippable(ref current);
                     RebalanceHPAfterCharmChange(pm, ref current);
-                    yield return current; 
+                    yield return current;
                 }
             }
             else if (LifebloodCore.TryEquip(null, pm, ref current))
@@ -426,7 +426,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
                 }
                 RebalanceHPAfterCharmChange(pm, ref next);
                 yield return next;
-                CONTINUE_OUTER: continue;
+            CONTINUE_OUTER: continue;
             }
 
             bool CanAdd(EquipCharmVariable ecv)

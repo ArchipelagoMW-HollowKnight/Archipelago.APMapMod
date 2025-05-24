@@ -1,8 +1,4 @@
 ﻿using Archipelago.HollowKnight;
-using ArchipelagoMapMod.Settings;
-using ArchipelagoMapMod.UI;
-using MapChanger;
-using MapChanger.Defs;
 using Modding;
 using RandoMapCore;
 using System.Reflection;

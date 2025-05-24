@@ -1,8 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json.Converters;
-using System.IO;
-using System.Reflection;
 
 namespace ArchipelagoMapMod.RandomizerData
 {

@@ -6,7 +6,7 @@ namespace ArchipelagoMapMod.RandomizerData
     {
         public string Name { get; init; }
         public string SceneName { get; init; }
-        [JsonIgnore]  public virtual string TitledArea { get => Data.GetRoomDef(SceneName)?.TitledArea; }
+        [JsonIgnore] public virtual string TitledArea { get => Data.GetRoomDef(SceneName)?.TitledArea; }
         [JsonIgnore] public virtual string MapArea { get => Data.GetRoomDef(SceneName)?.MapArea; }
         /// <summary>
         /// If true, copies of this location after the first may be shuffled among other flexible count locations by the RequestBuilder.

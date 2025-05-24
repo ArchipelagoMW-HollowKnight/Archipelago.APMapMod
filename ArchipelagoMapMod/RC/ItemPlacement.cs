@@ -1,5 +1,4 @@
 ﻿using RandomizerCore;
-using ArchipelagoMapMod.RC;
 
 namespace ArchipelagoMapMod.RC
 {

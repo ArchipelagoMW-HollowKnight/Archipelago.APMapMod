@@ -1,6 +1,6 @@
-﻿using RandomizerCore.Logic;
-using ArchipelagoMapMod.RC.LogicInts;
+﻿using ArchipelagoMapMod.RC.LogicInts;
 using ArchipelagoMapMod.RC.StateVariables;
+using RandomizerCore.Logic;
 
 namespace ArchipelagoMapMod.RC
 {

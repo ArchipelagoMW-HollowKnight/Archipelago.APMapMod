@@ -18,7 +18,7 @@ public class SkipSettings
     public bool DarkRooms = AP.Instance.SlotData.Options.DarkRooms;
     public bool ComplexSkips = AP.Instance.SlotData.Options.ComplexSkips;
     public bool DifficultSkips = AP.Instance.SlotData.Options.DifficultSkips;
-    
+
     //TODO: enable this when AP adds relevant logic settings.
     public bool Slopeballs = false;
     public bool ShriekPogos = false;

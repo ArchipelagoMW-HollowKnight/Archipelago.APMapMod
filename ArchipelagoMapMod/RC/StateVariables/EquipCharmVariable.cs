@@ -95,7 +95,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
                 {
                     ecv = new WhiteFragmentEquipVariable(term, charmName, lm);
                 }
-                else 
+                else
                 {
                     ecv = new EquipCharmVariable(term, charmName, charmID, lm);
                 }
@@ -125,15 +125,15 @@ namespace ArchipelagoMapMod.RC.StateVariables
         {
             try
             {
-                return ((APRandoContext) pm.ctx!).NotchCosts[CharmID - 1];
+                return ((APRandoContext)pm.ctx!).NotchCosts[CharmID - 1];
             }
             catch (IndexOutOfRangeException)
             {
-                List<int> costs = ((APRandoContext) pm.ctx!).NotchCosts ?? [-1];
+                List<int> costs = ((APRandoContext)pm.ctx!).NotchCosts ?? [-1];
                 ArchipelagoMapMod.Instance.LogError($"Unable to find cost for {CharmID} in {string.Join(", ", costs)} returning vanilla cost");
                 return CharmNotchCosts.GetVanillaCost(CharmID);
             }
-            
+
         }
 
         public virtual bool HasCharmProgression(ProgressionManager pm) => pm.Has(CharmTerm);

@@ -55,11 +55,6 @@
     <WriteLinesToFile File="$(ExportDir)/SHA.txt" Lines="@(FilesWithHashes->'%(FileHash)')" Overwrite="true" Encoding="UTF-8" />
   </Target>
   <ItemGroup>
-    <Compile Remove="Pathfinder\Instructions\EmptyInstruction.cs" />
-    <Compile Remove="Pathfinder\Instructions\MiscInstruction.cs" />
-    <Compile Remove="Pathfinder\Instructions\MiscTransitionInstruction.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\**\*" />
   </ItemGroup>
   <ItemGroup>
@@ -84,23 +79,11 @@
     <Reference Include="BenchRando">
       <HintPath>$(HollowKnightRefs)\Mods\BenchRando\BenchRando.dll</HintPath>
     </Reference>
-    <Reference Include="Benchwarp">
-      <HintPath>$(HollowKnightRefs)\Mods\Benchwarp\Benchwarp.dll</HintPath>
-    </Reference>
-    <Reference Include="ConnectionMetadataInjector">
-      <HintPath>$(HollowKnightRefs)\Mods\ConnectionMetadataInjector\ConnectionMetadataInjector.dll</HintPath>
-    </Reference>
     <Reference Include="ItemChanger">
       <HintPath>$(HollowKnightRefs)\Mods\ItemChanger\ItemChanger.dll</HintPath>
     </Reference>
-    <Reference Include="MagicUI">
-      <HintPath>$(HollowKnightRefs)\Mods\MagicUI\MagicUI.dll</HintPath>
-    </Reference>
     <Reference Include="MapChanger">
       <HintPath>$(HollowKnightRefs)\Mods\MapChanger\MapChanger.dll</HintPath>
-    </Reference>
-    <Reference Include="MenuChanger">
-      <HintPath>$(HollowKnightRefs)\Mods\MenuChanger\MenuChanger.dll</HintPath>
     </Reference>
     <Reference Include="MMHOOK_Assembly-CSharp">
       <HintPath>$(HollowKnightRefs)\MMHOOK_Assembly-CSharp.dll</HintPath>
@@ -119,9 +102,6 @@
     </Reference>
     <Reference Include="Archipelago">
       <HintPath>$(HollowKnightRefs)\Mods\Archipelago\Archipelago.HollowKnight.dll</HintPath>
-    </Reference>
-    <Reference Include="RCPathfinder">
-      <HintPath>$(HollowKnightRefs)\Mods\RCPathfinder\RCPathfinder.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(HollowKnightRefs)\UnityEngine.dll</HintPath>

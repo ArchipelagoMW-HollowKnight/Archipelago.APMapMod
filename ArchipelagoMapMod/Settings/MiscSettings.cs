@@ -16,14 +16,14 @@ public class MiscSettings
         TwoShardsPerMask,
         OneShardPerMask
     }
-    
+
     public enum VesselFragmentType
     {
         ThreeFragmentsPerVessel,
         TwoFragmentsPerVessel,
         OneFragmentPerVessel
     }
-    
+
     public enum SalubraNotchesSetting
     {
         GroupedWithCharmNotchesPool,

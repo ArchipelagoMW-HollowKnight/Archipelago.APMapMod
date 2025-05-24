@@ -57,8 +57,8 @@ public class PriorityEvent<T>
 
         public IEnumerable<T> GetSubscriberRange(float min, float max)
         {
-            int lb = _parent._entries.FindInclusiveLowerBound(new (min, default));
-            int ub = _parent._entries.FindExclusiveUpperBound(new (max, default));
+            int lb = _parent._entries.FindInclusiveLowerBound(new(min, default));
+            int ub = _parent._entries.FindExclusiveUpperBound(new(max, default));
 
             T[] result = new T[ub - lb];
             for (int i = lb; i < ub; i++) result[i - lb] = _parent._entries[i].Value;

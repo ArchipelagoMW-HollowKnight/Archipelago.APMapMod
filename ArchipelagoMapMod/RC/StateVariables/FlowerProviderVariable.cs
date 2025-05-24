@@ -8,7 +8,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
      * Required Parameters: none
      * Optiional Parameters: none
     */
-    #nullable enable
+#nullable enable
     public class FlowerProviderVariable : StateModifier
     {
         public override string Name { get; }

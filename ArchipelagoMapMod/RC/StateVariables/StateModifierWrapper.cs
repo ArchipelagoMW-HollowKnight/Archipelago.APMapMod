@@ -1,6 +1,5 @@
 ﻿using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
-using System.Security.Cryptography;
 
 namespace ArchipelagoMapMod.RC.StateVariables
 {
@@ -17,7 +16,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
         /// </summary>
         protected readonly string[] InnerParameters;
 
-        protected StateModifierWrapper(string name, LogicManager lm) 
+        protected StateModifierWrapper(string name, LogicManager lm)
         {
             Name = name;
             try

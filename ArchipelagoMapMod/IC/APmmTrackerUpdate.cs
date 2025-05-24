@@ -34,7 +34,7 @@ public class APmmTrackerUpdate : ItemChanger.Modules.Module
 
     private TrackerData TD => ApmmDataModule.Instance.TrackerData;
     private Dictionary<string, string> transitionLookup;
-    
+
     private void OnRandoPlacementVisitStateChanged(VisitStateChangedEventArgs args)
     {
         if (args.NewFlags.HasFlag(VisitState.Previewed))
@@ -50,7 +50,7 @@ public class APmmTrackerUpdate : ItemChanger.Modules.Module
         string placementName = args.Placement.Name;
 
         OnItemObtained?.Invoke(id, itemName, placementName);
-        
+
         if (args.Placement.Items.All(item => item.WasEverObtained()))
         {
             OnPlacementCleared?.Invoke(placementName);

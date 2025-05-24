@@ -11,7 +11,7 @@ public class APItem : RandoItem
     // /// <br/>This field is not serialized and will be null upon reloading the game.
     // /// </summary>
     // [JsonIgnore] public ItemRequestInfo? info;
-    
+
     /// <summary>
     /// The ItemDef associated with the location. Preferred over Data.GetItemDef, since this preserves modified item data.
     /// <br/>This field is serialized, and is safe to use after reloading the game. May rarely be null for external items which choose not to supply a value.

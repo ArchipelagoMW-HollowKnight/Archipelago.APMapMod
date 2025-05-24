@@ -1,6 +1,6 @@
 ﻿#nullable enable
-using RandomizerCore.Logic.StateLogic;
 using RandomizerCore.Logic;
+using RandomizerCore.Logic.StateLogic;
 
 namespace ArchipelagoMapMod.RC.StateVariables
 {
@@ -77,7 +77,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
 
             int soul = GetSoul(pm, state);
             if (soul < amount) return false;
-            
+
             int reserveSoul = GetReserveSoul(pm, state);
             if (reserveSoul >= amount)
             {

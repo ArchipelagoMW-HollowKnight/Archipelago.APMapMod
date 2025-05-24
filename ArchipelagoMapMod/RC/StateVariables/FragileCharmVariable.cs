@@ -17,9 +17,10 @@ namespace ArchipelagoMapMod.RC.StateVariables
             24 => "BROKEGREED",
             25 => "BROKESTRENGTH",
             _ => throw new ArgumentException($"Error constructing FCV from {name}: Unknown fragile charm id {charmID}.")
-        }) { }
+        })
+        { }
 
-        public FragileCharmVariable(string name, string charmName, int charmID, LogicManager lm, string repairTermName, string breakBoolName) : base(name, charmName, charmID, lm) 
+        public FragileCharmVariable(string name, string charmName, int charmID, LogicManager lm, string repairTermName, string breakBoolName) : base(name, charmName, charmID, lm)
         {
             RepairTerm = lm.GetTermStrict(repairTermName) ?? throw new ArgumentException($"Error constructing ECV from {name}: {repairTermName} term does not exist?");
             BreakBool = lm.StateManager.GetBoolStrict(breakBoolName) ?? throw new ArgumentException($"Error constructing ECV from {name}: could not find {breakBoolName} state bool.");
