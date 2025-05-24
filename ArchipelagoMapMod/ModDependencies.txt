@@ -1,7 +1,7 @@
 Archipelago from https://nightly.link/ArchipelagoMW-HollowKnight/Archipelago.HollowKnight/workflows/build-release/main/Archipelago.zip
 RandomizerCore
-MapChanger from https://github.com/syyePhenomenol/MapChanger/releases/download/v1.3.7/MapChanger.zip
+MapChanger
 BenchRando
 RandomizerCore.Json
 ItemChanger
-RandoMapCore from https://github.com/syyePhenomenol/RandoMapCore/releases/download/v1.0.9/RandoMapCore.zip
+RandoMapCore
