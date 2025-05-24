@@ -28,6 +28,10 @@ public class APRandoContext : RandoContext
         {
             foreach (PoolDef pool in Data.Pools)
             {
+                if (pool.Vanilla.Length == 0)
+                {
+                    continue;
+                }
                 if (pool.IsVanilla(gs))
                 {
                     // grimmchild gets the first 6 flames free so don't add them
