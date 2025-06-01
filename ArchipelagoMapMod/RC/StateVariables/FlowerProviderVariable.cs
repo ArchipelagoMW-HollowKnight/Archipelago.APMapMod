@@ -1,62 +1,61 @@
 ﻿using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
 
-namespace ArchipelagoMapMod.RC.StateVariables
+namespace ArchipelagoMapMod.RC.StateVariables;
+
+/*
+ * Prefix: $FLOWERGET
+ * Required Parameters: none
+ * Optiional Parameters: none
+*/
+public class FlowerProviderVariable : StateModifier
 {
-    /*
-     * Prefix: $FLOWERGET
-     * Required Parameters: none
-     * Optiional Parameters: none
-    */
-    public class FlowerProviderVariable : StateModifier
+    public override string Name { get; }
+    protected readonly StateBool NoFlower;
+    public const string Prefix = "$FLOWERGET";
+
+    public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
     {
-        public override string Name { get; }
-        protected readonly StateBool NoFlower;
-        public const string Prefix = "$FLOWERGET";
-
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
+        if (term == Prefix)
         {
-            if (term == Prefix)
-            {
-                variable = new FlowerProviderVariable(term, lm);
-                return true;
-            }
-            variable = default;
-            return false;
+            variable = new FlowerProviderVariable(term, lm);
+            return true;
         }
+        variable = default;
+        return false;
+    }
 
-        public FlowerProviderVariable(string name, LogicManager lm)
+    public FlowerProviderVariable(string name, LogicManager lm)
+    {
+        Name = name;
+        try
         {
-            Name = name;
-            try
-            {
-                NoFlower = lm.StateManager.GetBoolStrict("NOFLOWER");
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException("Error constructing FlowerProviderVariable", e);
-            }
+            NoFlower = lm.StateManager.GetBoolStrict("NOFLOWER");
         }
+        catch (Exception e)
+        {
+            throw new InvalidOperationException("Error constructing FlowerProviderVariable", e);
+        }
+    }
 
-        protected FlowerProviderVariable(string name)
-        {
-            Name = name;
-        }
+    protected FlowerProviderVariable(string name)
+    {
+        Name = name;
+    }
 
-        public override IEnumerable<Term> GetTerms()
-        {
-            return Enumerable.Empty<Term>();
-        }
+    public override IEnumerable<Term> GetTerms()
+    {
+        return Enumerable.Empty<Term>();
+    }
 
-        public override IEnumerable<LazyStateBuilder>? ProvideState(object? sender, ProgressionManager pm)
-        {
-            return Enumerable.Empty<LazyStateBuilder>();
-        }
+    public override IEnumerable<LazyStateBuilder>? ProvideState(object? sender, ProgressionManager pm)
+    {
+        return Enumerable.Empty<LazyStateBuilder>();
+    }
 
-        public override IEnumerable<LazyStateBuilder> ModifyState(object? sender, ProgressionManager pm, LazyStateBuilder state)
-        {
-            state.SetBool(NoFlower, false);
-            yield return state;
-        }
+    public override IEnumerable<LazyStateBuilder> ModifyState(object? sender, ProgressionManager pm, LazyStateBuilder state)
+    {
+        state.SetBool(NoFlower, false);
+        yield return state;
     }
 }

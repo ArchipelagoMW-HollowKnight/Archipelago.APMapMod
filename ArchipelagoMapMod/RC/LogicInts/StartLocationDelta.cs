@@ -1,53 +1,52 @@
 ﻿using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
 
-namespace ArchipelagoMapMod.RC.LogicInts
-{
-    /// <summary>
-    /// LogicInt which is true exactly when the GenerationSettings StartLocation equals its argument.
-    /// </summary>
+namespace ArchipelagoMapMod.RC.LogicInts;
+
+/// <summary>
+/// LogicInt which is true exactly when the GenerationSettings StartLocation equals its argument.
+/// </summary>
 #nullable enable
-    public class StartLocationDelta : StateProvider
+public class StartLocationDelta : StateProvider
+{
+    protected readonly Term? StartStateTerm;  // null in files generated before state logic
+    public override string Name { get; }
+    public string Location { get; }
+    public const string Prefix = "$StartLocation";
+
+    public StartLocationDelta(string name, LogicManager lm, string location)
     {
-        protected readonly Term? StartStateTerm;  // null in files generated before state logic
-        public override string Name { get; }
-        public string Location { get; }
-        public const string Prefix = "$StartLocation";
+        Location = location;
+        Name = name;
+        StartStateTerm = lm.GetTerm("Start_State");
+    }
 
-        public StartLocationDelta(string name, LogicManager lm, string location)
+    public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
+    {
+        if (VariableResolver.TryMatchPrefix(term, Prefix, out string[]? parameters))
         {
-            Location = location;
-            Name = name;
-            StartStateTerm = lm.GetTerm("Start_State");
+            string location = parameters[0];
+            variable = new StartLocationDelta(term, lm, location);
+            return true;
         }
+        variable = null;
+        return false;
+    }
 
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
-        {
-            if (VariableResolver.TryMatchPrefix(term, Prefix, out string[]? parameters))
-            {
-                string location = parameters[0];
-                variable = new StartLocationDelta(term, lm, location);
-                return true;
-            }
-            variable = null;
-            return false;
-        }
+    public override StateUnion? GetInputState(object? sender, ProgressionManager pm)
+    {
+        return ((APRandoContext)pm.ctx!).GenerationSettings.StartLocation == Location
+            ? StartStateTerm is not null
+            ? pm.GetState(StartStateTerm)
+            : StateUnion.Empty
+            : null;
+    }
 
-        public override StateUnion? GetInputState(object? sender, ProgressionManager pm)
+    public override IEnumerable<Term> GetTerms()
+    {
+        if (StartStateTerm is not null)
         {
-            return ((APRandoContext)pm.ctx!).GenerationSettings.StartLocation == Location
-                ? StartStateTerm is not null
-                ? pm.GetState(StartStateTerm)
-                : StateUnion.Empty
-                : null;
-        }
-
-        public override IEnumerable<Term> GetTerms()
-        {
-            if (StartStateTerm is not null)
-            {
-                yield return StartStateTerm;
-            }
+            yield return StartStateTerm;
         }
     }
 }
