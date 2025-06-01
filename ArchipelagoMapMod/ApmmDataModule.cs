@@ -19,6 +19,7 @@ public class ApmmDataModule : RmcDataModule
     private ApmmDataModule() { }
 
     public TrackerData TrackerData { get; private set; }
+    public TrackerData TrackerDataNoSequenceBreaks { get; private set; }
 
     public override string ModName => ArchipelagoMapMod.MOD;
 
@@ -48,16 +49,16 @@ public class ApmmDataModule : RmcDataModule
     public override IReadOnlyDictionary<string, RmcLocationDef> VanillaLocations => vanillaLocations;
 
     public override ProgressionManager PM => TrackerData.pm;
-    public override ProgressionManager PMNoSequenceBreak => TrackerData.pm;
+    public override ProgressionManager PMNoSequenceBreak => TrackerDataNoSequenceBreaks.pm;
     public override Term StartTerm => ((ProgressionInitializer)Context.InitialProgression).StartStateTerm;
     public override IReadOnlyCollection<Term> StartStateLinkedTerms => ((ProgressionInitializer)Context.InitialProgression).StartStateLinkedTerms;
     public override StateModifier WarpToBenchReset => (WarpToBenchResetVariable)PM.lm.GetVariableStrict(WarpToBenchResetVariable.Prefix);
     public override StateModifier WarpToStartReset => (WarpToStartResetVariable)PM.lm.GetVariable(WarpToStartResetVariable.Prefix);
 
     public override IReadOnlyCollection<string> UncheckedReachableTransitions => TrackerData.uncheckedReachableTransitions;
-    public override IReadOnlyCollection<string> UncheckedReachableTransitionsNoSequenceBreak => TrackerData.uncheckedReachableTransitions;
+    public override IReadOnlyCollection<string> UncheckedReachableTransitionsNoSequenceBreak => TrackerDataNoSequenceBreaks.uncheckedReachableTransitions;
     public override IReadOnlyDictionary<string, string> VisitedTransitions => TrackerData.visitedTransitions;
-    public override IReadOnlyCollection<string> OutOfLogicVisitedTransitions => [];
+    public override IReadOnlyCollection<string> OutOfLogicVisitedTransitions => TrackerDataNoSequenceBreaks.outOfLogicVisitedTransitions;
 
     private APRandoContext context;
     public override RandoContext Context => context;
@@ -94,10 +95,11 @@ public class ApmmDataModule : RmcDataModule
     {
         Data.Load();
 
-        //TODO: fix start location when AP provides the info.
         context = new APRandoContext(new GenerationSettings());
-        TrackerData = new TrackerData();
+        TrackerData = new TrackerData(true);
         TrackerData.Setup(context);
+        TrackerDataNoSequenceBreaks = new TrackerData(false);
+        TrackerDataNoSequenceBreaks.Setup(context);
 
         randomizedTransitions = [];
         vanillaTransitions = [];

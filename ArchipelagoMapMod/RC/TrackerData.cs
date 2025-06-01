@@ -44,12 +44,30 @@ public class TrackerData
     public HashSet<string> uncheckedReachableTransitions = [];
 
     /// <summary>
+    /// Whether to allow out of logic items and transitions to be added to progression immediately.
+    /// </summary>
+    public bool AllowSequenceBreaks;
+    /// <summary>
+    /// The subset of obtainedItems that are currently out of logic (obtained via sequence break).
+    /// </summary>
+    public HashSet<int> outOfLogicObtainedItems = [];
+    /// <summary>
+    /// The subset of visitedTransitions that are currently out of logic (visited via sequence break).
+    /// </summary>
+    public HashSet<string> outOfLogicVisitedTransitions = [];
+
+    /// <summary>
     /// The ProgressionManager for the current state, with the information available to the player.
     /// </summary>
     [JsonIgnore] public ProgressionManager pm;
     [JsonIgnore] public LogicManager lm;
     [JsonIgnore] public APRandoContext ctx;
     private MainUpdater mu;
+
+    public TrackerData(bool allowSequenceBreaks)
+    {
+        AllowSequenceBreaks = allowSequenceBreaks;
+    }
 
     public void Setup(APRandoContext ctx)
     {
@@ -63,8 +81,17 @@ public class TrackerData
     public void Reset()
     {
         ArchipelagoMapMod.Instance.Log("Setting up TrackerData...");
-        pm = new ProgressionManager(lm, ctx);
 
+        obtainedItems.Clear();
+        previewedLocations.Clear();
+        visitedTransitions.Clear();
+        clearedLocations.Clear();
+        uncheckedReachableLocations.Clear();
+        uncheckedReachableTransitions.Clear();
+        outOfLogicObtainedItems.Clear();
+        outOfLogicVisitedTransitions.Clear();
+
+        pm = new ProgressionManager(lm, ctx);
         mu = pm.mu;
 
         // note: location costs are ignored in the tracking, to prevent providing unintended information, by using p.location.logic rather than p.location
@@ -135,8 +162,7 @@ public class TrackerData
                 }
 
                 ItemPlacement ctxItem = ctx.ItemPlacements[tag.id];
-                AppendToDebug($"[Tracker-Data] Adding previously obtained item {ctxItem.Item.Name} to Obtained Items under index {tag.id}");
-                obtainedItems.Add(ctxItem.Index);
+                OnItemObtained(tag.id, ctxItem.Item.Name, ctxItem.Location.Name);
             }
         }
 
@@ -149,22 +175,14 @@ public class TrackerData
             }
         }
 
-        foreach (int i in obtainedItems)
+        // todo - this will cause problems in trando because we don't currently save transitions
+        foreach (KeyValuePair<string, string> kvp in visitedTransitions)
         {
-            if (i == -1 || ctx.ItemPlacements.Count < i - 1)
+            if (outOfLogicVisitedTransitions.Contains(kvp.Key))
             {
-                ArchipelagoMapMod.Instance.LogError($"invalid Index {i} found in obtained items");
-                ArchipelagoMapMod.Instance.LogError($"obtained Items: {string.Join(", ", obtainedItems)}");
                 continue;
             }
 
-            (RandoItem item, RandoLocation loc) = ctx.ItemPlacements[i];
-            AppendRandoItemToDebug(item, loc);
-            pm.Add(item, loc);
-        }
-
-        foreach (KeyValuePair<string, string> kvp in visitedTransitions)
-        {
             LogicTransition tt = lm.GetTransitionStrict(kvp.Value);
             LogicTransition st = lm.GetTransitionStrict(kvp.Key);
 
@@ -222,6 +240,12 @@ public class TrackerData
             {
                 pm.Add(ilw.GetReachableEffect());
             }
+            if (outOfLogicObtainedItems.Remove(id))
+            {
+                // item was out of logic and is now in logic, add it!
+                AppendRandoItemToDebug(item, location);
+                pm.Add(item, location);
+            }
             if (!clearedLocations.Contains(location.Name) && !previewedLocations.Contains(location.Name))
             {
                 uncheckedReachableLocations.Add(location.Name);
@@ -242,6 +266,13 @@ public class TrackerData
                 pm.Add(source.GetReachableEffect());
             }
 
+            if (outOfLogicVisitedTransitions.Remove(source.Name))
+            {
+                // transition was out of logic and is now in logic, add it!
+                AppendTransitionTargetToDebug(target.lt, source.lt);
+                pm.Add(target, source);
+            }
+
             if (!visitedTransitions.ContainsKey(source.Name))
             {
                 uncheckedReachableTransitions.Add(source.Name);
@@ -253,8 +284,15 @@ public class TrackerData
     {
         (RandoItem ri, RandoLocation rl) = ctx.ItemPlacements[id];
         obtainedItems.Add(id);
-        AppendRandoItemToDebug(ri, rl);
-        pm.Add(ri, rl);
+        if (AllowSequenceBreaks || rl.logic.CanGet(pm))
+        {
+            AppendRandoItemToDebug(ri, rl);
+            pm.Add(ri, rl);
+        }
+        else
+        {
+            outOfLogicObtainedItems.Add(id);
+        }
     }
 
     public void OnRemoteItemObtained(string itemName)
@@ -290,7 +328,7 @@ public class TrackerData
         uncheckedReachableTransitions.Remove(source);
 
         LogicTransition st = lm.GetTransition(source);
-        if (st.CanGet(pm))
+        if (AllowSequenceBreaks || st.CanGet(pm))
         {
             LogicTransition tt = lm.GetTransition(target);
             if (!pm.Has(st.term))
@@ -302,18 +340,20 @@ public class TrackerData
             AppendTransitionTargetToDebug(tt, st);
             pm.Add(tt, st);
         }
+        else
+        {
+            outOfLogicVisitedTransitions.Add(source);
+        }
     }
 
     private void AppendToDebug(string line)
     {
-        ArchipelagoMapMod.Instance.LogDebug(line);
-        //LogManager.Append(line + Environment.NewLine, logFileName);
+        ArchipelagoMapMod.Instance.LogDebug($"[Tracker][SB={AllowSequenceBreaks}] - {line}");
     }
 
     private void AppendToFine(string line)
     {
-        ArchipelagoMapMod.Instance.LogFine(line);
-        //LogManager.Append(line + Environment.NewLine, logFileName);
+        ArchipelagoMapMod.Instance.LogFine($"[Tracker][SB={AllowSequenceBreaks}] - {line}");
     }
 
     private void AppendWaypointToDebug(LogicWaypoint w)
