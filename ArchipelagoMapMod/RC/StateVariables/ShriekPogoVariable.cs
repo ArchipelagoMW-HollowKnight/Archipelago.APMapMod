@@ -3,7 +3,6 @@ using RandomizerCore.Logic.StateLogic;
 
 namespace ArchipelagoMapMod.RC.StateVariables
 {
-#nullable enable
     public class ShriekPogoVariable : StateModifierWrapper<CastSpellVariable>
     {
         public override string Name { get; }
@@ -21,7 +20,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
         public const string Prefix = "$SHRIEKPOGO";
         protected override string InnerPrefix => CastSpellVariable.Prefix;
 
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
+        public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
         {
             if (VariableResolver.TryMatchPrefix(term, Prefix, out _)
                 || VariableResolver.TryMatchPrefix(term, Prefix + 'S', out _)) // typo $SHRIEKPOGOS used in logic in an old version

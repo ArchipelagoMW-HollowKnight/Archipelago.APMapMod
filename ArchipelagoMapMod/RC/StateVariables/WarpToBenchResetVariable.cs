@@ -32,7 +32,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
             }
         }
 
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
+        public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
         {
             if (VariableResolver.TryMatchPrefix(term, Prefix, out _))
             {
@@ -43,21 +43,19 @@ namespace ArchipelagoMapMod.RC.StateVariables
             return false;
         }
 
-        public override IEnumerable<LazyStateBuilder> ProvideState(object? sender, ProgressionManager pm)
+        public override IEnumerable<LazyStateBuilder>? ProvideState(object? sender, ProgressionManager pm)
         {
-            return Enumerable.Empty<LazyStateBuilder>();
+            return [];
         }
 
         public override IEnumerable<LazyStateBuilder> ModifyState(object? sender, ProgressionManager pm, LazyStateBuilder state)
         {
-            yield return ResetSingle(pm, state);
+            return SaveQuitReset.ModifyState(sender, pm, state).SelectMany(s => BenchReset.ModifyState(sender, pm, s));
         }
 
         public override IEnumerable<Term> GetTerms()
         {
             return SaveQuitReset.GetTerms().Concat(BenchReset.GetTerms());
         }
-
-        public LazyStateBuilder ResetSingle(ProgressionManager pm, LazyStateBuilder state) => BenchReset.ResetSingle(pm, SaveQuitReset.ResetSingle(pm, state));
     }
 }

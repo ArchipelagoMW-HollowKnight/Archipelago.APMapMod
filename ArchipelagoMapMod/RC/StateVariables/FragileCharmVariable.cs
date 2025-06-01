@@ -31,19 +31,26 @@ namespace ArchipelagoMapMod.RC.StateVariables
             return base.GetTerms().Append(RepairTerm);
         }
 
-        protected override bool HasStateRequirements<T>(ProgressionManager pm, T state)
+        public override bool HasStateRequirements<T>(ProgressionManager pm, T state)
         {
             return base.HasStateRequirements<T>(pm, state) && (pm.Has(CharmTerm, 2) || !state.GetBool(BreakBool) && pm.Has(RepairTerm));
         }
 
         public void BreakCharm(ProgressionManager pm, ref LazyStateBuilder state)
         {
-            if (pm.Has(CharmTerm, 2)) return;
+            if (pm.Has(CharmTerm, 2))
+            {
+                return;
+            }
+
             if (state.GetBool(CharmBool))
             {
                 state.SetBool(CharmBool, false);
                 state.Increment(UsedNotchesInt, -((APRandoContext)pm.ctx).NotchCosts[CharmID - 1]);
-                if (state.GetBool(OvercharmBool)) state.SetBool(OvercharmBool, false);
+                if (state.GetBool(Overcharmed))
+                {
+                    state.SetBool(Overcharmed, false);
+                }
             }
             state.SetBool(AnticharmBool, true);
             state.SetBool(BreakBool, true);

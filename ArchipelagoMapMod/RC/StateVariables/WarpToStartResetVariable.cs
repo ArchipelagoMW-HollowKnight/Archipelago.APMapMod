@@ -5,11 +5,11 @@ using RandomizerCore.Logic.StateLogic;
 namespace ArchipelagoMapMod.RC.StateVariables
 {
     /*
-     * Prefix: $WARPTOSTART
-     * Required Parameters: none
-     * Optional Parameters: none
-     * Provides the effect of warping to start via Benchwarp or savequit.
-    */
+    * Prefix: $WARPTOSTART
+    * Required Parameters: none
+    * Optional Parameters: none
+    * Provides the effect of warping to start via Benchwarp or savequit.
+   */
     public class WarpToStartResetVariable : StateModifier
     {
         public override string Name { get; }
@@ -32,7 +32,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
             }
         }
 
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
+        public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
         {
             if (VariableResolver.TryMatchPrefix(term, Prefix, out _))
             {
@@ -43,21 +43,19 @@ namespace ArchipelagoMapMod.RC.StateVariables
             return false;
         }
 
-        public override IEnumerable<LazyStateBuilder> ProvideState(object? sender, ProgressionManager pm)
+        public override IEnumerable<LazyStateBuilder>? ProvideState(object? sender, ProgressionManager pm)
         {
             return Enumerable.Empty<LazyStateBuilder>();
         }
 
         public override IEnumerable<LazyStateBuilder> ModifyState(object? sender, ProgressionManager pm, LazyStateBuilder state)
         {
-            yield return ResetSingle(pm, state);
+            return SaveQuitReset.ModifyState(sender, pm, state).SelectMany(s => StartRespawnReset.ModifyState(sender, pm, s));
         }
 
         public override IEnumerable<Term> GetTerms()
         {
             return SaveQuitReset.GetTerms().Concat(StartRespawnReset.GetTerms());
         }
-
-        public LazyStateBuilder ResetSingle(ProgressionManager pm, LazyStateBuilder state) => StartRespawnReset.ResetSingle(pm, SaveQuitReset.ResetSingle(pm, state));
     }
 }

@@ -1,5 +1,4 @@
-﻿#nullable enable
-using RandomizerCore.Logic;
+﻿using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
 
 namespace ArchipelagoMapMod.RC.StateVariables
@@ -14,14 +13,14 @@ namespace ArchipelagoMapMod.RC.StateVariables
     {
         public override string Name { get; }
         protected int CharmID;
-        protected Term CharmTerm = null!;
-        protected StateBool AnticharmBool = null!;
-        protected StateBool OvercharmBool;
+        protected Term CharmTerm;
+        protected readonly StateBool Overcharmed;
+        protected readonly StateBool CannotOvercharm;
 
         protected readonly StateBool NoPassedCharmEquip;
         protected readonly Term NotchesTerm;
-        protected readonly StateBool CharmBool = null!;
-        protected readonly StateBool HasTakenDamage;
+        protected readonly StateBool CharmBool;
+        protected readonly StateBool AnticharmBool;
         protected readonly StateInt UsedNotchesInt;
         protected readonly StateInt MaxNotchCost;
 
@@ -34,8 +33,8 @@ namespace ArchipelagoMapMod.RC.StateVariables
             {
                 NotchesTerm = lm.GetTermStrict("NOTCHES");
                 NoPassedCharmEquip = lm.StateManager.GetBoolStrict("NOPASSEDCHARMEQUIP");
-                HasTakenDamage = lm.StateManager.GetBoolStrict("HASTAKENDAMAGE");
-                OvercharmBool = lm.StateManager.GetBoolStrict("OVERCHARMED");
+                Overcharmed = lm.StateManager.GetBoolStrict("OVERCHARMED");
+                CannotOvercharm = lm.StateManager.GetBoolStrict("CANNOTOVERCHARM");
                 UsedNotchesInt = lm.StateManager.GetIntStrict("USEDNOTCHES");
                 MaxNotchCost = lm.StateManager.GetIntStrict("MAXNOTCHCOST");
             }
@@ -70,9 +69,9 @@ namespace ArchipelagoMapMod.RC.StateVariables
             return $"{Prefix}[{charmID}]";
         }
 
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
+        public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
         {
-            if (VariableResolver.TryMatchPrefix(term, Prefix, out string[]? parameters))
+            if (VariableResolver.TryMatchPrefix(term, Prefix, out string[] parameters))
             {
                 int charmID;
                 string charmName;
@@ -86,7 +85,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
                     charmName = LogicConstUtil.GetCharmTerm(charmID);
                 }
 
-                EquipCharmVariable? ecv;
+                EquipCharmVariable ecv;
                 if (23 <= charmID && charmID <= 25)
                 {
                     ecv = new FragileCharmVariable(term, charmName, charmID, lm);
@@ -123,17 +122,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
 
         public virtual int GetNotchCost<T>(ProgressionManager pm, T state) where T : IState
         {
-            try
-            {
-                return ((APRandoContext)pm.ctx!).NotchCosts[CharmID - 1];
-            }
-            catch (IndexOutOfRangeException)
-            {
-                List<int> costs = ((APRandoContext)pm.ctx!).NotchCosts ?? [-1];
-                ArchipelagoMapMod.Instance.LogError($"Unable to find cost for {CharmID} in {string.Join(", ", costs)} returning vanilla cost");
-                return CharmNotchCosts.GetVanillaCost(CharmID);
-            }
-
+            return ((APRandoContext)pm.ctx).NotchCosts[CharmID - 1];
         }
 
         public virtual bool HasCharmProgression(ProgressionManager pm) => pm.Has(CharmTerm);
@@ -141,45 +130,84 @@ namespace ArchipelagoMapMod.RC.StateVariables
         /// <summary>
         /// Given that pm.HasCharmProgression returned true, this should determine whether the particular state supports equipping the charm, ignoring notch cost.
         /// </summary>
-        protected virtual bool HasStateRequirements<T>(ProgressionManager pm, T state) where T : IState
+        public virtual bool HasStateRequirements<T>(ProgressionManager pm, T state) where T : IState
         {
-            if (state.GetBool(NoPassedCharmEquip) || state.GetBool(AnticharmBool)) return false;
+            if (state.GetBool(NoPassedCharmEquip) || state.GetBool(AnticharmBool))
+            {
+                return false;
+            }
+
             return true;
+        }
+
+        /// <summary>
+        /// Determines whether the charm can be equipped with or without overcharming for the given state. Does not check progression or state requirements.
+        /// </summary>
+        public EquipResult HasNotchRequirements<T>(ProgressionManager pm, T state) where T : IState
+        {
+            if (IsEquipped(state))
+            {
+                return state.GetBool(Overcharmed) ? EquipResult.Overcharm : EquipResult.Nonovercharm; // Already equipped
+            }
+
+            int notchCost = GetNotchCost(pm, state);
+
+            if (notchCost <= 0)
+            {
+                return state.GetBool(Overcharmed) ? EquipResult.Overcharm : EquipResult.Nonovercharm; // free to equip
+            }
+
+            int netNotches = pm.Get(NotchesTerm) - state.GetInt(UsedNotchesInt) - notchCost;
+
+            if (netNotches >= 0)
+            {
+                return EquipResult.Nonovercharm;
+            }
+
+            int overcharmSave = Math.Max(state.GetInt(MaxNotchCost), notchCost);
+
+            if (netNotches + overcharmSave > 0 && !state.GetBool(CannotOvercharm))
+            {
+                return EquipResult.Overcharm; // charm is not 0 notches, so it requires an open notch to overcharm
+            }
+
+            return EquipResult.None;
         }
 
         public bool CanEquipNonovercharm<T>(ProgressionManager pm, T state) where T : IState
         {
-            if (HasStateRequirements(pm, state))
-            {
-                if (state.GetBool(CharmBool)) return !state.GetBool(OvercharmBool);
-                if (state.GetInt(UsedNotchesInt) + GetNotchCost(pm, state) <= pm.Get(NotchesTerm)) return true;
-            }
-            return false;
+            return HasCharmProgression(pm) && HasStateRequirements(pm, state) && HasNotchRequirements(pm, state) == EquipResult.Nonovercharm;
         }
 
         public bool CanEquipOvercharm<T>(ProgressionManager pm, T state) where T : IState
         {
-            if (HasStateRequirements(pm, state))
-            {
-                if (state.GetBool(CharmBool)) return true;
-                if (state.GetInt(UsedNotchesInt) < pm.Get(NotchesTerm)) return true;
-            }
-            return false;
+            return HasCharmProgression(pm) && HasStateRequirements(pm, state) && HasNotchRequirements(pm, state) != EquipResult.None;
         }
 
         public EquipResult CanEquip(ProgressionManager pm, StateUnion? localState)
         {
-            if (localState is null || !HasCharmProgression(pm)) return EquipResult.None;
-            for (int i = 0; i < localState.Count; i++)
+            if (localState is null || !HasCharmProgression(pm))
             {
-                if (CanEquipNonovercharm(pm, localState[i])) return EquipResult.Nonovercharm;
-            }
-            for (int i = 0; i < localState.Count; i++)
-            {
-                if (CanEquipOvercharm(pm, localState[i])) return EquipResult.Overcharm;
+                return EquipResult.None;
             }
 
-            return EquipResult.None;
+            bool overcharm = false;
+            for (int i = 0; i < localState.Count; i++)
+            {
+                if (!HasStateRequirements(pm, localState[i]))
+                {
+                    continue;
+                }
+
+                switch (HasNotchRequirements(pm, localState[i]))
+                {
+                    case EquipResult.None: continue;
+                    case EquipResult.Overcharm: overcharm = true; continue;
+                    case EquipResult.Nonovercharm: return EquipResult.Nonovercharm;
+                }
+            }
+
+            return overcharm ? EquipResult.Overcharm : EquipResult.None;
         }
 
         /// <summary>
@@ -187,15 +215,20 @@ namespace ArchipelagoMapMod.RC.StateVariables
         /// </summary>
         public EquipResult CanEquip<T>(ProgressionManager pm, T state) where T : IState
         {
-            if (!HasCharmProgression(pm) || !HasStateRequirements(pm, state)) return EquipResult.None;
-            if (CanEquipNonovercharm(pm, state)) return EquipResult.Nonovercharm;
-            if (CanEquipOvercharm(pm, state)) return EquipResult.Overcharm;
-            return EquipResult.None;
+            if (!HasCharmProgression(pm) || !HasStateRequirements(pm, state))
+            {
+                return EquipResult.None;
+            }
+
+            return HasNotchRequirements(pm, state);
         }
 
         public override IEnumerable<LazyStateBuilder> ModifyState(object? sender, ProgressionManager pm, LazyStateBuilder state)
         {
-            if (TryEquip(sender, pm, ref state)) yield return state;
+            if (TryEquip(sender, pm, ref state))
+            {
+                yield return state;
+            }
         }
 
         public bool TryEquip(object? sender, ProgressionManager pm, ref LazyStateBuilder state)
@@ -205,38 +238,12 @@ namespace ArchipelagoMapMod.RC.StateVariables
                 return true;
             }
 
-            if (!HasCharmProgression(pm) || !HasStateRequirements(pm, state))
+            if (CanEquip(pm, state) != EquipResult.None)
             {
-                return false;
-            }
-
-            int notchCost = GetNotchCost(pm, state);
-            if (notchCost <= 0)
-            {
-                DoEquipCharm(pm, notchCost, ref state);
+                DoEquipCharm(pm, GetNotchCost(pm, state), ref state);
                 return true;
             }
-
-            int netNotches = pm.Get(NotchesTerm) - state.GetInt(UsedNotchesInt);
-
-            if (netNotches <= 0)
-            {
-                int oldMaxNotch = state.GetInt(MaxNotchCost);
-                if (oldMaxNotch > notchCost && netNotches + oldMaxNotch > 0)
-                {
-                    DoEquipCharm(pm, notchCost, ref state);
-                }
-                return false;
-            }
-            else
-            {
-                if (netNotches < notchCost && state.GetBool(HasTakenDamage))
-                {
-                    return false; // state cannot overcharm!
-                }
-                DoEquipCharm(pm, notchCost, ref state);
-                return true;
-            }
+            return false;
         }
 
         public bool TryEquip(object? sender, ProgressionManager pm, in LazyStateBuilder state, out LazyStateBuilder newState)
@@ -246,41 +253,13 @@ namespace ArchipelagoMapMod.RC.StateVariables
                 return true;
             }
 
-            if (!HasCharmProgression(pm) || !HasStateRequirements(pm, state))
-            {
-                return false;
-            }
-
-            int notchCost = GetNotchCost(pm, state);
-            if (notchCost <= 0)
+            if (CanEquip(pm, state) != EquipResult.None)
             {
                 newState = new(state);
-                DoEquipCharm(pm, notchCost, ref newState);
+                DoEquipCharm(pm, GetNotchCost(pm, state), ref newState);
                 return true;
             }
-
-            int netNotches = pm.Get(NotchesTerm) - state.GetInt(UsedNotchesInt);
-
-            if (netNotches <= 0)
-            {
-                int oldMaxNotch = state.GetInt(MaxNotchCost);
-                if (oldMaxNotch > notchCost && netNotches + oldMaxNotch > 0)
-                {
-                    newState = new(state);
-                    DoEquipCharm(pm, notchCost, ref newState);
-                }
-                return false;
-            }
-            else
-            {
-                if (netNotches < notchCost && state.GetBool(HasTakenDamage))
-                {
-                    return false; // state cannot overcharm!
-                }
-                newState = new(state);
-                DoEquipCharm(pm, notchCost, ref newState);
-                return true;
-            }
+            return false;
         }
 
         protected virtual void DoEquipCharm(ProgressionManager pm, int notchCost, ref LazyStateBuilder state)
@@ -288,14 +267,96 @@ namespace ArchipelagoMapMod.RC.StateVariables
             state.Increment(UsedNotchesInt, notchCost);
             state.SetBool(CharmBool, true);
             state.SetInt(MaxNotchCost, Math.Max(state.GetInt(MaxNotchCost), notchCost));
-            if (state.GetInt(UsedNotchesInt) > pm.Get(NotchesTerm)) state.SetBool(OvercharmBool, true);
+            if (state.GetInt(UsedNotchesInt) > pm.Get(NotchesTerm))
+            {
+                state.SetBool(Overcharmed, true);
+            }
         }
 
-        public virtual bool IsEquipped(LazyStateBuilder state) => state.GetBool(CharmBool);
-        public virtual void SetUnequippable(ref LazyStateBuilder state) => state.SetBool(AnticharmBool, true);
+        public bool IsEquipped(LazyStateBuilder state) => state.GetBool(CharmBool);
+        public bool IsEquipped<T>(T state) where T : IState => state.GetBool(CharmBool);
+        public void SetUnequippable(ref LazyStateBuilder state) => state.SetBool(AnticharmBool, true);
+        public bool IsDetermined<T>(T state) where T : IState => state.GetBool(CharmBool) || state.GetBool(AnticharmBool);
         public int GetAvailableNotches(ProgressionManager pm, LazyStateBuilder state)
         {
             return pm.Get(NotchesTerm) - state.GetInt(UsedNotchesInt);
+        }
+
+        public IEnumerable<LazyStateBuilder> DecideCharm(ProgressionManager pm, LazyStateBuilder state)
+        {
+            if (IsDetermined(state))
+            {
+                yield return state;
+                yield break;
+            }
+            else
+            {
+                LazyStateBuilder lsb = new(state);
+                SetUnequippable(ref lsb);
+                yield return lsb;
+                if (TryEquip(null, pm, ref state))
+                {
+                    yield return state;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Enumerates states for all equippable subsets of the provided set of charms.
+        /// <br/>Guarantees that <see cref="IsDetermined{T}(T)"/> returns true for all provided ECVs on all output states.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if length of charm list is greater than 30.</exception>
+        public static IEnumerable<LazyStateBuilder> GenerateCharmCombinations(ProgressionManager pm, LazyStateBuilder state, IEnumerable<EquipCharmVariable> charmList)
+        {
+            List<EquipCharmVariable> charms = [];
+            foreach (EquipCharmVariable c in charmList)
+            {
+                if (!c.IsDetermined(state))
+                {
+                    if (!c.HasCharmProgression(pm) || !c.HasStateRequirements(pm, state) || c.HasNotchRequirements(pm, state) == EquipResult.None)
+                    {
+                        c.SetUnequippable(ref state);
+                    }
+                    else
+                    {
+                        charms.Add(c);
+                    }
+                }
+            }
+
+            int len = charms.Count;
+            if (len == 0)
+            {
+                yield return state;
+                yield break;
+            }
+            else if (len > 30)
+            {
+                throw new ArgumentOutOfRangeException(nameof(charmList));
+            }
+
+            int p = 1 << len;
+            for (int i = 0; i < p; i++)
+            {
+                LazyStateBuilder next = new(state);
+                for (int j = 0; j < len; j++)
+                {
+                    int f = 1 << j;
+                    if ((i & f) == f) // equip
+                    {
+                        if (!charms[j].TryEquip(null, pm, ref next)) // should only fail due to out of notches
+                        {
+                            goto end_of_outer_loop;
+                        }
+                    }
+                    else // do not equip
+                    {
+                        charms[j].SetUnequippable(ref next);
+                    }
+                }
+                yield return next;
+            end_of_outer_loop: continue; // failed to equip requested charms, so we discard next.
+            }
         }
     }
 }

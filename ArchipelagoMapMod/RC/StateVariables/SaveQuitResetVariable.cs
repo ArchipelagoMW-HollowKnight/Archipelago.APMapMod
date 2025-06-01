@@ -9,21 +9,28 @@ namespace ArchipelagoMapMod.RC.StateVariables
      * Optional Parameters: none
      * Provides the effect of warping via Benchwarp or savequit, regardless of destination type.
     */
-    public class SaveQuitResetVariable : StateResetter
+    public class SaveQuitResetVariable : StateModifier
     {
         public override string Name { get; }
         public const string Prefix = "$SAVEQUITRESET";
-        protected override State ResetState { get; }
 
-        protected override string ResetLogicProperty => "SaveQuitConditionalReset";
-        protected override bool OptIn => true;
+        protected readonly StateBool NoFlower;
+        protected readonly StateBool UsedShade;
+        protected readonly StateInt RequiredMaxSoul;
+        protected readonly ISoulStateManager SSM;
+        protected readonly IHPStateManager HPSM;
 
-        public SaveQuitResetVariable(string term, LogicManager lm) : base(lm)
+        public SaveQuitResetVariable(string term, LogicManager lm)
         {
             Name = term;
             try
             {
-                ResetState = lm.StateManager.GetNamedStateStrict("SaveQuitResetState");
+                NoFlower = lm.StateManager.GetBoolStrict("NOFLOWER");
+                UsedShade = lm.StateManager.GetBoolStrict("USEDSHADE");
+                RequiredMaxSoul = lm.StateManager.GetIntStrict("REQUIREDMAXSOUL");
+
+                SSM = (ISoulStateManager)lm.GetVariableStrict(SoulStateManager.Prefix);
+                HPSM = (IHPStateManager)lm.GetVariableStrict(HPStateManager.Prefix);
             }
             catch (Exception e)
             {
@@ -42,6 +49,31 @@ namespace ArchipelagoMapMod.RC.StateVariables
             return false;
         }
 
-        new public LazyStateBuilder ResetSingle(ProgressionManager pm, LazyStateBuilder state) => base.ResetSingle(pm, state);
+        public override IEnumerable<Term> GetTerms()
+        {
+            foreach (Term t in SSM.GetTerms())
+            {
+                yield return t;
+            }
+
+            foreach (Term t in HPSM.GetTerms(IHPStateManager.HPSMOperation.RestoreWhiteHealth))
+            {
+                yield return t;
+            }
+        }
+
+        public override IEnumerable<LazyStateBuilder>? ProvideState(object? sender, ProgressionManager pm)
+        {
+            return [];
+        }
+
+        public override IEnumerable<LazyStateBuilder> ModifyState(object? sender, ProgressionManager pm, LazyStateBuilder state)
+        {
+            state.SetBool(NoFlower, true); // not game accurate, but we do this to prevent warps from being required for flower quest.
+            SSM.TrySpendAllSoul(pm, ref state); // zero out soul. A subsequent modifier will handle bench / start respawn soul effects.
+            state.SetBool(UsedShade, false); // not necessary to reset shade variables for typical use, but in the case of warping to a non-start hard respawn, it would be correct to reset them here.
+            state.SetInt(RequiredMaxSoul, 0);
+            return HPSM.RestoreWhiteHealth(pm, state); // bad to chain this into a cheaper restore on the bench...
+        }
     }
 }

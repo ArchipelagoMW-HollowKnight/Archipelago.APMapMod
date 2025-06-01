@@ -3,12 +3,9 @@
     "Bool": [
       "USEDSHADE",
       "OVERCHARMED",
-      "SPENTALLSOUL",
+      "CANNOTOVERCHARM",
       "CANNOTREGAINSOUL",
       "CANNOTSHADESKIP",
-      "HASTAKENDAMAGE",
-      "HASTAKENDOUBLEDAMAGE",
-      "HASALMOSTDIED",
       "BROKEHEART",
       "BROKEGREED",
       "BROKESTRENGTH",
@@ -104,74 +101,19 @@
       "REQUIREDMAXSOUL",
       "SPENTHP",
       "SPENTBLUEHP",
+      "LAZYSPENTHP",
       "USEDNOTCHES",
       "MAXNOTCHCOST"
     ]
   },
   "Properties": {
-    "SPENTALLSOUL": {
-      "BenchResetCondition": "Salubra's_Blessing + CANNOTREGAINSOUL=FALSE",
-      "HotSpringResetCondition": "CANNOTREGAINSOUL=FALSE",
-      "SaveQuitResetCondition": "CANNOTREGAINSOUL=FALSE",
-      "StartRespawnResetCondition": "CANNOTREGAINSOUL=FALSE"
-    },
-    "CANNOTREGAINSOUL": {
-      "BenchResetCondition": "NONE"
-    },
-    "CANNOTSHADESKIP": {
-      "BenchResetCondition": "NONE"
-    },
-    "BROKEHEART": {
-      "BenchResetCondition": "NONE"
-    },
-    "BROKEGREED": {
-      "BenchResetCondition": "NONE"
-    },
-    "BROKESTRENGTH": {
-      "BenchResetCondition": "NONE"
-    },
     "NOFLOWER": {
-      "DefaultValue": true,
-      "BenchResetCondition": "NONE"
+      "DefaultValue": true
     },
     "NOPASSEDCHARMEQUIP": {
       "DefaultValue": true
-    },
-    "SPENTSOUL": {
-      "BenchResetCondition": "Salubra's_Blessing + CANNOTREGAINSOUL=FALSE",
-      "HotSpringResetCondition": "CANNOTREGAINSOUL=FALSE",
-      "StartRespawnResetCondition": "CANNOTREGAINSOUL=FALSE"
-    },
-    "SPENTRESERVESOUL": {
-      "BenchResetCondition": "Salubra's_Blessing + CANNOTREGAINSOUL=FALSE",
-      "HotSpringResetCondition": "CANNOTREGAINSOUL=FALSE",
-      "StartRespawnResetCondition": "CANNOTREGAINSOUL=FALSE"
-    },
-    "SOULLIMITER": {
-      "BenchResetCondition": "NONE"
-    },
-    "REQUIREDMAXSOUL": {
-      "BenchResetCondition": "NONE"
-    },
-    "SPENTHP": {
-      "HotSpringResetCondition": "ANY",
-      "BenchwarpResetCondition": "ANY",
-      "StartRespawnResetCondition": "ANY"
     }
   },
-  "NamedStates": {
-    "BenchResetState": {
-      "ModifiedBoolFields": {
-        "NOPASSEDCHARMEQUIP": false
-      }
-    },
-    "StartRespawnResetState": {},
-    "SaveQuitResetState": {
-      "ModifiedBoolFields": {
-        "SPENTALLSOUL": true
-      }
-    },
-    "HotSpringResetState": {}
-  },
+  "NamedStates": {},
   "NamedStateUnions": {}
 }

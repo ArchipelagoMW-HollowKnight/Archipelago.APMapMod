@@ -1,5 +1,4 @@
-﻿#nullable enable
-using RandomizerCore.Logic;
+﻿using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
 
 namespace ArchipelagoMapMod.RC.StateVariables
@@ -13,7 +12,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
         public const string Prefix = "$SLOPEBALL";
         protected override string InnerPrefix => CastSpellVariable.Prefix;
 
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
+        public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
         {
             if (term.StartsWith(Prefix))
             {
@@ -42,12 +41,19 @@ namespace ArchipelagoMapMod.RC.StateVariables
         {
             yield return slopeballSkips;
             yield return fireball;
-            foreach (Term t in InnerVariable.GetTerms()) yield return t;
+            foreach (Term t in InnerVariable.GetTerms())
+            {
+                yield return t;
+            }
         }
 
         public override IEnumerable<LazyStateBuilder> ModifyState(object? sender, ProgressionManager pm, LazyStateBuilder state)
         {
-            if (!pm.Has(slopeballSkips) || !pm.Has(fireball)) return Enumerable.Empty<LazyStateBuilder>();
+            if (!pm.Has(slopeballSkips) || !pm.Has(fireball))
+            {
+                return Enumerable.Empty<LazyStateBuilder>();
+            }
+
             return InnerVariable.ModifyState(sender, pm, state);
         }
     }

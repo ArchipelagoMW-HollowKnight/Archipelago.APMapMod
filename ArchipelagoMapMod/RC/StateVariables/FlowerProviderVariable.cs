@@ -8,14 +8,13 @@ namespace ArchipelagoMapMod.RC.StateVariables
      * Required Parameters: none
      * Optiional Parameters: none
     */
-#nullable enable
     public class FlowerProviderVariable : StateModifier
     {
         public override string Name { get; }
-        protected readonly StateBool? NoFlower;
+        protected readonly StateBool NoFlower;
         public const string Prefix = "$FLOWERGET";
 
-        public static bool TryMatch(LogicManager lm, string term, out LogicVariable? variable)
+        public static bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
         {
             if (term == Prefix)
             {
@@ -56,7 +55,7 @@ namespace ArchipelagoMapMod.RC.StateVariables
 
         public override IEnumerable<LazyStateBuilder> ModifyState(object? sender, ProgressionManager pm, LazyStateBuilder state)
         {
-            state.SetBool(NoFlower!, false);
+            state.SetBool(NoFlower, false);
             yield return state;
         }
     }
