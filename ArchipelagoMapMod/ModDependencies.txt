@@ -5,3 +5,4 @@ BenchRando
 RandomizerCore.Json
 ItemChanger
 RandoMapCore
+MagicUI

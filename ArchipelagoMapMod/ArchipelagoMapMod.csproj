@@ -70,6 +70,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>$(HollowKnightRefs)\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="MagicUI">
+      <HintPath>$(HollowKnightRefs)/Mods/MagicUI/MagicUI.dll</HintPath>
+    </Reference>
     <Reference Include="RandoMapCore">
       <HintPath>$(HollowKnightRefs)/Mods/RandoMapCore/RandoMapCore.dll</HintPath>
     </Reference>

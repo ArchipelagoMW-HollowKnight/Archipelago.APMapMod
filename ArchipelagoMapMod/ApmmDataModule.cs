@@ -4,7 +4,9 @@ using ArchipelagoMapMod.RandomizerData;
 using ArchipelagoMapMod.RC;
 using ArchipelagoMapMod.RC.StateVariables;
 using ArchipelagoMapMod.Settings;
+using ArchipelagoMapMod.UI.SkipOptionsGrid;
 using ItemChanger;
+using MapChanger.UI;
 using RandoMapCore;
 using RandoMapCore.Data;
 using RandomizerCore;
@@ -96,10 +98,7 @@ public class ApmmDataModule : RmcDataModule
         Data.Load();
 
         context = new APRandoContext(new GenerationSettings());
-        TrackerData = new TrackerData(true);
-        TrackerData.Setup(context);
-        TrackerDataNoSequenceBreaks = new TrackerData(false);
-        TrackerDataNoSequenceBreaks.Setup(context);
+        ResetTracker();
 
         randomizedTransitions = [];
         vanillaTransitions = [];
@@ -159,11 +158,34 @@ public class ApmmDataModule : RmcDataModule
 
         TrackerData.UnhookTrackerUpdate();
         TrackerData = null;
+        TrackerDataNoSequenceBreaks.UnhookTrackerUpdate();
+        TrackerDataNoSequenceBreaks = null;
         randomizedTransitions = null;
         vanillaTransitions = null;
         randomizedTransitionPlacements = null;
         randomizedLocations = null;
         vanillaLocations = null;
+    }
+
+    public override IEnumerable<MainButton> GetPauseMenuMainButtons()
+    {
+        return [new SkipOptionsControlButton()];
+    }
+
+    public override IEnumerable<ExtraButtonGrid> GetPauseMenuExtraButtonGrids()
+    {
+        return [new SkipOptionsGrid()];
+    }
+
+    public void ResetTracker()
+    {
+        TrackerData?.UnhookTrackerUpdate();
+        TrackerData = new TrackerData(true);
+        TrackerData.Setup(context);
+
+        TrackerDataNoSequenceBreaks?.UnhookTrackerUpdate();
+        TrackerDataNoSequenceBreaks = new TrackerData(false);
+        TrackerDataNoSequenceBreaks.Setup(context);
     }
 
     private bool TryGetTransitionDef(string name, out RmcTransitionDef transitionDef)
