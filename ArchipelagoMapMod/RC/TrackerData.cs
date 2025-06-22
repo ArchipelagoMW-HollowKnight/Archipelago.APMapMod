@@ -368,7 +368,7 @@ public class TrackerData
 
     private void AppendRandoLocationToDebug(RandoLocation rl)
     {
-        if (rl.Name == RemotePlacement.SINGLETON_NAME)
+        if (rl.Name != RemotePlacement.SINGLETON_NAME)
         {
             AppendToDebug("New reachable randomized location: " + rl.Name);
         }
