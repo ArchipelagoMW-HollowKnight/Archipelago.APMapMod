@@ -171,7 +171,7 @@ public class TrackerData
         {
             foreach (AbstractItem remoteItem in pmt.Items)
             {
-                AddRemoteItem(remoteItem.name);
+                OnRemoteItemObtained(remoteItem.name);
             }
         }
 
@@ -197,20 +197,6 @@ public class TrackerData
         }
     }
 
-    private ItemPlacement AddRemoteItem(string itemName)
-    {
-        APItem item = new(lm.GetItemStrict(itemName));
-        APLocation location = new(lm.GetLogicDefStrict("Remote"));
-        ItemPlacement itemPlacement = new(item, location)
-        {
-            Index = ctx.ItemPlacements.Count
-        };
-        ctx.ItemPlacements.Add(itemPlacement);
-        AppendToDebug($"[Tracker-Data] Adding Remote item {itemName} to Remote Placement under index {itemPlacement.Index}");
-        obtainedItems.Add(itemPlacement.Index);
-        return itemPlacement;
-    }
-
     private void HookTrackerUpdate()
     {
         APmmTrackerUpdate.OnItemObtained += OnItemObtained;
@@ -224,6 +210,7 @@ public class TrackerData
     public void UnhookTrackerUpdate()
     {
         APmmTrackerUpdate.OnItemObtained -= OnItemObtained;
+        APmmTrackerUpdate.OnRemoteItemObtained -= OnRemoteItemObtained;
         APmmTrackerUpdate.OnPlacementPreviewed -= OnPlacementPreviewed;
         APmmTrackerUpdate.OnPlacementCleared -= OnPlacementCleared;
         APmmTrackerUpdate.OnTransitionVisited -= OnTransitionVisited;
@@ -299,8 +286,16 @@ public class TrackerData
     {
         try
         {
-            ItemPlacement itemPlacement = AddRemoteItem(itemName);
-            pm.Add(itemPlacement.Item, itemPlacement.Location);
+            APItem item = new(lm.GetItemStrict(itemName));
+            APLocation location = new(lm.GetLogicDefStrict("Remote"));
+            ItemPlacement itemPlacement = new(item, location)
+            {
+                Index = ctx.ItemPlacements.Count
+            };
+            ctx.ItemPlacements.Add(itemPlacement);
+            AppendToDebug($"[Tracker-Data] Adding Remote item {itemName} to Remote Placement under index {itemPlacement.Index}");
+            obtainedItems.Add(itemPlacement.Index);
+            pm.Add(item, location);
         }
         catch (Exception ex)
         {
@@ -373,7 +368,10 @@ public class TrackerData
 
     private void AppendRandoLocationToDebug(RandoLocation rl)
     {
-        AppendToDebug("New reachable randomized location: " + rl.Name);
+        if (rl.Name == RemotePlacement.SINGLETON_NAME)
+        {
+            AppendToDebug("New reachable randomized location: " + rl.Name);
+        }
     }
 
     private void AppendReachableTransitionToDebug(LogicTransition lt)
