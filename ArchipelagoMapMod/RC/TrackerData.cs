@@ -287,7 +287,7 @@ public class TrackerData
         try
         {
             APItem item = new(lm.GetItemStrict(itemName));
-            APLocation location = new(lm.GetLogicDefStrict("Remote"));
+            APLocation location = new(lm.GetLogicDefStrict(RemotePlacement.SINGLETON_NAME));
             ItemPlacement itemPlacement = new(item, location)
             {
                 Index = ctx.ItemPlacements.Count
