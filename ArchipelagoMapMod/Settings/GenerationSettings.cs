@@ -5,7 +5,7 @@ namespace ArchipelagoMapMod.Settings;
 
 public class GenerationSettings
 {
-    public string StartLocation => ArchipelagoMod.Instance.SlotData.Options.StartLocationName ?? "King's Pass";
+    public string StartLocation => ArchipelagoMod.Instance.SlotData.Options.StartLocationName ?? StartLocationNames.Kings_Pass;
     public StartDef StartDef => StartDef.Lookup[StartLocation];
 
     public TransitionSettings TransitionSettings = new();
