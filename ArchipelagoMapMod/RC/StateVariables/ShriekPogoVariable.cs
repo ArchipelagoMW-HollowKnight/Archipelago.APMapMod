@@ -3,6 +3,8 @@ using RandomizerCore.Logic.StateLogic;
 
 namespace ArchipelagoMapMod.RC.StateVariables;
 
+#nullable enable annotations
+
 public class ShriekPogoVariable : StateModifierWrapper<CastSpellVariable>
 {
     public override string Name { get; }

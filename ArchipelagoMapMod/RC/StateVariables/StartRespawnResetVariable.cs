@@ -3,6 +3,8 @@ using RandomizerCore.Logic.StateLogic;
 
 namespace ArchipelagoMapMod.RC.StateVariables;
 
+#nullable enable annotations
+
 /*
 * Prefix: $STARTRESPAWN
 * Required Parameters: none

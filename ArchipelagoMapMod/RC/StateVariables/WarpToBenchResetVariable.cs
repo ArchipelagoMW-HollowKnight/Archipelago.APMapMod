@@ -1,4 +1,4 @@
-﻿#nullable enable
+﻿#nullable enable annotations
 using RandomizerCore.Logic;
 using RandomizerCore.Logic.StateLogic;
 
