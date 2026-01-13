@@ -1,5 +1,6 @@
 ﻿using Archipelago.HollowKnight.IC;
 using ArchipelagoMapMod.IC;
+using ArchipelagoMapMod.RandomizerData;
 using ItemChanger;
 using ItemChanger.Internal;
 using Newtonsoft.Json;
@@ -63,10 +64,12 @@ public class TrackerData
     [JsonIgnore] public LogicManager lm;
     [JsonIgnore] public APRandoContext ctx;
     private MainUpdater mu;
+    private string filename;
 
     public TrackerData(bool allowSequenceBreaks)
     {
         AllowSequenceBreaks = allowSequenceBreaks;
+        filename = "TrackerData" + (allowSequenceBreaks ? "With" : "No") + "SequenceBreaks.txt";
     }
 
     public void Setup(APRandoContext ctx)
@@ -80,7 +83,12 @@ public class TrackerData
 
     public void Reset()
     {
-        ArchipelagoMapMod.Instance.Log("Setting up TrackerData...");
+        ArchipelagoMapMod.Instance.Log($"Setting up TrackerData (SB={AllowSequenceBreaks})...");
+        LogFileManager.EnsureStarted();
+        LogFileManager.NewFile(filename);
+
+        string gs = JsonUtil.Serialize(ctx.GenerationSettings);
+        LogFileManager.AppendLines(filename, "Building tracker data from generation settings:", gs);
 
         obtainedItems.Clear();
         previewedLocations.Clear();
@@ -293,7 +301,7 @@ public class TrackerData
                 Index = ctx.ItemPlacements.Count
             };
             ctx.ItemPlacements.Add(itemPlacement);
-            AppendToDebug($"[Tracker-Data] Adding Remote item {itemName} to Remote Placement under index {itemPlacement.Index}");
+            AppendToDebug($"Adding Remote item {itemName} to Remote Placement under index {itemPlacement.Index}");
             obtainedItems.Add(itemPlacement.Index);
             pm.Add(item, location);
         }
@@ -343,12 +351,7 @@ public class TrackerData
 
     private void AppendToDebug(string line)
     {
-        ArchipelagoMapMod.Instance.LogDebug($"[Tracker][SB={AllowSequenceBreaks}] - {line}");
-    }
-
-    private void AppendToFine(string line)
-    {
-        ArchipelagoMapMod.Instance.LogFine($"[Tracker][SB={AllowSequenceBreaks}] - {line}");
+        LogFileManager.AppendLines(filename, line);
     }
 
     private void AppendWaypointToDebug(LogicWaypoint w)
@@ -358,7 +361,7 @@ public class TrackerData
 
     private void AppendVanillaToDebug(GeneralizedPlacement v)
     {
-        AppendToFine($"New reachable vanilla placement: {v.Item.Name} at {v.Location.Name}");
+        AppendToDebug($"New reachable vanilla placement: {v.Item.Name} at {v.Location.Name}");
     }
 
     private void AppendRandoItemToDebug(RandoItem ri, RandoLocation rl)
@@ -391,12 +394,12 @@ public class TrackerData
 
     private void AppendImprovedStateToDebug(Term target, StateUnion value)
     {
-        AppendToFine($"Improved {target.Name} state to {lm.StateManager.PrettyPrint(value)} via evaluation.");
+        AppendToDebug($"Improved {target.Name} state to {lm.StateManager.PrettyPrint(value)} via evaluation.");
     }
 
     private void AppendTransmittedStateToDebug(Term target, StateUnion value)
     {
-        AppendToFine($"Improved {target.Name} state to {lm.StateManager.PrettyPrint(value)} via transmission.");
+        AppendToDebug($"Improved {target.Name} state to {lm.StateManager.PrettyPrint(value)} via transmission.");
     }
 
     public bool HasVisited(string transition) => visitedTransitions.ContainsKey(transition);
