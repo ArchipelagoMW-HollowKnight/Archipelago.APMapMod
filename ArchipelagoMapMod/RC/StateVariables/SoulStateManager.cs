@@ -3,6 +3,7 @@ using RandomizerCore.Logic.StateLogic;
 using static ArchipelagoMapMod.RC.StateVariables.ISoulStateManager;
 
 namespace ArchipelagoMapMod.RC.StateVariables;
+
 public interface ISoulStateManager : ILogicVariable
 {
     /// <summary>
@@ -209,7 +210,7 @@ public class SoulStateManager : LogicVariable, ISoulStateManager
                 return false;
             }
 
-            SpendAndRebalance(groupTotal, ref soul, ref state);
+            SpendAndRebalance(groupTotal, ref soul, ref operand);
         }
         state = operand;
         return true;
@@ -226,7 +227,7 @@ public class SoulStateManager : LogicVariable, ISoulStateManager
                 return false;
             }
 
-            SpendAndRebalance(amount, ref soul, ref state);
+            SpendAndRebalance(amount, ref soul, ref operand);
         }
         state = operand;
         return true;

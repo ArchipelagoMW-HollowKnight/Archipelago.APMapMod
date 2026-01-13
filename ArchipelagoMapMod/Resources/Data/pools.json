@@ -437,7 +437,6 @@
         "location": "Weaversong"
       },
       {
-        // at time of writing, this is incorrect upstream, overwrite with caution
         "item": "Grimmchild1",
         "location": "Grimmchild"
       },

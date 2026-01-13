@@ -889,7 +889,7 @@
   },
   {
     "name": "Grub-Resting_Grounds",
-    "logic": "RestingGrounds_10 + (LEFTCLAW | WINGS) + UPWALLBREAK"
+    "logic": "RestingGrounds_10 + (LEFTCLAW | WINGS | ENEMYPOGOS + DANGEROUSSKIPS + RIGHTCLAW) + UPWALLBREAK"
   },
   {
     "name": "Grub-Crystal_Peak_Below_Chest",
@@ -1085,7 +1085,7 @@
   },
   {
     "name": "Lifeblood_Cocoon-Failed_Tramway",
-    "logic": "(Deepnest_26 + (LEFTCLAW | WINGS + ENEMYPOGOS) | Deepnest_26[left1] + Opened_Tramway_Exit_Gate) + (LEFTCLAW | WINGS + (RIGHTCLAW + (LEFTDASH | LEFTSUPERDASH | OBSCURESKIPS + PRECISEMOVEMENT) | ENEMYPOGOS | $SHADESKIP))"
+    "logic": "(Deepnest_26 + (LEFTCLAW | WINGS + ENEMYPOGOS | $SHRIEKPOGO) | Deepnest_26[left1] + Opened_Tramway_Exit_Gate) + (LEFTCLAW | WINGS + (RIGHTCLAW + (LEFTDASH | LEFTSUPERDASH | OBSCURESKIPS + PRECISEMOVEMENT) | ENEMYPOGOS | $SHADESKIP))"
   },
   {
     "name": "Lifeblood_Cocoon-Galien",
@@ -1417,7 +1417,7 @@
   },
   {
     "name": "Geo_Rock-Deepnest_Spike_Grub_Right",
-    "logic": "Deepnest_03[top1] | Deepnest_03[right1] + RIGHTCLAW | Deepnest_03 + (FULLCLAW | WINGS | LEFTCLAW + $SHADESKIP | RIGHTCLAW + ENEMYPOGOS + COMPLEXSKIPS)"
+    "logic": "Deepnest_03[top1] | Deepnest_03[left1] + RIGHTCLAW | Deepnest_03 + (FULLCLAW | WINGS | LEFTCLAW + $SHADESKIP | RIGHTCLAW + ENEMYPOGOS + COMPLEXSKIPS)"
   },
   {
     "name": "Geo_Rock-Deepnest_By_Mantis_Lords_Garpede_Pogo",
@@ -1509,7 +1509,7 @@
   },
   {
     "name": "Geo_Rock-Kingdom's_Edge_Oro_Far_Left",
-    "logic": "(Deepnest_East_06[left1] | Deepnest_East_06[top1] | (Deepnest_East_06[bot1] | Deepnest_East_06[door1] | Deepnest_East_06[right1]) + (LEFTCLAW | WINGS + ENEMYPOGOS)) + (RIGHTCLAW | WINGS + LEFTCLAW + ENEMYPOGOS | WINGS + $SHADESKIP | WINGS + $SHRIEKPOGO[2,before:ROOMSOUL])"
+    "logic": "(Deepnest_East_06[left1] | Deepnest_East_06[top1] | (Deepnest_East_06[bot1] | Deepnest_East_06[door1] | Deepnest_East_06[right1]) + (LEFTCLAW | WINGS + ENEMYPOGOS)) + (RIGHTCLAW | WINGS + LEFTCLAW | WINGS + $SHADESKIP | WINGS + $SHRIEKPOGO[2,before:ROOMSOUL])"
   },
   {
     "name": "Geo_Rock-Kingdom's_Edge_Oro_Middle_Left",
@@ -1929,7 +1929,7 @@
   },
   {
     "name": "Geo_Rock-Resting_Grounds_Catacombs_Grub",
-    "logic": "RestingGrounds_10 + (LEFTCLAW | WINGS) + UPWALLBREAK"
+    "logic": "RestingGrounds_10 + (LEFTCLAW | WINGS | ENEMYPOGOS + DANGEROUSSKIPS + RIGHTCLAW) + UPWALLBREAK"
   },
   {
     "name": "Geo_Rock-Resting_Grounds_Catacombs_Left_Dupe",

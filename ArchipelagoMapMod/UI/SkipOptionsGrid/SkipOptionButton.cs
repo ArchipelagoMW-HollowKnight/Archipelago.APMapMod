@@ -13,7 +13,7 @@ internal class SkipOptionButton(string skipName, FieldInfo field) : ExtraButton
 {
     private APRandoContext Context => (APRandoContext)ApmmDataModule.Instance.Context;
     private SkipSettings Settings => Context.GenerationSettings.SkipSettings;
-    private bool Value => (bool)field.GetValue(Settings);
+    private bool Value => (bool)@field.GetValue(Settings);
 
     public override string Name => $"{Layout.Mod} {skipName}";
 

@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitattributes" />
+    <File Path=".github/dependabot.yml" />
+    <File Path=".github/workflows/auto-dependabot.yml" />
+    <File Path=".github/workflows/build-release.yml" />
+    <File Path=".gitignore" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="ArchipelagoMapMod/ArchipelagoMapMod.csproj" />
+</Solution>

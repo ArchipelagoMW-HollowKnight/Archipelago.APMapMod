@@ -1,11 +1,22 @@
 ﻿using ArchipelagoMapMod.RC.LogicInts;
 using ArchipelagoMapMod.RC.StateVariables;
+using RandomizerCore.Json;
 using RandomizerCore.Logic;
+using RandomizerCore.Logic.StateLogic;
 
 namespace ArchipelagoMapMod.RC;
 
 public class RandoVariableResolver : VariableResolver
 {
+    public override StateManagerBuilder GetStateModel()
+    {
+        StateManagerBuilder smb = base.GetStateModel();
+        JsonLogicFormat fmt = new();
+        using Stream stateData = ArchipelagoMapMod.Assembly.GetManifestResourceStream($"{ArchipelagoMapMod.MOD}.Resources.Logic.state.json");
+        smb.AppendRawStateData(fmt.LoadStateData(stateData));
+        return smb;
+    }
+
     public override bool TryMatch(LogicManager lm, string term, out LogicVariable variable)
     {
         if (base.TryMatch(lm, term, out variable))

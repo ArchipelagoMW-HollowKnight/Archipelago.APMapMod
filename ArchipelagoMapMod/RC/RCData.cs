@@ -13,8 +13,7 @@ public static class RCData
             (LogicFileType.Waypoints, "waypoints"),
             (LogicFileType.Transitions, "transitions"),
             (LogicFileType.Locations, "locations"),
-            (LogicFileType.ItemStrings, "items"),
-            (LogicFileType.StateData, "state"),
+            (LogicFileType.ItemStrings, "items")
         };
 
     /// <summary>
@@ -31,7 +30,7 @@ public static class RCData
             lmb.DeserializeFile(type, fmt, s);
         }
 
-        foreach (var a in _runtimeLogicOverrideOwner.GetSubscribers())
+        foreach (Action<GenerationSettings, LogicManagerBuilder> a in _runtimeLogicOverrideOwner.GetSubscribers())
         {
             try
             {

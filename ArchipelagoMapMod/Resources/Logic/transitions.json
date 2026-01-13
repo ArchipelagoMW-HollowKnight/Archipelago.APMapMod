@@ -1318,7 +1318,7 @@
   {
     "sceneName": "Fungus1_26",
     "gateName": "left1",
-    "logic": "Fungus1_26[left1] | (Fungus1_26[right1] | Fungus1_26[door_SlugShrine]) + (ACID | COMPLEXSKIPS + ACIDSKIPS + WINGS + (LEFTSUPERDASH | ENEMYPOGOS + LEFTCLAW + SPELLAIRSTALL + $CASTSPELL) + LEFTDASH + (FIREBALL + FIREBALLSKIPS + $CASTSPELL[2] | LEFTSHARPSHADOW | $SHRIEKPOGO) | RIGHTSKIPACID + $SHRIEKPOGO[2]) + (ANYCLAW | WINGS)",
+    "logic": "Fungus1_26[left1] | (Fungus1_26[right1] | Fungus1_26[door_SlugShrine]) + (ACID | COMPLEXSKIPS + ACIDSKIPS + WINGS + (LEFTSUPERDASH | ENEMYPOGOS + LEFTCLAW + SPELLAIRSTALL + $CASTSPELL) + LEFTDASH + (FIREBALL + FIREBALLSKIPS + $CASTSPELL[2] | LEFTSHARPSHADOW | $SHRIEKPOGO) | RIGHTSKIPACID + $SHRIEKPOGO[2]) + (ANYCLAW | WINGS | $SLOPEBALL)",
     "oneWayType": "TwoWay",
     "Name": "Fungus1_26[left1]"
   },
@@ -2509,14 +2509,14 @@
   {
     "sceneName": "Deepnest_26",
     "gateName": "left1",
-    "logic": "Deepnest_26[left1] | Deepnest_26 + (LEFTCLAW | (WINGS + ENEMYPOGOS)) + Opened_Tramway_Exit_Gate",
+    "logic": "Deepnest_26[left1] | Deepnest_26 + (LEFTCLAW | (WINGS + ENEMYPOGOS) | $SHRIEKPOGO) + Opened_Tramway_Exit_Gate",
     "oneWayType": "TwoWay",
     "Name": "Deepnest_26[left1]"
   },
   {
     "sceneName": "Deepnest_26",
     "gateName": "left2",
-    "logic": "Deepnest_26[left2] | Deepnest_26 + (LEFTCLAW | (WINGS + ENEMYPOGOS))",
+    "logic": "Deepnest_26[left2] | Deepnest_26 + (LEFTCLAW | (WINGS + ENEMYPOGOS) | $SHRIEKPOGO)",
     "oneWayType": "TwoWay",
     "Name": "Deepnest_26[left2]"
   },
@@ -3673,7 +3673,7 @@
   {
     "sceneName": "Abyss_20",
     "gateName": "top1",
-    "logic": "Abyss_20[top1] | Abyss_20[top2] + (LEFTCLAW | ENEMYPOGOS + WINGS)",
+    "logic": "Abyss_20[top1] | Abyss_20[top2] + (LEFTCLAW | ENEMYPOGOS + WINGS | RIGHTCLAW + $SHRIEKPOGO[2,before:AREASOUL,after:AREASOUL])",
     "oneWayType": "TwoWay",
     "Name": "Abyss_20[top1]"
   },
@@ -3925,7 +3925,7 @@
   {
     "sceneName": "Waterways_09",
     "gateName": "left1",
-    "logic": "Waterways_09[left1] | Waterways_09[right1] + (LEFTCLAW | WINGS | (RIGHTCLAW + (LEFTDASH | LEFTSUPERDASH)))",
+    "logic": "Waterways_09[left1] | Waterways_09[right1] + Opened_Waterways_Exit",
     "oneWayType": "TwoWay",
     "Name": "Waterways_09[left1]"
   },
