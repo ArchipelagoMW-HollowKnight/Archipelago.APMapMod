@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ArchipelagoMapMod;
 
-public class ArchipelagoMapMod : Mod
+public class ArchipelagoMapMod : Mod, IGlobalSettings<GlobalSettings>, IMenuMod
 {
     internal const string MOD = "ArchipelagoMapMod";
 
@@ -21,12 +21,16 @@ public class ArchipelagoMapMod : Mod
 
     public bool IsInApSave = false;
 
+    public GlobalSettings GS { get; private set; } = new();
+
     public ArchipelagoMapMod()
     {
         Instance = this;
     }
 
     internal static Assembly Assembly => Assembly.GetExecutingAssembly();
+
+    public bool ToggleButtonInsideMenu => false;
 
     /// <summary>
     /// Mod version as reported to the modding API
@@ -57,7 +61,7 @@ public class ArchipelagoMapMod : Mod
     {
         Log($"Initializing APMapMod {GetVersion()}");
 
-        foreach (var dependency in dependencies)
+        foreach (string dependency in dependencies)
         {
             if (ModHooks.GetMod(dependency) is not Mod)
             {
@@ -84,5 +88,20 @@ public class ArchipelagoMapMod : Mod
     private void OnQuitToMenu()
     {
         IsInApSave = false;
+    }
+
+    public void OnLoadGlobal(GlobalSettings s) => GS = s;
+
+    public GlobalSettings OnSaveGlobal() => GS;
+
+    public List<IMenuMod.MenuEntry> GetMenuData(IMenuMod.MenuEntry? toggleButtonEntry)
+    {
+        return [
+            new IMenuMod.MenuEntry("Enable Tracker Log",
+                ["Off", "On"],
+                "Enables logging tracker history for diagnostic purposes",
+                i => GS.EnableTrackerLog = i == 1,
+                () => GS.EnableTrackerLog ? 1 : 0)
+        ];
     }
 }

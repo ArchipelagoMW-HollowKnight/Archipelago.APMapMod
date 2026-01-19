@@ -66,11 +66,20 @@ internal static class LogFileManager
 
     public static void NewFile(string filename)
     {
+        if (!ArchipelagoMapMod.Instance.GS.EnableTrackerLog)
+        {
+            return;
+        }
+
         File.Create(Path.Combine(ApmmDirectory, filename)).Close();
     }
 
-    public static void AppendLines(string filename, params string[] lines)
+    public static void AppendLine(string filename, string line)
     {
-        File.AppendAllLines(Path.Combine(ApmmDirectory, filename), lines);
+        if (!ArchipelagoMapMod.Instance.GS.EnableTrackerLog)
+        {
+            return;
+        }
+        File.AppendAllText(Path.Combine(ApmmDirectory, filename), line);
     }
 }

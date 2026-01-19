@@ -88,7 +88,8 @@ public class TrackerData
         LogFileManager.NewFile(filename);
 
         string gs = JsonUtil.Serialize(ctx.GenerationSettings);
-        LogFileManager.AppendLines(filename, "Building tracker data from generation settings:", gs);
+        LogFileManager.AppendLine(filename, "Building tracker data from generation settings:");
+        LogFileManager.AppendLine(filename, gs);
 
         obtainedItems.Clear();
         previewedLocations.Clear();
@@ -351,7 +352,7 @@ public class TrackerData
 
     private void AppendToDebug(string line)
     {
-        LogFileManager.AppendLines(filename, line);
+        //LogFileManager.AppendLines(filename, line);
     }
 
     private void AppendWaypointToDebug(LogicWaypoint w)
