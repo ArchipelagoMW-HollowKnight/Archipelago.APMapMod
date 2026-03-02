@@ -1,4 +1,4 @@
-Archipelago from https://nightly.link/TheAvonian/Archipelago.HollowKnight/workflows/build-release/main/Archipelago.zip
+Archipelago from https://nightly.link/ArchipelagoMW-HollowKnight/Archipelago.HollowKnight/workflows/build-release/main/Archipelago.zip
 RandomizerCore
 MapChanger
 BenchRando
