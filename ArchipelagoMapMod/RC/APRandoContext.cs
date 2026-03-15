@@ -61,22 +61,17 @@ public class APRandoContext : RandoContext
             NotchCosts.Add(cost);
         }
 
+        Dictionary<string, string> randomizedTransitions = ArchipelagoMod.Instance.SlotData.EntrancePairs ?? [];
+
         foreach (KeyValuePair<string, TransitionDef> transition in Data.Transitions)
         {
             if (transition.Value.VanillaTarget == null) continue;
-            LogicTransition location = LM.TransitionLookup[transition.Key];
-            LogicTransition item = LM.GetTransition(transition.Value.VanillaTarget);
-            Vanilla.Add(new GeneralizedPlacement(item, location));
-        }
-
-        if (ArchipelagoMod.Instance.SlotData.EntrancePairs is { } transitions)
-        {
-            foreach (KeyValuePair<string, string> transition in transitions)
+            if (randomizedTransitions.TryGetValue(transition.Key, out string targetTransition))
             {
                 TransitionDef sourceDef = Data.GetTransitionDef(transition.Key);
-                TransitionDef targetDef = Data.GetTransitionDef(transition.Value);
+                TransitionDef targetDef = Data.GetTransitionDef(targetTransition);
                 LogicTransition source = LM.TransitionLookup[transition.Key];
-                LogicTransition target = LM.TransitionLookup[transition.Value];
+                LogicTransition target = LM.TransitionLookup[targetTransition];
                 APTransition sourceTrans = new(source)
                 {
                     TransitionDef = sourceDef
@@ -86,7 +81,11 @@ public class APRandoContext : RandoContext
                     TransitionDef = targetDef
                 };
                 TransitionPlacements.Add(new TransitionPlacement(targetTrans, sourceTrans));
+                continue;
             }
+            LogicTransition location = LM.TransitionLookup[transition.Key];
+            LogicTransition item = LM.GetTransition(transition.Value.VanillaTarget);
+            Vanilla.Add(new GeneralizedPlacement(item, location));
         }
 
         // Populate our item placements with info from IC
