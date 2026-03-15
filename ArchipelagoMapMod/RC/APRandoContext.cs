@@ -23,6 +23,7 @@ public class APRandoContext : RandoContext
         this.StartDef = gs.StartDef;
 
         Vanilla = [];
+        TransitionPlacements = [];
         // if unshuffled locations were added, the server will send all vanilla placements as randomized instead
         if (!ArchipelagoMod.Instance.SlotData.Options.AddUnshuffledLocations)
         {
@@ -60,10 +61,28 @@ public class APRandoContext : RandoContext
             NotchCosts.Add(cost);
         }
 
-        // todo: update this with transitions from AP when given and dont add them to vanilla
+        Dictionary<string, string> randomizedTransitions = ArchipelagoMod.Instance.SlotData.EntrancePairs ?? [];
+
         foreach (KeyValuePair<string, TransitionDef> transition in Data.Transitions)
         {
             if (transition.Value.VanillaTarget == null) continue;
+            if (randomizedTransitions.TryGetValue(transition.Key, out string targetTransition))
+            {
+                TransitionDef sourceDef = Data.GetTransitionDef(transition.Key);
+                TransitionDef targetDef = Data.GetTransitionDef(targetTransition);
+                LogicTransition source = LM.TransitionLookup[transition.Key];
+                LogicTransition target = LM.TransitionLookup[targetTransition];
+                APTransition sourceTrans = new(source)
+                {
+                    TransitionDef = sourceDef
+                };
+                APTransition targetTrans = new(target)
+                {
+                    TransitionDef = targetDef
+                };
+                TransitionPlacements.Add(new TransitionPlacement(targetTrans, sourceTrans));
+                continue;
+            }
             LogicTransition location = LM.TransitionLookup[transition.Key];
             LogicTransition item = LM.GetTransition(transition.Value.VanillaTarget);
             Vanilla.Add(new GeneralizedPlacement(item, location));
