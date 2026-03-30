@@ -7,7 +7,7 @@
     <Description>A Hollow Knight mod for Archipelago that adds many new features to the map.</Description>
     <Copyright>Copyright © BadMagic 2025, KonoTyran 2023</Copyright>
     <Authors>BadMagic, KonoTyran</Authors>
-    <Version>3.3.1</Version>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <Deterministic>false</Deterministic>
     <ImplicitUsings>true</ImplicitUsings>
@@ -40,6 +40,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <Target Name="CustomVersion" AfterTargets="MinVer">
+      <PropertyGroup>
+          <AssemblyVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch).0</AssemblyVersion>
+      </PropertyGroup>
+  </Target>
   <Target Name="CopyMod" AfterTargets="PostBuildEvent">
     <RemoveDir Directories="$(ExportDir)/" />
     <MakeDir Directories="$(ExportDir)/" />
@@ -62,6 +67,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="MinVer" Version="7.0.0" PrivateAssets="all"/>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Archipelago.MultiClient.Net">
