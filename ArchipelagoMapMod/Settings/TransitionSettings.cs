@@ -20,5 +20,5 @@ public class TransitionSettings
         _ => TransitionMode.RoomRandomizer,
     };
 
-    public bool Coupled = AP.Instance.SlotData.Options.ShuffleEntrancesMode != ShuffleEntrancesMode.Decoupled;
+    public bool Coupled = AP.Instance.SlotData.Options.ShuffleEntrancesMode == ShuffleEntrancesMode.Coupled;
 }
