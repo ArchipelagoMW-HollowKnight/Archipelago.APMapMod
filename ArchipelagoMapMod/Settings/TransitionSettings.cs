@@ -1,4 +1,7 @@
-﻿namespace ArchipelagoMapMod.Settings;
+﻿using Archipelago.HollowKnight;
+using AP = Archipelago.HollowKnight.ArchipelagoMod;
+
+namespace ArchipelagoMapMod.Settings;
 
 public class TransitionSettings
 {
@@ -9,36 +12,13 @@ public class TransitionSettings
         FullAreaRandomizer,
         RoomRandomizer,
     }
-    //TODO: Point to AP's settings when added to HKAP
-    public TransitionMode Mode = TransitionMode.None;
-
-    public enum AreaConstraintSetting
+    public TransitionMode Mode = AP.Instance.SlotData.Options.EntranceRandoType switch
     {
-        None,
-        MoreConnectedMapAreas,
-        MoreConnectedTitledAreas,
-    }
+        EntranceRandoType.None => TransitionMode.None,
+        EntranceRandoType.MapArea => TransitionMode.MapAreaRandomizer,
+        EntranceRandoType.FullArea => TransitionMode.FullAreaRandomizer,
+        _ => TransitionMode.RoomRandomizer,
+    };
 
-    public AreaConstraintSetting AreaConstraint = AreaConstraintSetting.None;
-
-    /*
-    // This will likely be difficult to implement -- not many rooms which don't have items or npcs or events
-    // and then even fewer combinations which give matching transition counts
-    public enum RemoveRoomsSetting
-    {
-        None,
-        RemoveEmptyHallways,
-        AggressivelyRemoveRooms,
-    }
-    public RemoveRoomsSetting Remove;
-    */
-
-    public enum TransitionMatchingSetting
-    {
-        MatchingDirections,
-        MatchingDirectionsAndNoDoorToDoor,
-        NonmatchingDirections
-    }
-    public TransitionMatchingSetting TransitionMatching = TransitionMatchingSetting.MatchingDirections;
-    public bool Coupled = true;
+    public bool Coupled = AP.Instance.SlotData.Options.ShuffleEntrancesMode != ShuffleEntrancesMode.Decoupled;
 }

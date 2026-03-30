@@ -65,10 +65,14 @@ public class APRandoContext : RandoContext
 
         foreach (KeyValuePair<string, TransitionDef> transition in Data.Transitions)
         {
-            if (transition.Value.VanillaTarget == null) continue;
+            if (transition.Value.VanillaTarget == null)
+            {
+                continue;
+            }
+
             if (randomizedTransitions.TryGetValue(transition.Key, out string targetTransition))
             {
-                TransitionDef sourceDef = Data.GetTransitionDef(transition.Key);
+                TransitionDef sourceDef = transition.Value;
                 TransitionDef targetDef = Data.GetTransitionDef(targetTransition);
                 LogicTransition source = LM.TransitionLookup[transition.Key];
                 LogicTransition target = LM.TransitionLookup[targetTransition];
@@ -95,7 +99,10 @@ public class APRandoContext : RandoContext
             foreach (AbstractItem item in placement.Items)
             {
                 //check if this is an AP item.
-                if (!item.GetTag(out ArchipelagoItemTag aptag)) continue;
+                if (!item.GetTag(out ArchipelagoItemTag aptag))
+                {
+                    continue;
+                }
 
                 APLocation logicLocation = new(LM.GetLogicDef(placement.Name));
 
@@ -152,9 +159,20 @@ public class APRandoContext : RandoContext
 
     public override IEnumerable<GeneralizedPlacement> EnumerateExistingPlacements()
     {
-        foreach (GeneralizedPlacement p in Vanilla) yield return p;
-        foreach (ItemPlacement p in ItemPlacements) yield return p;
-        foreach (TransitionPlacement p in TransitionPlacements) yield return p;
+        foreach (GeneralizedPlacement p in Vanilla)
+        {
+            yield return p;
+        }
+
+        foreach (ItemPlacement p in ItemPlacements)
+        {
+            yield return p;
+        }
+
+        foreach (TransitionPlacement p in TransitionPlacements)
+        {
+            yield return p;
+        }
     }
 
 

@@ -93,12 +93,13 @@ public class TrackerData
 
         obtainedItems.Clear();
         previewedLocations.Clear();
-        visitedTransitions.Clear();
         clearedLocations.Clear();
         uncheckedReachableLocations.Clear();
         uncheckedReachableTransitions.Clear();
         outOfLogicObtainedItems.Clear();
-        outOfLogicVisitedTransitions.Clear();
+
+        visitedTransitions = GetPersistedTransitionDict();
+        outOfLogicVisitedTransitions = GetPersistedOolTransitionSet();
 
         pm = new ProgressionManager(lm, ctx);
         mu = pm.mu;
@@ -404,6 +405,20 @@ public class TrackerData
     }
 
     public bool HasVisited(string transition) => visitedTransitions.ContainsKey(transition);
+
+    private Dictionary<string, string> GetPersistedTransitionDict()
+    {
+        return AllowSequenceBreaks
+            ? ArchipelagoMapMod.Instance.LS.TrackerVisitedTransitionsWithSequenceBreak
+            : ArchipelagoMapMod.Instance.LS.TrackerVisitedTransitionsNoSequenceBreak;
+    }
+
+    private HashSet<string> GetPersistedOolTransitionSet()
+    {
+        return AllowSequenceBreaks
+            ? []
+            : ArchipelagoMapMod.Instance.LS.TrackerOutOfLogicVisitedTransitions;
+    }
 
     public class DelegateUpdateEntry : UpdateEntry
     {
