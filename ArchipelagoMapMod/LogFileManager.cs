@@ -80,6 +80,6 @@ internal static class LogFileManager
         {
             return;
         }
-        File.AppendAllText(Path.Combine(ApmmDirectory, filename), line);
+        File.AppendAllText(Path.Combine(ApmmDirectory, filename), $"{line}\n");
     }
 }

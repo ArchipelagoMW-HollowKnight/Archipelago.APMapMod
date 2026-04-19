@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ArchipelagoMapMod;
 
-public class ArchipelagoMapMod : Mod, IGlobalSettings<GlobalSettings>, ILocalSettings<SaveSettings>, IMenuMod
+public class ArchipelagoMapMod : Mod, IGlobalSettings<GlobalSettings>, IMenuMod
 {
     internal const string MOD = "ArchipelagoMapMod";
 
@@ -22,8 +22,6 @@ public class ArchipelagoMapMod : Mod, IGlobalSettings<GlobalSettings>, ILocalSet
     public bool IsInApSave = false;
 
     public GlobalSettings GS { get; private set; } = new();
-
-    public SaveSettings LS { get; private set; } = null;
 
     public ArchipelagoMapMod()
     {
@@ -95,10 +93,6 @@ public class ArchipelagoMapMod : Mod, IGlobalSettings<GlobalSettings>, ILocalSet
     public void OnLoadGlobal(GlobalSettings s) => GS = s;
 
     public GlobalSettings OnSaveGlobal() => GS;
-
-    public void OnLoadLocal(SaveSettings s) => LS = s;
-
-    public SaveSettings OnSaveLocal() => LS;
 
     public List<IMenuMod.MenuEntry> GetMenuData(IMenuMod.MenuEntry? toggleButtonEntry)
     {

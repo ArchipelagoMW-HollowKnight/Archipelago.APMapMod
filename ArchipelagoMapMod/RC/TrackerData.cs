@@ -98,8 +98,8 @@ public class TrackerData
         uncheckedReachableTransitions.Clear();
         outOfLogicObtainedItems.Clear();
 
-        visitedTransitions = GetPersistedTransitionDict();
-        outOfLogicVisitedTransitions = GetPersistedOolTransitionSet();
+        visitedTransitions.Clear();
+        outOfLogicVisitedTransitions.Clear();
 
         pm = new ProgressionManager(lm, ctx);
         mu = pm.mu;
@@ -144,7 +144,12 @@ public class TrackerData
         AppendToDebug("running first update cycle");
         mu.StartUpdating(); // automatically handle tracking reachable unobtained locations/transitions and adding vanilla progression to pm
 
-        AppendToDebug($"Finished logic setup, marking previously obtained items.");
+        AppendToDebug($"Finished logic setup, marking previously obtained items and transitions.");
+
+        foreach ((string source, string target) in APmmTrackerUpdate.GetKnownVisitedTransitionPairs())
+        {
+            OnTransitionVisited(source, target);
+        }
 
         foreach (AbstractPlacement placement in Ref.Settings.Placements.Values)
         {
@@ -183,27 +188,6 @@ public class TrackerData
             {
                 OnRemoteItemObtained(remoteItem.name);
             }
-        }
-
-        // todo - this will cause problems in trando because we don't currently save transitions
-        foreach (KeyValuePair<string, string> kvp in visitedTransitions)
-        {
-            if (outOfLogicVisitedTransitions.Contains(kvp.Key))
-            {
-                continue;
-            }
-
-            LogicTransition tt = lm.GetTransitionStrict(kvp.Value);
-            LogicTransition st = lm.GetTransitionStrict(kvp.Key);
-
-            if (!pm.Has(st.term))
-            {
-                AppendProgressionTransitionToDebug(st);
-                pm.Add(st.GetReachableEffect());
-            }
-
-            AppendTransitionTargetToDebug(tt, st);
-            pm.Add(tt, st);
         }
     }
 
@@ -353,7 +337,7 @@ public class TrackerData
 
     private void AppendToDebug(string line)
     {
-        //LogFileManager.AppendLines(filename, line);
+        LogFileManager.AppendLine(filename, line);
     }
 
     private void AppendWaypointToDebug(LogicWaypoint w)
@@ -405,20 +389,6 @@ public class TrackerData
     }
 
     public bool HasVisited(string transition) => visitedTransitions.ContainsKey(transition);
-
-    private Dictionary<string, string> GetPersistedTransitionDict()
-    {
-        return AllowSequenceBreaks
-            ? ArchipelagoMapMod.Instance.LS.TrackerVisitedTransitionsWithSequenceBreak
-            : ArchipelagoMapMod.Instance.LS.TrackerVisitedTransitionsNoSequenceBreak;
-    }
-
-    private HashSet<string> GetPersistedOolTransitionSet()
-    {
-        return AllowSequenceBreaks
-            ? []
-            : ArchipelagoMapMod.Instance.LS.TrackerOutOfLogicVisitedTransitions;
-    }
 
     public class DelegateUpdateEntry : UpdateEntry
     {

@@ -1,22 +1,63 @@
-﻿using Archipelago.HollowKnight.IC;
+﻿using Archipelago.HollowKnight;
+using Archipelago.HollowKnight.IC;
+using Archipelago.MultiClient.Net;
+using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
 using ArchipelagoMapMod.RC;
 using ItemChanger;
+using Newtonsoft.Json.Linq;
 
 namespace ArchipelagoMapMod.IC;
 
-public class APmmTrackerUpdate : ItemChanger.Modules.Module
+public partial class APmmTrackerUpdate : ItemChanger.Modules.Module
 {
+    private const string DATASTORAGE_KEY_VISITED_TRANSITIONS = "visited_transitions";
+
+    private static APmmTrackerUpdate LoadedInstance;
+    public static IEnumerable<(string source, string target)> GetKnownVisitedTransitionPairs()
+    {
+        return LoadedInstance?.GetVisitedTransitionPairs() ?? [];
+    }
+
+    public HashSet<string> VisitedTransitions { get; private set; } = [];
+
+    private ArchipelagoSession session;
+
+    [DataStorageProperty(nameof(session), Scope.Slot, DATASTORAGE_KEY_VISITED_TRANSITIONS)]
+    private partial DataStorageElement VisitedTransitionsRemote { get; set; }
+
     public override void Initialize()
     {
+        session = ArchipelagoMod.Instance.session;
+
         ModuleHandlingProperties = ModuleHandlingFlags.AllowDeserializationFailure;
         APmmItemTag.AfterRandoItemGive += AfterRandoItemGive;
         APmmPlacementTag.OnRandoPlacementVisitStateChanged += OnRandoPlacementVisitStateChanged;
         AbstractItem.AfterGiveGlobal += AfterRemoteItemGive;
         Events.OnTransitionOverride += OnTransitionOverride;
+
+        VisitedTransitionsRemote.Initialize(JObject.FromObject(new Dictionary<string, bool>()));
+        VisitedTransitionsRemote.OnValueChanged += OnRemoteTransitionsUpdated;
+        VisitedTransitionsRemote += Operation.Update(BuildTransitionData(VisitedTransitions));
+
+        try
+        {
+            Dictionary<string, bool> remoteTransitions = VisitedTransitionsRemote.To<Dictionary<string, bool>>();
+            // sync local storage from remote but don't update the map as it is not yet ready.
+            MarkTransitionsFromServer(remoteTransitions, false);
+        }
+        catch (Exception ex)
+        {
+            ArchipelagoMapMod.Instance.LogError($"Unexpected issue unlocking transitions from server data: {ex}");
+        }
+
+        LoadedInstance = this;
     }
 
     public override void Unload()
     {
+        LoadedInstance = null;
+
         APmmItemTag.AfterRandoItemGive -= AfterRandoItemGive;
         APmmPlacementTag.OnRandoPlacementVisitStateChanged -= OnRandoPlacementVisitStateChanged;
         AbstractItem.AfterGiveGlobal -= AfterRemoteItemGive;
@@ -70,12 +111,18 @@ public class APmmTrackerUpdate : ItemChanger.Modules.Module
 
     private void OnTransitionOverride(ItemChanger.Transition source, ItemChanger.Transition origTarget, ITransition newTarget)
     {
-        OnTransitionFound(source.ToString());
+        string sourceName = source.ToString();
+        lock (VisitedTransitions)
+        {
+            VisitedTransitions.Add(sourceName);
+        }
+        VisitedTransitionsRemote += Operation.Update(BuildTransitionData([sourceName]));
+        OnTransitionFound(sourceName);
     }
 
     private void OnTransitionFound(string sourceName)
     {
-        transitionLookup ??= TD.ctx.TransitionPlacements.ToDictionary(p => p.Source.Name, p => p.Target.Name);
+        InitTransitionLookup();
         if (transitionLookup.TryGetValue(sourceName, out string targetName) && !TD.HasVisited(sourceName))
         {
             OnTransitionVisited?.Invoke(sourceName, targetName);
@@ -86,9 +133,80 @@ public class APmmTrackerUpdate : ItemChanger.Modules.Module
                 OnTransitionVisited?.Invoke(targetName, sourceName);
             }
 
-            OnFinishedUpdate?.Invoke();
+            try
+            {
+                OnFinishedUpdate?.Invoke();
+            }
+            // because this may be invoked from server events it can be before the map is ready, that's ok (probably?)
+            catch (Exception ex)
+            {
+                ArchipelagoMapMod.Instance.LogWarn($"Transition found before map alive, probably harmless?: {ex}");
+            }
         }
     }
 
+    private IEnumerable<(string source, string target)> GetVisitedTransitionPairs()
+    {
+        InitTransitionLookup();
+        APRandoContext context = (APRandoContext)ApmmDataModule.Instance.Context;
+        lock (VisitedTransitions)
+        {
+            foreach (string source in VisitedTransitions)
+            {
+                if (transitionLookup.TryGetValue(source, out string target))
+                {
+                    yield return (source, target);
+                    if (context.GenerationSettings.TransitionSettings.Coupled && transitionLookup.ContainsKey(target))
+                    {
+                        yield return (target, source);
+                    }
+                }
+            }
+        }
+    }
+
+    private void OnRemoteTransitionsUpdated(JToken oldData, JToken newData, Dictionary<string, JToken> additionalArguments)
+    {
+        Dictionary<string, bool> transitions = newData.ToObject<Dictionary<string, bool>>();
+        MarkTransitionsFromServer(transitions, true);
+    }
+
+    private Dictionary<string, bool> BuildTransitionData(IEnumerable<string> visitedTransitions)
+    {
+        Dictionary<string, bool> visitedTransitionsDict = [];
+        foreach (string t in visitedTransitions)
+        {
+            visitedTransitionsDict[t] = true;
+        }
+        return visitedTransitionsDict;
+    }
+
+    private void MarkTransitionsFromServer(Dictionary<string, bool> visitedTransitions, bool notifyMap)
+    {
+        if (visitedTransitions == null)
+        {
+            return;
+        }
+
+        lock (VisitedTransitions)
+        {
+            VisitedTransitions.UnionWith(visitedTransitions.Keys);
+        }
+
+        if (notifyMap == false)
+        {
+            return;
+        }
+
+        foreach (string t in visitedTransitions.Keys)
+        {
+            OnTransitionFound(t);
+        }
+    }
+
+    private void InitTransitionLookup()
+    {
+        transitionLookup ??= TD.ctx.TransitionPlacements.ToDictionary(p => p.Source.Name, p => p.Target.Name);
+    }
 }
 
