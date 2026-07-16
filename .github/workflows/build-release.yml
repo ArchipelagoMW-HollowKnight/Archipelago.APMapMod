@@ -38,7 +38,7 @@ jobs:
             Write-Output "No double Zip Found"
           }
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
 
       - name: Install dependencies
         run: dotnet restore
